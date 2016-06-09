@@ -1,37 +1,38 @@
 #include <iostream>
 #include "Subscriber.hpp"
 
-Subscriber::Subscriber() :
-        context(zctx_new(), [](zctx_t * context) {
-            zctx_destroy(&context);
-        }),
-        socket(zsocket_new(context.get(), ZMQ_SUB))
+Subscriber::Subscriber(std::string ip) :
+        ContextListener(ZMQ_SUB)
 {
-    zsocket_connect(socket, "tcp://127.0.0.1:5678");
-    zsocket_set_subscribe(socket, "AAAA");
-    std::cout << "Subscribed to AAAA" << std::endl;
+    zsocket_connect(socket, ("tcp://" + ip + ":5678").c_str());
 }
 
-void Subscriber::mainloop()
+void Subscriber::start(std::string file_path, std::string channel)
 {
+    zsocket_set_subscribe(socket, channel.c_str());
+    std::cout << "Subscribed to " << channel << std::endl;
+
     auto deleter = [](zmsg_t * message) {
         zmsg_destroy(&message);
     };
 
+    std::unique_ptr<zmsg_t, decltype(deleter)> message(nullptr, deleter);
+
     while (!zctx_interrupted) {
-        std::unique_ptr<zmsg_t, decltype(deleter)> message(zmsg_recv(socket), deleter);
+        message.reset(zmsg_recv(socket));
+
+        if (message.get() == nullptr) {
+            continue;
+        }
 
         for (int i = 0; i < zmsg_size(message.get()); ++i) {
             zmsg_pop(message.get());
             zframe_t * content = zmsg_pop(message.get());
 
-            char * content_str = zframe_strdup(content);
-
-            std::cout << content_str << std::endl;
-
-            free(content_str);
+            std::unique_ptr<char> content_str(zframe_strdup(content));
+            std::cout << content_str.get() << std::endl;
         }
 
-        zclock_sleep(500);
+        wait_interval();
     }
 }

@@ -2,40 +2,40 @@
 #include <fstream>
 #include "Publisher.hpp"
 
-Publisher::Publisher() :
-        context(zctx_new(), [](zctx_t * context) {
-            zctx_destroy(&context);
-        }),
-        socket(zsocket_new(context.get(), ZMQ_PUB))
+Publisher::Publisher(std::string ip) :
+        ContextListener(ZMQ_PUB)
 {
-    zsocket_bind(socket, "tcp://*:5678");
+    zsocket_bind(socket, ("tcp://" + ip + ":5678").c_str());
 }
 
-void Publisher::mainloop()
+void Publisher::start(std::string file_path, std::string channel)
 {
-    std::ifstream in("test.txt", std::ios_base::binary);
-
-    if (!in) {
-        std::cout << "File not found" << std::endl;
-    }
+    std::ifstream in(file_path, std::ios_base::binary);
+    assert(in);
 
     std::streamoff offset = 0;
-    size_t size = 11;
-    char buffer[size];
+    char buffer[block_size];
 
     while (!zctx_interrupted) {
-        memset(buffer, 0, size);
+        advance_buffer(in, buffer, offset);
 
-        in.seekg(offset);
-        in.read(buffer, size);
-        offset += size;
+        zstr_sendm(socket, channel.c_str());
+        zmq_send(socket, buffer, block_size, 0);
 
-        zstr_sendm(socket, "AAAA");
-        zmq_send(socket, buffer, size, 0);
-
-        std::cout << buffer << std::endl;
-        std::cout << "Sending message" << std::endl;
-
-        zclock_sleep(500);
+        wait_interval();
     }
+}
+
+void Publisher::set_block_size(size_t block_size)
+{
+    this->block_size = block_size;
+}
+
+void Publisher::advance_buffer(std::ifstream & in, char * buffer, std::streamoff & offset)
+{
+    memset(buffer, 0, block_size);
+
+    in.seekg(offset);
+    in.read(buffer, block_size);
+    offset += block_size;
 }

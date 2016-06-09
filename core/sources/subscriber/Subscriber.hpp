@@ -3,26 +3,15 @@
 
 #include <czmq.h>
 #include <memory>
+#include "../ContextListener.hpp"
 
 
-class Subscriber
+class Subscriber : public ContextListener
 {
-private:
-    /**
-     * @brief ZeroMQ context pointer.
-     *
-     * This pointer must be initialized with (zctx_new(), zctx_destroy) as parameters
-     * in order to destroy the context. Note that zctx_destroy automatically destroys
-     * all context sockets.
-     */
-    std::shared_ptr<zctx_t> context;
-
-    void * socket;
-
 public:
-    Subscriber();
+    Subscriber(std::string ip);
 
-    void mainloop();
+    void start(std::string file_path, std::string channel);
 };
 
 

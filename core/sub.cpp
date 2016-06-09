@@ -2,7 +2,8 @@
 
 int main()
 {
-    Subscriber subscriber;
-    subscriber.mainloop();
+    Subscriber subscriber("127.0.0.1");
+    subscriber.start("", "AAAA");
+
     return 0;
 }

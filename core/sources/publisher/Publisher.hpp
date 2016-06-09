@@ -2,27 +2,38 @@
 #define PUBLISHER_PUBLISHER_HPP
 
 #include <memory>
-
+#include <string>
 #include <czmq.h>
 
-class Publisher
+#include "../ContextListener.hpp"
+
+class Publisher : public ContextListener
 {
 private:
-    /**
-     * @brief ZeroMQ context pointer.
-     *
-     * This pointer must be initialized with (zctx_new(), zctx_destroy) as parameters
-     * in order to destroy the context. Note that zctx_destroy automatically destroys
-     * all context sockets.
-     */
-    std::shared_ptr<zctx_t> context;
+    size_t block_size = 16;
 
-    void * socket;
+    /**
+     * @brief Moves cursor in the input stream and stores the block in the buffer.
+     *
+     * Moves the cursor of the stream in order to buffer another section of the
+     * file given by the block_size.
+     */
+    void advance_buffer(std::ifstream & in, char *buffer, std::streamoff &offset);
 
 public:
-    Publisher();
+    Publisher(std::string ip);
 
-    void mainloop();
+    void start(std::string file_path, std::string channel);
+
+    /**
+     * @brief sets the block_size of data to transmit in one ZeroMQ message.
+     *
+     * Sets the block_size of data to transmit in one ZeroMQ Message, note that
+     * ZeroMQ then fragments the data in frames, this block_size is not
+     * necessary one frame, it just describes a sufficient piece of information
+     * that the subscriber can consume and interpret.
+     */
+    void set_block_size(size_t block_size);
 };
 
 
