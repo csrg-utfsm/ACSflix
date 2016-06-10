@@ -3,7 +3,7 @@
 #include "Publisher.hpp"
 
 Publisher::Publisher(std::string ip) :
-        ContextListener(ZMQ_PUB)
+        DataEndPoint(ZMQ_PUB)
 {
     zsocket_bind(socket, ("tcp://" + ip + ":5678").c_str());
 }

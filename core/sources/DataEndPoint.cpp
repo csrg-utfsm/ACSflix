@@ -1,6 +1,6 @@
-#include "ContextListener.hpp"
+#include "DataEndPoint.hpp"
 
-ContextListener::ContextListener(int type) :
+DataEndPoint::DataEndPoint(int type) :
         context(zctx_new(), [](zctx_t * context) {
             zctx_destroy(&context);
         }),
@@ -9,14 +9,14 @@ ContextListener::ContextListener(int type) :
 
 }
 
-void ContextListener::wait_interval()
+void DataEndPoint::wait_interval()
 {
     if (milliseconds != 0) {
         zclock_sleep(milliseconds);
     }
 }
 
-void ContextListener::set_interval(size_t milliseconds)
+void DataEndPoint::set_interval(size_t milliseconds)
 {
     this->milliseconds = (int) milliseconds;
 }

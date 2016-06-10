@@ -8,7 +8,7 @@ set(SOURCE_FILES
         sources/publisher/Publisher.hpp
         sources/subscriber/Subscriber.cpp
         sources/subscriber/Subscriber.hpp
-        sources/ContextListener.cpp sources/ContextListener.hpp)
+        sources/DataEndPoint.cpp sources/DataEndPoint.hpp)
 
 
 add_executable(publisher pub.cpp ${SOURCE_FILES})

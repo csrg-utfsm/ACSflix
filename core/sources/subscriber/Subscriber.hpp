@@ -3,11 +3,11 @@
 
 #include <czmq.h>
 #include <memory>
-#include "../ContextListener.hpp"
+#include "../DataEndPoint.hpp"
 #include <vector>
 
 
-class Subscriber : public ContextListener
+class Subscriber : public DataEndPoint
 {
 private:
     void consume(FILE *message, std::unique_ptr<_zmsg_t, void (*)(_zmsg_t *)>::pointer pZmsg);
@@ -15,7 +15,7 @@ private:
     auto deleter = [](zmsg_t * message) {
         zmsg_destroy(&message);
     };
-    
+
 public:
     Subscriber(std::string ip);
 

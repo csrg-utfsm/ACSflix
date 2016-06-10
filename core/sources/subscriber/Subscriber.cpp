@@ -3,7 +3,7 @@
 #include "Subscriber.hpp"
 
 Subscriber::Subscriber(std::string ip) :
-        ContextListener(ZMQ_SUB)
+        DataEndPoint(ZMQ_SUB)
 {
     zsocket_connect(socket, ("tcp://" + ip + ":5678").c_str());
 }

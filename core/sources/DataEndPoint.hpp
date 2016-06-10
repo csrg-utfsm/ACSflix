@@ -1,11 +1,11 @@
-#ifndef PUBLISHER_CONTEXTLISTENERS_HPP
-#define PUBLISHER_CONTEXTLISTENERS_HPP
+#ifndef PUBLISHER_DATAENDPOINT_HPP
+#define PUBLISHER_DATAENDPOINT_HPP
 
 #include <czmq.h>
 #include <string>
 
 
-class ContextListener
+class DataEndPoint
 {
 private:
     /**
@@ -25,14 +25,14 @@ protected:
     void wait_interval();
 
 public:
-    ContextListener(int type);
+    DataEndPoint(int type);
 
     /**
-     * @brief Starts sending data to subscribers, block by block.
+     * @brief Starts the endpoint for sending or receiving data.
      *
-     * Sends binary data block by block, given by the block_size. This is a
-     * blocking method, so you will probably need to thread this class in
-     * order to have multiple publishers.
+     * Starts the endpoint for sending or receiving data, it is the
+     * job of the implementing class to define the corresponding
+     * behaviour.
      */
     virtual void start(std::string file_path, std::string channel) = 0;
 
@@ -48,4 +48,4 @@ public:
 };
 
 
-#endif //PUBLISHER_CONTEXTLISTENERS_HPP
+#endif //PUBLISHER_DATAENDPOINT_HPP

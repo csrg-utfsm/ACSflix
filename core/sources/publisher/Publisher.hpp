@@ -5,9 +5,9 @@
 #include <string>
 #include <czmq.h>
 
-#include "../ContextListener.hpp"
+#include "../DataEndPoint.hpp"
 
-class Publisher : public ContextListener
+class Publisher : public DataEndPoint
 {
 private:
     size_t block_size = 16;
@@ -28,6 +28,13 @@ private:
 public:
     Publisher(std::string ip);
 
+    /**
+     * @brief Starts sending data to subscribers, block by block.
+     *
+     * Sends binary data block by block, given by the block_size. This is a
+     * blocking method, so you will probably need to thread this class in
+     * order to have multiple publishers.
+     */
     void start(std::string file_path, std::string channel);
 
     /**
