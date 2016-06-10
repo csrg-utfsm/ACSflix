@@ -4,10 +4,10 @@ int main()
 {
     Publisher publisher("*");
 
-    publisher.set_block_size(11);
-    publisher.set_interval(500);
+    publisher.set_block_size(1024);
+    publisher.set_interval(1);
 
-    publisher.start("test.txt", "AAAA");
+    publisher.start("test.mp4", "AAAA");
 
     return 0;
 }

@@ -18,7 +18,12 @@ private:
      * Moves the cursor of the stream in order to buffer another section of the
      * file given by the block_size.
      */
-    void advance_buffer(std::ifstream & in, char *buffer, std::streamoff &offset);
+    void advance_buffer(FILE * file, void * buffer, long & block_cursor);
+
+    /**
+     * @brief Obtains how many blocks are contained in the file.
+     */
+    long get_file_block_count(std::string file_path);
 
 public:
     Publisher(std::string ip);

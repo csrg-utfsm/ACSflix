@@ -23,6 +23,7 @@ protected:
     void * socket;
 
     void wait_interval();
+
 public:
     ContextListener(int type);
 

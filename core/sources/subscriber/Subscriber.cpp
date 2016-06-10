@@ -1,4 +1,5 @@
 #include <iostream>
+#include <fstream>
 #include "Subscriber.hpp"
 
 Subscriber::Subscriber(std::string ip) :
@@ -9,12 +10,9 @@ Subscriber::Subscriber(std::string ip) :
 
 void Subscriber::start(std::string file_path, std::string channel)
 {
-    zsocket_set_subscribe(socket, channel.c_str());
-    std::cout << "Subscribed to " << channel << std::endl;
+    subscribe(channel);
 
-    auto deleter = [](zmsg_t * message) {
-        zmsg_destroy(&message);
-    };
+    FILE * file = fopen(file_path.c_str(), "wb");
 
     std::unique_ptr<zmsg_t, decltype(deleter)> message(nullptr, deleter);
 
@@ -25,14 +23,38 @@ void Subscriber::start(std::string file_path, std::string channel)
             continue;
         }
 
-        for (int i = 0; i < zmsg_size(message.get()); ++i) {
-            zmsg_pop(message.get());
-            zframe_t * content = zmsg_pop(message.get());
+        // take out the channel code.
+        zframe_t * channel_frame = zmsg_pop(message.get());
+        zframe_destroy(&channel_frame);
 
-            std::unique_ptr<char> content_str(zframe_strdup(content));
-            std::cout << content_str.get() << std::endl;
+        // consume all frames in the message.
+        for (int i = 0; i < zmsg_size(message.get()); ++i) {
+            consume(file, message.get());
         }
+
+        // flush buffer to the real system file.
+        fflush(file);
 
         wait_interval();
     }
+
+    fclose(file);
+}
+
+void Subscriber::subscribe(std::string channel)
+{
+    zsocket_set_subscribe(socket, channel.c_str());
+    std::cout << "Subscribed to " << channel << std::endl;
+}
+
+void Subscriber::consume(FILE * file, zmsg_t * message)
+{
+    zframe_t * frame = zmsg_pop(message);
+    byte * buffer = zframe_data(frame);
+
+    size_t content_size = zframe_size(frame);
+
+    fwrite(buffer, 1, content_size, file);
+
+    zframe_destroy(&frame);
 }

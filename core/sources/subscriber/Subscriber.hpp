@@ -4,12 +4,22 @@
 #include <czmq.h>
 #include <memory>
 #include "../ContextListener.hpp"
+#include <vector>
 
 
 class Subscriber : public ContextListener
 {
+private:
+    void consume(FILE *message, std::unique_ptr<_zmsg_t, void (*)(_zmsg_t *)>::pointer pZmsg);
+
+    auto deleter = [](zmsg_t * message) {
+        zmsg_destroy(&message);
+    };
+    
 public:
     Subscriber(std::string ip);
+
+    void subscribe(std::string channel);
 
     void start(std::string file_path, std::string channel);
 };

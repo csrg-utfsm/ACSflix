@@ -3,8 +3,8 @@
 int main()
 {
     Subscriber subscriber("127.0.0.1");
-    subscriber.set_interval(500);
-    subscriber.start("", "AAAA");
+    // subscriber.set_interval(100);
+    subscriber.start("copy.mp4", "AAAA");
 
     return 0;
 }
