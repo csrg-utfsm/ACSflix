@@ -9,7 +9,7 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    Subscriber subscriber("127.0.0.1");
+    Subscriber subscriber(argv[2]);
     // subscriber.set_interval(100);
     subscriber.start(argv[1], "AAAA");
 
