@@ -18,7 +18,7 @@ private:
      */
     std::shared_ptr<zctx_t> context;
 
-    int milliseconds;
+    int milliseconds = 0;
 
 protected:
     void * socket;
