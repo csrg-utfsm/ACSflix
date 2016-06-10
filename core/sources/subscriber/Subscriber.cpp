@@ -39,8 +39,8 @@ void Subscriber::start(std::string file_path, std::string channel)
                 long block_number = take_block_number(file, message.get());
 
                 if (block_number - previous_block_number != 1) {
-                    packets_lost++;
-                    std::cout << "Packets lost: " << block_number - previous_block_number << "/" << packets_lost << std::endl;
+                    packets_lost += block_number - previous_block_number - 1;
+                    std::cout << "Packets lost: " << packets_lost << std::endl;
                 }
 
                 previous_block_number = block_number;
