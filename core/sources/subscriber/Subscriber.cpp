@@ -17,6 +17,7 @@ void Subscriber::start(std::string file_path, std::string channel)
     std::unique_ptr<zmsg_t, decltype(deleter)> message(nullptr, deleter);
 
     bool number = true;
+    long previous_block_number = -1;
 
     while (!zctx_interrupted) {
         message.reset(zmsg_recv(socket));
@@ -34,7 +35,13 @@ void Subscriber::start(std::string file_path, std::string channel)
         size_t message_size = zmsg_size(message.get());
         for (int i = 0; i < message_size; ++i) {
             if (number) {
-                take_block_number(file, message.get());
+                long block_number = take_block_number(file, message.get());
+
+                if (block_number - previous_block_number != 1) {
+                    std::cout << "Packet lost!" << std::endl;
+                }
+
+                previous_block_number = block_number;
             } else {
                 consume(file, message.get());
             }
@@ -68,17 +75,21 @@ void Subscriber::consume(FILE * file, zmsg_t * message)
     zframe_destroy(&frame);
 }
 
-void Subscriber::take_block_number(FILE * file, zmsg_t * message)
+long Subscriber::take_block_number(FILE * file, zmsg_t * message)
 {
     zframe_t * frame = zmsg_pop(message);
     byte * buffer = zframe_data(frame);
     size_t content_size = zframe_size(frame);
 
-    std::cout << zframe_strdup(frame) << std::endl;
+    char * block_number_str = zframe_strdup(frame);
 
     fwrite(buffer, 1, content_size, file);
 
     zframe_destroy(&frame);
+
+    long block_number = strtol(block_number_str, nullptr, 10);
+
+    free(block_number_str);
+
+    return block_number;
 }
-
-

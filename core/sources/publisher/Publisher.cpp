@@ -23,8 +23,6 @@ void Publisher::start(std::string file_path, std::string channel)
     zclock_sleep(1000);
 
     while (!zctx_interrupted) {
-        advance_buffer(file, buffer, block_cursor);
-
         sprintf(num_buffer, "%lu", block_cursor);
 
         zstr_sendm(socket, channel.c_str());
@@ -40,6 +38,8 @@ void Publisher::start(std::string file_path, std::string channel)
         if (feof(file)) {
             return;
         }
+
+        advance_buffer(file, buffer, block_cursor);
     }
 }
 
