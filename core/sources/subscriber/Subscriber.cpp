@@ -31,6 +31,7 @@ void Subscriber::start(std::string file_path, std::string channel)
         zframe_t * channel_frame = zmsg_pop(message.get());
         zframe_destroy(&channel_frame);
 
+
         // consume all frames in the message.
         size_t message_size = zmsg_size(message.get());
         for (int i = 0; i < message_size; ++i) {
