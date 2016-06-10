@@ -3,6 +3,7 @@
 
 #include <czmq.h>
 #include <string>
+#include <memory>
 
 
 class DataEndPoint

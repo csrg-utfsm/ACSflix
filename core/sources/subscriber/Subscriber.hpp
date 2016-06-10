@@ -3,8 +3,10 @@
 
 #include <czmq.h>
 #include <memory>
-#include "../DataEndPoint.hpp"
+#include <functional>
 #include <vector>
+
+#include "../DataEndPoint.hpp"
 
 
 class Subscriber : public DataEndPoint
@@ -12,7 +14,7 @@ class Subscriber : public DataEndPoint
 private:
     void consume(FILE *message, std::unique_ptr<_zmsg_t, void (*)(_zmsg_t *)>::pointer pZmsg);
 
-    auto deleter = [](zmsg_t * message) {
+    std::function<void(zmsg_t*)> deleter = [](zmsg_t * message) {
         zmsg_destroy(&message);
     };
 

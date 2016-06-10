@@ -43,7 +43,7 @@ void Subscriber::start(std::string file_path, std::string channel)
 
 void Subscriber::subscribe(std::string channel)
 {
-    zsocket_set_subscribe(socket, channel.c_str());
+    zsocket_set_subscribe(socket, const_cast<char*>(channel.c_str()));
     std::cout << "Subscribed to " << channel << std::endl;
 }
 
