@@ -12,11 +12,13 @@
 class Subscriber : public DataEndPoint
 {
 private:
-    void consume(FILE *message, std::unique_ptr<_zmsg_t, void (*)(_zmsg_t *)>::pointer pZmsg);
-
     std::function<void(zmsg_t*)> deleter = [](zmsg_t * message) {
         zmsg_destroy(&message);
     };
+
+    void consume(FILE *message, std::unique_ptr<_zmsg_t, void (*)(_zmsg_t *)>::pointer pZmsg);
+
+    void take_block_number(FILE * file, zmsg_t * message);
 
 public:
     Subscriber(std::string ip);

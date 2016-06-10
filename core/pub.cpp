@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
     Publisher publisher("*");
 
     publisher.set_block_size(1024);
-    publisher.set_interval(1);
+    // publisher.set_interval(10);
 
     publisher.start(argv[1], "AAAA");
 

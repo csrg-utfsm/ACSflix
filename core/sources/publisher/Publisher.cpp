@@ -18,10 +18,17 @@ void Publisher::start(std::string file_path, std::string channel)
     long block_cursor = 0;
     byte buffer[block_size];
 
+    char num_buffer[50];
+
+    zclock_sleep(1000);
+
     while (!zctx_interrupted) {
         advance_buffer(file, buffer, block_cursor);
 
+        sprintf(num_buffer, "%lu", block_cursor);
+
         zstr_sendm(socket, channel.c_str());
+        zstr_sendm(socket, num_buffer);
         zmq_send(socket, buffer, block_size, 0);
 
         if (block_cursor % 100 == 0) {
