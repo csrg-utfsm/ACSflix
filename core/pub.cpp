@@ -9,7 +9,7 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    Publisher publisher("*");
+    Publisher publisher;
 
     publisher.set_block_size(1024);
     // publisher.set_interval(10);

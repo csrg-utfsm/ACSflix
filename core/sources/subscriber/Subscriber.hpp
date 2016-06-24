@@ -16,9 +16,7 @@ private:
         zmsg_destroy(&message);
     };
 
-    void consume(FILE *message, std::unique_ptr<_zmsg_t, void (*)(_zmsg_t *)>::pointer pZmsg);
-
-    long take_block_number(FILE * file, zmsg_t * message);
+    void consume(FILE * file, zmsg_t * message);
 
 public:
     Subscriber(std::string ip);

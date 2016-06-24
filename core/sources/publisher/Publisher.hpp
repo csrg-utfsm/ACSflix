@@ -23,10 +23,10 @@ private:
     /**
      * @brief Obtains how many blocks are contained in the file.
      */
-    long get_file_block_count(std::string file_path);
+    long get_file_size(std::string file_path);
 
 public:
-    Publisher(std::string ip);
+    Publisher();
 
     /**
      * @brief Starts sending data to subscribers, block by block.
