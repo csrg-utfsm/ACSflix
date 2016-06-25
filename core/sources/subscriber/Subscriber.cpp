@@ -38,7 +38,9 @@ void Subscriber::start(std::string file_path, std::string channel)
         blocks_received++;
 
         // flush buffer to the real system file.
-        fflush(file);
+        if (blocks_received % 10 == 0) {
+            fflush(file);
+        }
 
         wait_interval();
     }
