@@ -2,13 +2,22 @@
 #include <fstream>
 #include "Subscriber.hpp"
 
-Subscriber::Subscriber(std::string ip) :
-        DataEndPoint(ZMQ_SUB)
+Subscriber::Subscriber(std::string ip)
 {
-    // int size = 1024 * 512;
-    // zmq_setsockopt(socket, ZMQ_RCVBUF, &size, sizeof(size));
+    context = zctx_new();
 
-    zsocket_connect(socket, ("tcp://" + ip + ":5678").c_str());
+    // prepare the flow control channel.
+    dealer = zsocket_new(context, ZMQ_DEALER);
+    zsocket_connect(dealer, "tcp://127.0.0.1:6000");
+
+    // prepare the transport channel.
+    subscriber = zsocket_new(context, ZMQ_SUB);
+    zsocket_connect(subscriber, ("tcp://" + ip + ":5678").c_str());
+}
+
+Subscriber::~Subscriber()
+{
+    zctx_destroy(&context);
 }
 
 void Subscriber::start(std::string file_path, std::string channel)
@@ -22,7 +31,13 @@ void Subscriber::start(std::string file_path, std::string channel)
     long blocks_received = 0;
 
     while (!zctx_interrupted) {
-        message.reset(zmsg_recv(socket));
+        // send all available credits.
+        while (credits) {
+            zstr_send(dealer, "FETCH");
+            credits--;
+        }
+
+        message.reset(zmsg_recv(subscriber));
 
         if (message.get() == nullptr) {
             continue;
@@ -36,13 +51,10 @@ void Subscriber::start(std::string file_path, std::string channel)
         // consist on only just one frame.
         consume(file, message.get());
         blocks_received++;
+        credits++;
 
         // flush buffer to the real system file.
-        if (blocks_received % 10 == 0) {
-            fflush(file);
-        }
-
-        wait_interval();
+        fflush(file);
     }
 
     fclose(file);
@@ -50,7 +62,7 @@ void Subscriber::start(std::string file_path, std::string channel)
 
 void Subscriber::subscribe(std::string channel)
 {
-    zsocket_set_subscribe(socket, const_cast<char*>(channel.c_str()));
+    zsocket_set_subscribe(subscriber, const_cast<char*>(channel.c_str()));
     std::cout << "Subscribed to " << channel << std::endl;
 }
 
@@ -64,3 +76,9 @@ void Subscriber::consume(FILE * file, zmsg_t * message)
 
     zframe_destroy(&frame);
 }
+
+void Subscriber::set_credits(size_t credits)
+{
+    this->credits = credits;
+}
+

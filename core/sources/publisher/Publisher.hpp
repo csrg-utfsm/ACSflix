@@ -5,12 +5,15 @@
 #include <string>
 #include <czmq.h>
 
-#include "../DataEndPoint.hpp"
-
-class Publisher : public DataEndPoint
+class Publisher
 {
 private:
     size_t block_size = 16;
+
+    zctx_t * context;
+
+    void * publisher;
+    void * router;
 
     /**
      * @brief Moves cursor in the input stream and stores the block in the buffer.
@@ -27,6 +30,8 @@ private:
 
 public:
     Publisher();
+
+    ~Publisher();
 
     /**
      * @brief Starts sending data to subscribers, block by block.

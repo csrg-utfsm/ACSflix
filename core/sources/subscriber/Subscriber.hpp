@@ -6,10 +6,8 @@
 #include <functional>
 #include <vector>
 
-#include "../DataEndPoint.hpp"
 
-
-class Subscriber : public DataEndPoint
+class Subscriber
 {
 private:
     std::function<void(zmsg_t*)> deleter = [](zmsg_t * message) {
@@ -18,12 +16,23 @@ private:
 
     void consume(FILE * file, zmsg_t * message);
 
+    zctx_t * context;
+
+    void * subscriber;
+    void * dealer;
+
+    size_t credits;
+
 public:
     Subscriber(std::string ip);
+
+    ~Subscriber();
 
     void subscribe(std::string channel);
 
     void start(std::string file_path, std::string channel);
+
+    void set_credits(size_t credits);
 };
 
 

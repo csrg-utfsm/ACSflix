@@ -10,7 +10,8 @@ int main(int argc, char* argv[])
     }
 
     Subscriber subscriber(argv[2]);
-    // subscriber.set_interval(100);
+    subscriber.set_credits(10);
+
     subscriber.start(argv[1], "AAAA");
 
     return 0;

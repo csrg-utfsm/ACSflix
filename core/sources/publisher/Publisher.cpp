@@ -2,10 +2,20 @@
 #include <fstream>
 #include "Publisher.hpp"
 
-Publisher::Publisher() :
-        DataEndPoint(ZMQ_PUB)
+Publisher::Publisher()
 {
-    zsocket_bind(socket, "tcp://*:5678");
+    context = zctx_new();
+
+    router = zsocket_new(context, ZMQ_ROUTER);
+    zsocket_bind(router, "tcp://*:6000");
+
+    publisher = zsocket_new(context, ZMQ_PUB);
+    zsocket_bind(publisher, "tcp://*:5678");
+}
+
+Publisher::~Publisher()
+{
+    zctx_destroy(&context);
 }
 
 void Publisher::start(std::string file_path, std::string channel)
@@ -19,47 +29,40 @@ void Publisher::start(std::string file_path, std::string channel)
     long block_cursor = 0;
     byte buffer[block_size];
 
+    size_t this_size = block_size;
+
     std::cout << "Blocks: " << block_count << std::endl;
 
-    zclock_sleep(1000);
-
-    struct timeval tv;
-    suseconds_t last_time;
-    suseconds_t time_difference;
-    suseconds_t current_time;
-
-    gettimeofday(&tv, nullptr);
-    last_time = (suseconds_t) (1000000 * tv.tv_sec + tv.tv_usec);
-
     while (!zctx_interrupted) {
-        gettimeofday(&tv, NULL);
+        zframe_t * identify = zframe_recv(router);
 
-        current_time = (suseconds_t) (1000000 * tv.tv_sec + tv.tv_usec);
+        if (!identify) {
+            break;
+        }
 
-        time_difference = current_time - last_time;
+        // receive credit.
+        delete zstr_recv(router);
 
-        // if (time_difference >= 25) {
-            last_time = current_time;
+        advance_buffer(file, buffer, block_cursor);
 
-            advance_buffer(file, buffer, block_cursor);
+        zstr_sendm(publisher, channel.c_str());
 
-            zstr_sendm(socket, channel.c_str());
+        if (block_cursor == block_count) {
+            this_size = file_size - (block_cursor - 1) * block_size;
+        }
 
-            if (block_cursor == block_count) {
-                zmq_send(socket, buffer, file_size - (block_cursor - 1) * block_size, 0);
-            } else {
-                zmq_send(socket, buffer, block_size, 0);
-            }
+        zmq_send(publisher, buffer, this_size, 0);
 
-            if (block_cursor % 100 == 0) {
-                std::cout << block_cursor * 100.0f / block_count << "%" << std::endl;
-            }
+        if (block_cursor % 100 == 0) {
+            std::cout << block_cursor * 100.0f / block_count << "%" << std::endl;
+        }
 
-            if (feof(file)) {
-                return;
-            }
-        // }
+        if (feof(file)) {
+            return;
+        }
     }
+
+    fclose(file);
 }
 
 void Publisher::set_block_size(size_t block_size)

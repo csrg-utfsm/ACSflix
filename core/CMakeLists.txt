@@ -7,8 +7,7 @@ set(SOURCE_FILES
         sources/publisher/Publisher.cpp
         sources/publisher/Publisher.hpp
         sources/subscriber/Subscriber.cpp
-        sources/subscriber/Subscriber.hpp
-        sources/DataEndPoint.cpp sources/DataEndPoint.hpp)
+        sources/subscriber/Subscriber.hpp)
 
 
 add_executable(publisher pub.cpp ${SOURCE_FILES})
