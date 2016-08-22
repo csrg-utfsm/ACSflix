@@ -2,7 +2,8 @@
 #include <fstream>
 #include "Subscriber.hpp"
 
-Subscriber::Subscriber(std::string ip)
+Subscriber::Subscriber(std::string ip) :
+    credits(10)
 {
     context = zctx_new();
 
@@ -81,4 +82,3 @@ void Subscriber::set_credits(size_t credits)
 {
     this->credits = credits;
 }
-
