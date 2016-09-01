@@ -5,7 +5,7 @@
 #include <string>
 #include <czmq.h>
 
-class Publisher
+class Emitter
 {
 private:
     size_t block_size = 16;
@@ -29,9 +29,9 @@ private:
     long get_file_size(std::string file_path);
 
 public:
-    Publisher();
+    Emitter();
 
-    ~Publisher();
+    ~Emitter();
 
     /**
      * @brief Starts sending data to subscribers, block by block.

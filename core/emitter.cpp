@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "sources/publisher/Publisher.hpp"
+#include "sources/emitter/Emitter.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -9,11 +9,11 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    Publisher publisher;
+    Emitter emitter;
 
-    publisher.set_block_size(1024);
+    emitter.set_block_size(1024);
 
-    publisher.start(argv[1], "AAAA");
+    emitter.start(argv[1], "AAAA");
 
     return 0;
 }

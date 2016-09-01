@@ -1,8 +1,8 @@
 #include <iostream>
 #include <fstream>
-#include "Subscriber.hpp"
+#include "Receiver.hpp"
 
-Subscriber::Subscriber(std::string ip) :
+Receiver::Receiver(std::string ip) :
     credits(10)
 {
     context = zctx_new();
@@ -16,12 +16,12 @@ Subscriber::Subscriber(std::string ip) :
     zsocket_connect(subscriber, ("tcp://" + ip + ":5678").c_str());
 }
 
-Subscriber::~Subscriber()
+Receiver::~Receiver()
 {
     zctx_destroy(&context);
 }
 
-void Subscriber::start(std::string file_path, std::string channel)
+void Receiver::start(std::string file_path, std::string channel)
 {
     subscribe(channel);
 
@@ -61,13 +61,13 @@ void Subscriber::start(std::string file_path, std::string channel)
     fclose(file);
 }
 
-void Subscriber::subscribe(std::string channel)
+void Receiver::subscribe(std::string channel)
 {
     zsocket_set_subscribe(subscriber, const_cast<char*>(channel.c_str()));
     std::cout << "Subscribed to " << channel << std::endl;
 }
 
-void Subscriber::consume(FILE * file, zmsg_t * message)
+void Receiver::consume(FILE * file, zmsg_t * message)
 {
     zframe_t * frame = zmsg_pop(message);
     byte * buffer = zframe_data(frame);
@@ -78,7 +78,7 @@ void Subscriber::consume(FILE * file, zmsg_t * message)
     zframe_destroy(&frame);
 }
 
-void Subscriber::set_credits(size_t credits)
+void Receiver::set_credits(size_t credits)
 {
     this->credits = credits;
 }

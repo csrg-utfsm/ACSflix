@@ -1,24 +1,26 @@
 #include <iostream>
 #include <fstream>
-#include "Publisher.hpp"
+#include "Emitter.hpp"
 
-Publisher::Publisher()
+Emitter::Emitter()
 {
     context = zctx_new();
 
+    // create the router to receiver credits from the client.
     router = zsocket_new(context, ZMQ_ROUTER);
     zsocket_bind(router, "tcp://*:6000");
 
+    // create the outgoing socket for binary data.
     publisher = zsocket_new(context, ZMQ_PUB);
     zsocket_bind(publisher, "tcp://*:5678");
 }
 
-Publisher::~Publisher()
+Emitter::~Emitter()
 {
     zctx_destroy(&context);
 }
 
-void Publisher::start(std::string file_path, std::string channel)
+void Emitter::start(std::string file_path, std::string channel)
 {
     FILE * file = fopen(file_path.c_str(), "rb");
     assert(file);
@@ -32,6 +34,7 @@ void Publisher::start(std::string file_path, std::string channel)
     size_t this_size = block_size;
 
     std::cout << "Blocks: " << block_count << std::endl;
+    std::cout << "Waiting for client..." << std::endl;
 
     while (!zctx_interrupted) {
         zframe_t * identify = zframe_recv(router);
@@ -65,19 +68,19 @@ void Publisher::start(std::string file_path, std::string channel)
     fclose(file);
 }
 
-void Publisher::set_block_size(size_t block_size)
+void Emitter::set_block_size(size_t block_size)
 {
     this->block_size = block_size;
 }
 
-void Publisher::advance_buffer(FILE * file, void * buffer, long & block_cursor)
+void Emitter::advance_buffer(FILE * file, void * buffer, long & block_cursor)
 {
     memset(buffer, 0, block_size);
     fread(buffer, 1, block_size, file);
     block_cursor++;
 }
 
-long Publisher::get_file_size(std::string file_path)
+long Emitter::get_file_size(std::string file_path)
 {
     struct stat st;
     stat(file_path.c_str(), &st);

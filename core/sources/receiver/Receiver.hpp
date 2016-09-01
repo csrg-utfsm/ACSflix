@@ -1,3 +1,4 @@
+
 #ifndef PUBLISHER_SUBSCRIBER_HPP
 #define PUBLISHER_SUBSCRIBER_HPP
 
@@ -7,7 +8,7 @@
 #include <vector>
 
 
-class Subscriber
+class Receiver
 {
 private:
     std::function<void(zmsg_t*)> deleter = [](zmsg_t * message) {
@@ -24,9 +25,9 @@ private:
     size_t credits;
 
 public:
-    Subscriber(std::string ip);
+    Receiver(std::string ip);
 
-    ~Subscriber();
+    ~Receiver();
 
     void subscribe(std::string channel);
 
