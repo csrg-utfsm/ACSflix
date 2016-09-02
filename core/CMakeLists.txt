@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(publisher)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -lzmq -lczmq -lpthread")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lzmq -lczmq -lpthread")
 
 set(SOURCE_FILES
         sources/emitter/Emitter.cpp
@@ -9,5 +9,5 @@ set(SOURCE_FILES
         sources/receiver/Receiver.cpp
         sources/receiver/Receiver.hpp)
 
-add_executable(emitter emitter.cpp ${SOURCE_FILES})
+add_executable(emitter emitter.cpp ${SOURCE_FILES} sources/utils.h)
 add_executable(receiver receiver.cpp ${SOURCE_FILES})

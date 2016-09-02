@@ -11,18 +11,14 @@
 class Receiver
 {
 private:
-    std::function<void(zmsg_t*)> deleter = [](zmsg_t * message) {
-        zmsg_destroy(&message);
-    };
-
-    void consume(FILE * file, zmsg_t * message);
-
     zctx_t * context;
 
     void * subscriber;
     void * dealer;
 
     size_t credits;
+
+    void consume(FILE * file, zmsg_t * message);
 
 public:
     Receiver(std::string ip);

@@ -1,8 +1,11 @@
 #include <iostream>
 #include <fstream>
 #include "Emitter.hpp"
+#include <assert.h>
+#include <cmath>
 
-Emitter::Emitter()
+Emitter::Emitter() :
+    block_size(16)
 {
     context = zctx_new();
 

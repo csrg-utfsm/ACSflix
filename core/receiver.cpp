@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "sources/receiver/Receiver.hpp"
+#include "sources/utils.h"
 
 int main(int argc, char* argv[])
 {
@@ -20,7 +21,7 @@ int main(int argc, char* argv[])
     }
 
     Receiver receiver(argv[2]);
-    receiver.set_credits((size_t) std::stoi(argv[3]));
+    receiver.set_credits((size_t) bdt::str_to_int(argv[3]));
 
     receiver.start(argv[1], "AAAA");
 

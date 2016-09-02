@@ -27,7 +27,7 @@ void Receiver::start(std::string file_path, std::string channel)
 
     FILE * file = fopen(file_path.c_str(), "wb");
 
-    std::unique_ptr<zmsg_t, decltype(deleter)> message(nullptr, deleter);
+    zmsg_t * message;
 
     long blocks_received = 0;
 
@@ -38,24 +38,26 @@ void Receiver::start(std::string file_path, std::string channel)
             credits--;
         }
 
-        message.reset(zmsg_recv(subscriber));
+        message = zmsg_recv(subscriber);
 
-        if (message.get() == nullptr) {
+        if (message == NULL) {
             continue;
         }
 
         // take out the channel code.
-        zframe_t * channel_frame = zmsg_pop(message.get());
+        zframe_t * channel_frame = zmsg_pop(message);
         zframe_destroy(&channel_frame);
 
         // given the architecture of the software, all messages
         // consist on only just one frame.
-        consume(file, message.get());
+        consume(file, message);
         blocks_received++;
         credits++;
 
         // flush buffer to the real system file.
         fflush(file);
+
+        zmsg_destroy(&message);
     }
 
     fclose(file);

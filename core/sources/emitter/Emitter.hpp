@@ -8,7 +8,7 @@
 class Emitter
 {
 private:
-    size_t block_size = 16;
+    size_t block_size;
 
     zctx_t * context;
 
