@@ -21,6 +21,13 @@ Receiver::~Receiver()
     zctx_destroy(&context);
 }
 
+void Receiver::receive_sets()
+{
+    zmsg_t * message = zmsg_recv(dealer);
+    char * block_size = zmsg_popstr(message);
+    std::cout << "BLOCK SIZE: " << block_size << std::endl;
+}
+
 void Receiver::start(std::string file_path, std::string channel)
 {
     subscribe(channel);
@@ -30,6 +37,8 @@ void Receiver::start(std::string file_path, std::string channel)
     zmsg_t * message;
 
     long blocks_received = 0;
+
+    receive_sets();
 
     while (!zctx_interrupted) {
         // send all available credits.

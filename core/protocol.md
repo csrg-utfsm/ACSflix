@@ -2,9 +2,9 @@
 
 This protocol is based on ZeroMQ frame messages, each line of the packet is a different frame.
 
-## HOLA
+## HOLA ** DEPRECATED
 
-The receiver shall contact the server, the contents of this packet are optional.
+The receiver shall contact the server, sending a HOLA packet. The contents of this packet are optional.
 
     IP
     PORT

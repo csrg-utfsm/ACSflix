@@ -51,6 +51,8 @@ public:
      * that the subscriber can consume and interpret.
      */
     void set_block_size(size_t block_size);
+
+    void send_sets();
 };
 
 

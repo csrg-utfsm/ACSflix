@@ -1,8 +1,9 @@
 #include <iostream>
 #include <fstream>
-#include "Emitter.hpp"
-#include <assert.h>
 #include <cmath>
+
+#include "Emitter.hpp"
+#include "../utils.h"
 
 Emitter::Emitter() :
     block_size(16)
@@ -23,6 +24,12 @@ Emitter::~Emitter()
     zctx_destroy(&context);
 }
 
+void Emitter::send_sets()
+{
+    std::string message = bdt::size_to_str(block_size);
+    zstr_send(router, message.c_str());
+}
+
 void Emitter::start(std::string file_path, std::string channel)
 {
     FILE * file = fopen(file_path.c_str(), "rb");
@@ -38,6 +45,8 @@ void Emitter::start(std::string file_path, std::string channel)
 
     std::cout << "Blocks: " << block_count << std::endl;
     std::cout << "Waiting for client..." << std::endl;
+
+    send_sets();
 
     while (!zctx_interrupted) {
         zframe_t * identify = zframe_recv(router);

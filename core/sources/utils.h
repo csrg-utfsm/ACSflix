@@ -1,12 +1,11 @@
-#ifndef PUBLISHER_UTILS_H
-#define PUBLISHER_UTILS_H
+#ifndef UTILS_H
+#define UTILS_H
 
 #include <string>
 #include <sstream>
 
 namespace bdt
 {
-
     int str_to_int(std::string value)
     {
         int i;
@@ -15,7 +14,15 @@ namespace bdt
         return i;
     }
 
+    
+    std::string size_to_str(size_t value)
+    {
+        std::ostringstream is;
+        is << value;
+        return is.str();
+    }
+
 }; // Bulk Data Transfer
 
 
-#endif //PUBLISHER_UTILS_H
+#endif //UTILS_H

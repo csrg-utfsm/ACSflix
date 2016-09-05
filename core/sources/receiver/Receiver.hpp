@@ -3,7 +3,6 @@
 #define PUBLISHER_SUBSCRIBER_HPP
 
 #include <czmq.h>
-#include <memory>
 #include <functional>
 #include <vector>
 
@@ -30,6 +29,8 @@ public:
     void start(std::string file_path, std::string channel);
 
     void set_credits(size_t credits);
+
+    void receive_sets();
 };
 
 
