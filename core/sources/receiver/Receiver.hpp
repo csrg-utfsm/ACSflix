@@ -3,8 +3,6 @@
 #define PUBLISHER_SUBSCRIBER_HPP
 
 #include <czmq.h>
-#include <functional>
-#include <vector>
 
 
 class Receiver

@@ -14,15 +14,12 @@ namespace bdt
         return i;
     }
 
-    
     std::string size_to_str(size_t value)
     {
         std::ostringstream is;
         is << value;
         return is.str();
     }
-
 }; // Bulk Data Transfer
-
 
 #endif //UTILS_H
