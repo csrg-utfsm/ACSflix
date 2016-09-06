@@ -6,7 +6,7 @@
 #include "../utils.h"
 
 Emitter::Emitter() :
-    block_size(16)
+        block_size(16)
 {
     context = zctx_new();
 
@@ -28,11 +28,13 @@ void Emitter::send_sets()
 {
     std::string message = bdt::size_to_str(block_size);
     zstr_send(router, message.c_str());
+
+    std::cout << "SETS packet sent." << std::endl;
 }
 
 void Emitter::start(std::string file_path, std::string channel)
 {
-    FILE * file = fopen(file_path.c_str(), "rb");
+    FILE *file = fopen(file_path.c_str(), "rb");
     assert(file);
 
     long file_size = get_file_size(file_path);
@@ -49,7 +51,7 @@ void Emitter::start(std::string file_path, std::string channel)
     send_sets();
 
     while (!zctx_interrupted) {
-        zframe_t * identify = zframe_recv(router);
+        zframe_t *identify = zframe_recv(router);
 
         if (!identify) {
             break;
@@ -85,7 +87,7 @@ void Emitter::set_block_size(size_t block_size)
     this->block_size = block_size;
 }
 
-void Emitter::advance_buffer(FILE * file, void * buffer, long & block_cursor)
+void Emitter::advance_buffer(FILE *file, void *buffer, long &block_cursor)
 {
     memset(buffer, 0, block_size);
     fread(buffer, 1, block_size, file);

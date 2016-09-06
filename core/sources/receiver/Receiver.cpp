@@ -9,7 +9,7 @@ Receiver::Receiver(std::string ip) :
 
     // prepare the flow control channel.
     dealer = zsocket_new(context, ZMQ_DEALER);
-    zsocket_connect(dealer, "tcp://127.0.0.1:6000");
+    zsocket_connect(dealer, ("tcp://" + ip + ":6000").c_str());
 
     // prepare the transport channel.
     subscriber = zsocket_new(context, ZMQ_SUB);
@@ -23,7 +23,9 @@ Receiver::~Receiver()
 
 void Receiver::receive_sets()
 {
+    std::cout << "Waiting for SETS packet." << std::endl;
     zmsg_t * message = zmsg_recv(dealer);
+    std::cout << "SETS packet received." << std::endl;
     char * block_size = zmsg_popstr(message);
     std::cout << "BLOCK SIZE: " << block_size << std::endl;
 }
