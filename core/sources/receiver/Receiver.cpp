@@ -26,16 +26,28 @@ Receiver::~Receiver()
 
 void Receiver::send_hola()
 {
+    zstr_sendm(dealer, "R");
+    zstr_sendm(dealer, "");
     zstr_send(dealer, "HOLA");
 }
 
 void Receiver::receive_sets()
 {
     std::cout << "[SETS] waiting for packet." << std::endl;
-    char * message = zstr_recv(dealer);
+    zmsg_t * message = zmsg_recv(dealer);
+
+    // delete identity.
+    delete zmsg_popstr(message);
+
+    // delete delimiter.
+    delete zmsg_popstr(message);
+
+    char * block_size_str = zmsg_popstr(message);
     std::cout << "[SETS] packet received." << std::endl;
-    std::cout << "[SETS] block_size: " << message << std::endl;
-    delete message;
+    std::cout << "[SETS] block_size: " << block_size_str << std::endl;
+    delete block_size_str;
+
+    zmsg_destroy(&message);
 }
 
 void Receiver::start(std::string file_path, std::string channel)

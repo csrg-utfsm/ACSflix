@@ -28,7 +28,10 @@ void Emitter::receive_hola()
 {
     zmsg_t * message = zmsg_recv(router);
 
-    // delete identity, it won't be used not matter.
+    // delete identity, it won't be used.
+    delete zmsg_popstr(message);
+
+    // delete delimiter.
     delete zmsg_popstr(message);
 
     char * code = zmsg_popstr(message);
@@ -46,6 +49,7 @@ void Emitter::send_sets()
 {
     std::string message = bdt::size_to_str(block_size);
     zstr_sendm(router, "S");
+    zstr_sendm(router, "");
     zstr_send(router, message.c_str());
     std::cout << "[SETS] packet sent." << std::endl;
 }
@@ -89,7 +93,7 @@ void Emitter::start(std::string file_path, std::string channel)
 
         zmq_send(publisher, buffer, this_size, 0);
 
-        if (block_cursor % 100 == 0) {
+        if (block_cursor % (block_count / 10) == 0) {
             std::cout << block_cursor * 100.0f / block_count << "%" << std::endl;
         }
 
