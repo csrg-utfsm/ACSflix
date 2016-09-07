@@ -3,7 +3,8 @@
 #include <cmath>
 
 #include "Emitter.hpp"
-#include "../utils.h"
+#include "../util/utils.h"
+#include "../util/ProgressBar.hpp"
 
 Emitter::Emitter() :
         block_size(16)
@@ -40,6 +41,8 @@ void Emitter::start(std::string file_path, std::string channel)
     long file_size = get_file_size(file_path);
     long block_count = (long) ceil((float) file_size / block_size);
 
+    ProgressBar bar((size_t) block_count);
+
     long block_cursor = 0;
     byte buffer[block_size];
 
@@ -71,7 +74,7 @@ void Emitter::start(std::string file_path, std::string channel)
         zmq_send(publisher, buffer, this_size, 0);
 
         if (block_cursor % 100 == 0) {
-            std::cout << block_cursor * 100.0f / block_count << "%" << std::endl;
+            bar.set_cursor((size_t) block_cursor);
         }
 
         if (feof(file)) {
