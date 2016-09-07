@@ -12,7 +12,7 @@ Emitter::Emitter() :
     context = zctx_new();
 
     // create the router to receiver credits from the client.
-    router = zsocket_new(context, ZMQ_ROUTER);
+    router = zsocket_new(context, ZMQ_PAIR);
     zsocket_bind(router, "tcp://*:6000");
 
     // create the outgoing socket for binary data.
@@ -25,12 +25,34 @@ Emitter::~Emitter()
     zctx_destroy(&context);
 }
 
+void Emitter::receive_hola()
+{
+    zmsg_t * message = zmsg_recv(router);
+
+    // delete identity, it won't be used.
+    delete zmsg_popstr(message);
+
+    // delete delimiter.
+    delete zmsg_popstr(message);
+
+    char * code = zmsg_popstr(message);
+
+    if (!strcmp(code, "HOLA")) {
+        std::cout << "[HOLA] packet received." << std::endl;
+    }
+
+    delete code;
+
+    zmsg_destroy(&message);
+}
+
 void Emitter::send_sets()
 {
     std::string message = bdt::size_to_str(block_size);
+    zstr_sendm(router, "S");
+    zstr_sendm(router, "");
     zstr_send(router, message.c_str());
-
-    std::cout << "SETS packet sent." << std::endl;
+    std::cout << "[SETS] packet sent." << std::endl;
 }
 
 void Emitter::start(std::string file_path, std::string channel)
@@ -51,10 +73,11 @@ void Emitter::start(std::string file_path, std::string channel)
     std::cout << "Blocks: " << block_count << std::endl;
     std::cout << "Waiting for client..." << std::endl;
 
+    receive_hola();
     send_sets();
 
     while (!zctx_interrupted) {
-        zframe_t *identify = zframe_recv(router);
+        zframe_t * identify = zframe_recv(router);
 
         if (!identify) {
             break;
@@ -75,6 +98,7 @@ void Emitter::start(std::string file_path, std::string channel)
 
         if (block_cursor % 100 == 0) {
             bar.set_cursor((size_t) block_cursor);
+            std::cout << block_cursor * 100.0f / block_count << "%" << std::endl;
         }
 
         if (feof(file)) {

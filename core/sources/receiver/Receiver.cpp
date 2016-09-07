@@ -7,9 +7,12 @@ Receiver::Receiver(std::string ip) :
 {
     context = zctx_new();
 
+    char identity[] = "S";
+
     // prepare the flow control channel.
     dealer = zsocket_new(context, ZMQ_DEALER);
     zsocket_connect(dealer, ("tcp://" + ip + ":6000").c_str());
+    zsocket_set_identity(dealer, identity);
 
     // prepare the transport channel.
     subscriber = zsocket_new(context, ZMQ_SUB);
@@ -21,13 +24,30 @@ Receiver::~Receiver()
     zctx_destroy(&context);
 }
 
+void Receiver::send_hola()
+{
+    zstr_sendm(dealer, "R");
+    zstr_sendm(dealer, "");
+    zstr_send(dealer, "HOLA");
+}
+
 void Receiver::receive_sets()
 {
-    std::cout << "Waiting for SETS packet." << std::endl;
+    std::cout << "[SETS] waiting for packet." << std::endl;
     zmsg_t * message = zmsg_recv(dealer);
-    std::cout << "SETS packet received." << std::endl;
-    char * block_size = zmsg_popstr(message);
-    std::cout << "BLOCK SIZE: " << block_size << std::endl;
+
+    // delete identity.
+    delete zmsg_popstr(message);
+
+    // delete delimiter.
+    delete zmsg_popstr(message);
+
+    char * block_size_str = zmsg_popstr(message);
+    std::cout << "[SETS] packet received." << std::endl;
+    std::cout << "[SETS] block_size: " << block_size_str << std::endl;
+    delete block_size_str;
+
+    zmsg_destroy(&message);
 }
 
 void Receiver::start(std::string file_path, std::string channel)
@@ -40,6 +60,7 @@ void Receiver::start(std::string file_path, std::string channel)
 
     long blocks_received = 0;
 
+    send_hola();
     receive_sets();
 
     while (!zctx_interrupted) {

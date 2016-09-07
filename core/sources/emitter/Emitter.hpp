@@ -53,6 +53,8 @@ public:
     void set_block_size(size_t block_size);
 
     void send_sets();
+
+    void receive_hola();
 };
 
 

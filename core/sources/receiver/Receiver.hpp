@@ -29,6 +29,8 @@ public:
     void set_credits(size_t credits);
 
     void receive_sets();
+
+    void send_hola();
 };
 
 
