@@ -1,18 +1,16 @@
 #include <iostream>
 #include <fstream>
 #include "Receiver.hpp"
+#include "../util/utils.h"
 
 Receiver::Receiver(std::string ip) :
     credits(10)
 {
     context = zctx_new();
 
-    char identity[] = "S";
-
-    // prepare the flow control channel.
+    // prepare the connection and flow control channel.
     dealer = zsocket_new(context, ZMQ_DEALER);
     zsocket_connect(dealer, ("tcp://" + ip + ":6000").c_str());
-    zsocket_set_identity(dealer, identity);
 
     // prepare the transport channel.
     subscriber = zsocket_new(context, ZMQ_SUB);
@@ -26,28 +24,35 @@ Receiver::~Receiver()
 
 void Receiver::send_hola()
 {
-    zstr_sendm(dealer, "R");
     zstr_sendm(dealer, "");
     zstr_send(dealer, "HOLA");
+    std::cout << "[HOLA] packet sent." << std::endl;
 }
 
 void Receiver::receive_sets()
 {
     std::cout << "[SETS] waiting for packet." << std::endl;
-    zmsg_t * message = zmsg_recv(dealer);
 
-    // delete identity.
-    delete zmsg_popstr(message);
+    // delimiter.
+    char * delimiter = zstr_recv(dealer);
+    if (delimiter == NULL) {
+        exit(13);
+    }
 
-    // delete delimiter.
-    delete zmsg_popstr(message);
+    std::cout << "[SETS] delimiter received." << std::endl;
+    zstr_free(&delimiter);
 
-    char * block_size_str = zmsg_popstr(message);
-    std::cout << "[SETS] packet received." << std::endl;
+    // block size.
+    char * block_size_str = zstr_recv(dealer);
     std::cout << "[SETS] block_size: " << block_size_str << std::endl;
-    delete block_size_str;
+    zstr_free(&block_size_str);
+}
 
-    zmsg_destroy(&message);
+void Receiver::send_chao()
+{
+    std::string message = bdt::size_to_str(blocks_received);
+    zstr_sendm(dealer, "CHAO");
+    zstr_send(dealer, message.c_str());
 }
 
 void Receiver::start(std::string file_path, std::string channel)
@@ -58,7 +63,7 @@ void Receiver::start(std::string file_path, std::string channel)
 
     zmsg_t * message;
 
-    long blocks_received = 0;
+    blocks_received = 0;
 
     send_hola();
     receive_sets();
@@ -66,7 +71,7 @@ void Receiver::start(std::string file_path, std::string channel)
     while (!zctx_interrupted) {
         // send all available credits.
         while (credits) {
-            zstr_send(dealer, "FETCH");
+            zstr_send(dealer, "CREA");
             credits--;
         }
 
@@ -82,17 +87,29 @@ void Receiver::start(std::string file_path, std::string channel)
 
         // given the architecture of the software, all messages
         // consist on only just one frame.
-        consume(file, message);
+        zframe_t * frame = zmsg_pop(message);
+
+        std::cout << zframe_size(frame) << std::endl;
+
+        if (zframe_size(frame) == (size_t) 0) {
+            // receive DONE packet is received, quit receiving.
+            break;
+        }
+
+        consume(file, frame);
         blocks_received++;
         credits++;
 
         // flush buffer to the real system file.
         fflush(file);
 
+        zframe_destroy(&frame);
         zmsg_destroy(&message);
     }
 
     fclose(file);
+
+    send_chao();
 }
 
 void Receiver::subscribe(std::string channel)
@@ -101,15 +118,12 @@ void Receiver::subscribe(std::string channel)
     std::cout << "Subscribed to " << channel << std::endl;
 }
 
-void Receiver::consume(FILE * file, zmsg_t * message)
+void Receiver::consume(FILE * file, zframe_t * frame)
 {
-    zframe_t * frame = zmsg_pop(message);
     byte * buffer = zframe_data(frame);
     size_t content_size = zframe_size(frame);
 
     fwrite(buffer, 1, content_size, file);
-
-    zframe_destroy(&frame);
 }
 
 void Receiver::set_credits(size_t credits)

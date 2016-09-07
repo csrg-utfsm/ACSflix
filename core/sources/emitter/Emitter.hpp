@@ -13,7 +13,7 @@ private:
     zctx_t * context;
 
     void * publisher;
-    void * router;
+    void * dealer;
 
     /**
      * @brief Moves cursor in the input stream and stores the block in the buffer.
@@ -55,6 +55,8 @@ public:
     void send_sets();
 
     void receive_hola();
+
+    void receive_chao();
 };
 
 

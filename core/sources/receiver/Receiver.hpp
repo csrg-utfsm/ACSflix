@@ -13,9 +13,10 @@ private:
     void * subscriber;
     void * dealer;
 
+    size_t blocks_received;
     size_t credits;
 
-    void consume(FILE * file, zmsg_t * message);
+    void consume(FILE * file, zframe_t * message);
 
 public:
     Receiver(std::string ip);
@@ -31,6 +32,8 @@ public:
     void receive_sets();
 
     void send_hola();
+
+    void send_chao();
 };
 
 

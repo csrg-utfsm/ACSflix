@@ -11,9 +11,9 @@ Emitter::Emitter() :
 {
     context = zctx_new();
 
-    // create the router to receiver credits from the client.
-    router = zsocket_new(context, ZMQ_PAIR);
-    zsocket_bind(router, "tcp://*:6000");
+    // create the dealer to receiver credits from the client.
+    dealer = zsocket_new(context, ZMQ_DEALER);
+    zsocket_bind(dealer, "tcp://*:6000");
 
     // create the outgoing socket for binary data.
     publisher = zsocket_new(context, ZMQ_PUB);
@@ -27,32 +27,57 @@ Emitter::~Emitter()
 
 void Emitter::receive_hola()
 {
-    zmsg_t * message = zmsg_recv(router);
+    std::cout << "[HOLA] waiting for packet." << std::endl;
 
-    // delete identity, it won't be used.
-    delete zmsg_popstr(message);
+    // delimiter.
+    char * delimiter = zstr_recv(dealer);
+    zstr_free(&delimiter);
 
-    // delete delimiter.
-    delete zmsg_popstr(message);
+    // code.
+    char * code = zstr_recv(dealer);
 
-    char * code = zmsg_popstr(message);
-
-    if (!strcmp(code, "HOLA")) {
+    // check that this is a HOLA packet.
+    if (strcmp(code, "HOLA") == 0) {
         std::cout << "[HOLA] packet received." << std::endl;
+    } else {
+        throw std::runtime_error("Invalid HOLA packet, probably out of sync.");
     }
 
-    delete code;
-
-    zmsg_destroy(&message);
+    zstr_free(&code);
 }
 
 void Emitter::send_sets()
 {
     std::string message = bdt::size_to_str(block_size);
-    zstr_sendm(router, "S");
-    zstr_sendm(router, "");
-    zstr_send(router, message.c_str());
+    zstr_sendm(dealer, "");
+    zstr_send(dealer, message.c_str());
     std::cout << "[SETS] packet sent." << std::endl;
+}
+
+void Emitter::receive_chao()
+{
+    char * id;
+    while (true) {
+        // analyze packet id, ignoring CREA packets.
+        id = zstr_recv(dealer);
+
+        if (strcmp(id, "CREA") == 0) {
+            zstr_free(&id);
+            continue;
+        } else if (strcmp(id, "CHAO") == 0) {
+            zstr_free(&id);
+            break;
+        } else {
+            zstr_free(&id);
+            // state error,
+            throw std::runtime_error("Invalid CHAO/CREA packet, probably out of sync.");
+        }
+    }
+
+    // blocks_received.
+    char * blocks_received = zstr_recv(dealer);
+    std::cout << "[CHAO] received got " << blocks_received << " packets." << std::endl;
+    zstr_free(&blocks_received);
 }
 
 void Emitter::start(std::string file_path, std::string channel)
@@ -77,14 +102,8 @@ void Emitter::start(std::string file_path, std::string channel)
     send_sets();
 
     while (!zctx_interrupted) {
-        zframe_t * identify = zframe_recv(router);
-
-        if (!identify) {
-            break;
-        }
-
         // receive credit.
-        delete zstr_recv(router);
+        delete zstr_recv(dealer);
 
         advance_buffer(file, buffer, block_cursor);
 
@@ -98,15 +117,22 @@ void Emitter::start(std::string file_path, std::string channel)
 
         if (block_cursor % 100 == 0) {
             bar.set_cursor((size_t) block_cursor);
-            std::cout << block_cursor * 100.0f / block_count << "%" << std::endl;
         }
 
         if (feof(file)) {
-            return;
+            // clear progress bar.
+            std::cout << std::endl;
+
+            // send DONE packet.
+            zstr_sendm(publisher, channel.c_str());
+            zstr_send(publisher, "");
+            break;
         }
     }
 
     fclose(file);
+
+    receive_chao();
 }
 
 void Emitter::set_block_size(size_t block_size)
