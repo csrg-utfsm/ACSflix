@@ -1,7 +1,7 @@
 #include <iostream>
 
-#include "sources/receiver/Receiver.hpp"
-#include "sources/util/utils.h"
+#include "../receiver/Receiver.hpp"
+#include "../util/utils.h"
 
 int main(int argc, char* argv[])
 {
@@ -19,11 +19,6 @@ int main(int argc, char* argv[])
         std::cerr << "Specify the credits argument." << std::endl;
         return 1;
     }
-
-    Receiver receiver(argv[2]);
-    receiver.set_credits((size_t) bdt::str_to_int(argv[3]));
-
-    receiver.start(argv[1], "AAAA");
 
     return 0;
 }

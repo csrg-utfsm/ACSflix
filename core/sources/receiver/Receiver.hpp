@@ -14,6 +14,7 @@ private:
     void * dealer;
 
     size_t blocks_received;
+    size_t block_size;
     size_t credits;
 
     void consume(FILE * file, zframe_t * message);

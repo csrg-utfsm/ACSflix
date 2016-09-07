@@ -1,13 +1,16 @@
 #include <iostream>
 #include <fstream>
 #include <cmath>
+#include <stdexcept>
 
 #include "Emitter.hpp"
 #include "../util/utils.h"
-#include "../util/ProgressBar.hpp"
 
 Emitter::Emitter() :
-        block_size(16)
+        block_size(16),
+        block_count(0),
+        block_cursor(0),
+        buffer(NULL)
 {
     context = zctx_new();
 
@@ -23,6 +26,22 @@ Emitter::Emitter() :
 Emitter::~Emitter()
 {
     zctx_destroy(&context);
+    delete[] buffer;
+}
+
+void Emitter::send_sets()
+{
+    std::string message = bdt::size_to_str(block_size);
+    zstr_sendm(dealer, "");
+    zstr_send(dealer, message.c_str());
+    std::cout << "[SETS] packet sent." << std::endl;
+}
+
+void Emitter::send_done()
+{
+    // send DONE packet.
+    zstr_sendm(publisher, channel.c_str());
+    zstr_send(publisher, "");
 }
 
 void Emitter::receive_hola()
@@ -30,8 +49,7 @@ void Emitter::receive_hola()
     std::cout << "[HOLA] waiting for packet." << std::endl;
 
     // delimiter.
-    char * delimiter = zstr_recv(dealer);
-    zstr_free(&delimiter);
+    delete zstr_recv(dealer);
 
     // code.
     char * code = zstr_recv(dealer);
@@ -43,15 +61,7 @@ void Emitter::receive_hola()
         throw std::runtime_error("Invalid HOLA packet, probably out of sync.");
     }
 
-    zstr_free(&code);
-}
-
-void Emitter::send_sets()
-{
-    std::string message = bdt::size_to_str(block_size);
-    zstr_sendm(dealer, "");
-    zstr_send(dealer, message.c_str());
-    std::cout << "[SETS] packet sent." << std::endl;
+    delete code;
 }
 
 void Emitter::receive_chao()
@@ -62,14 +72,15 @@ void Emitter::receive_chao()
         id = zstr_recv(dealer);
 
         if (strcmp(id, "CREA") == 0) {
-            zstr_free(&id);
+            delete id;
             continue;
         } else if (strcmp(id, "CHAO") == 0) {
-            zstr_free(&id);
+            delete id;
             break;
         } else {
-            zstr_free(&id);
-            // state error,
+            delete id;
+
+            // state error.
             throw std::runtime_error("Invalid CHAO/CREA packet, probably out of sync.");
         }
     }
@@ -77,79 +88,71 @@ void Emitter::receive_chao()
     // blocks_received.
     char * blocks_received = zstr_recv(dealer);
     std::cout << "[CHAO] received got " << blocks_received << " packets." << std::endl;
-    zstr_free(&blocks_received);
+    delete blocks_received;
 }
 
-void Emitter::start(std::string file_path, std::string channel)
+void Emitter::start(std::string channel)
 {
-    FILE *file = fopen(file_path.c_str(), "rb");
-    assert(file);
-
-    long file_size = get_file_size(file_path);
-    long block_count = (long) ceil((float) file_size / block_size);
-
-    ProgressBar bar((size_t) block_count);
-
-    long block_cursor = 0;
-    byte buffer[block_size];
-
-    size_t this_size = block_size;
+    this->channel = channel;
 
     std::cout << "Blocks: " << block_count << std::endl;
-    std::cout << "Waiting for client..." << std::endl;
 
     receive_hola();
     send_sets();
+}
 
-    while (!zctx_interrupted) {
-        // receive credit.
-        delete zstr_recv(dealer);
+void Emitter::send(byte * buffer, size_t buffer_size)
+{
+    // receive credit.
+    delete zstr_recv(dealer);
 
-        advance_buffer(file, buffer, block_cursor);
+    block_cursor++;
 
-        zstr_sendm(publisher, channel.c_str());
+    // send piece of data.
+    zstr_sendm(publisher, channel.c_str());
+    zmq_send(publisher, buffer, buffer_size, 0);
+}
 
-        if (block_cursor == block_count) {
-            this_size = file_size - (block_cursor - 1) * block_size;
-        }
-
-        zmq_send(publisher, buffer, this_size, 0);
-
-        if (block_cursor % 100 == 0) {
-            bar.set_cursor((size_t) block_cursor);
-        }
-
-        if (feof(file)) {
-            // clear progress bar.
-            std::cout << std::endl;
-
-            // send DONE packet.
-            zstr_sendm(publisher, channel.c_str());
-            zstr_send(publisher, "");
-            break;
-        }
-    }
-
-    fclose(file);
-
+void Emitter::stop()
+{
+    send_done();
     receive_chao();
 }
 
 void Emitter::set_block_size(size_t block_size)
 {
     this->block_size = block_size;
+
+    // my compiler needed this cast...
+    buffer = (byte *) malloc(block_size);
 }
 
-void Emitter::advance_buffer(FILE *file, void *buffer, long &block_cursor)
+void Emitter::set_block_count(size_t block_count)
 {
-    memset(buffer, 0, block_size);
-    fread(buffer, 1, block_size, file);
-    block_cursor++;
+    this->block_count = block_count;
 }
 
-long Emitter::get_file_size(std::string file_path)
+void Emitter::set_block_count_from_size(size_t file_size)
 {
-    struct stat st;
-    stat(file_path.c_str(), &st);
-    return st.st_size;
+    set_block_count((size_t) ceil(file_size / block_size));
+}
+
+byte * Emitter::get_buffer()
+{
+    return buffer;
+}
+
+size_t Emitter::get_block_cursor()
+{
+    return block_cursor;
+}
+
+size_t Emitter::get_block_count()
+{
+    return block_count;
+}
+
+size_t Emitter::get_block_size()
+{
+    return block_size;
 }

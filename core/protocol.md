@@ -1,6 +1,6 @@
 # Protocol
 
-This protocol is based on ZeroMQ frame messages, each line of the packet
+This protocol is based on ZeroMQ messages, each line of the packet
 is a different frame.
 
 ## HOLA

@@ -9,24 +9,23 @@ class Emitter
 {
 private:
     size_t block_size;
+    size_t block_count;
+    size_t block_cursor;
 
+    byte * buffer;
+
+    std::string channel;
     zctx_t * context;
-
     void * publisher;
     void * dealer;
 
-    /**
-     * @brief Moves cursor in the input stream and stores the block in the buffer.
-     *
-     * Moves the cursor of the stream in order to buffer another section of the
-     * file given by the block_size.
-     */
-    void advance_buffer(FILE * file, void * buffer, long & block_cursor);
+    void send_sets();
 
-    /**
-     * @brief Obtains how many blocks are contained in the file.
-     */
-    long get_file_size(std::string file_path);
+    void send_done();
+
+    void receive_hola();
+
+    void receive_chao();
 
 public:
     Emitter();
@@ -34,29 +33,54 @@ public:
     ~Emitter();
 
     /**
-     * @brief Starts sending data to subscribers, block by block.
+     * @brief Set start connection parameters and contacts the receiver.
      *
-     * Sends binary data block by block, given by the block_size. This is a
-     * blocking method, so you will probably need to thread this class in
-     * order to have multiple publishers.
+     * Initiates the handshake process and blocks until the first steps of
+     * the protocols are done.
      */
-    void start(std::string file_path, std::string channel);
+    void start(std::string channel);
 
     /**
-     * @brief sets the block_size of data to transmit in one ZeroMQ message.
+     * @brief sends a block of data to the receiver.
      *
-     * Sets the block_size of data to transmit in one ZeroMQ Message, note that
-     * ZeroMQ then fragments the data in frames, this block_size is not
-     * necessary one frame, it just describes a sufficient piece of information
-     * that the subscriber can consume and interpret.
+     * Blocks until a credit is get and then sends the block asynchronously.
+     * After the call to this function, the packet may or may not send the
+     * block, since this is handled by ZeroMQ. But the Credits System will
+     * make sure that the data arrives to the client as fast as it can handle.
+     */
+    void send(byte * buffer, size_t buffer_size);
+
+    /**
+     * @brief starts the stop process of the protocol.
+     *
+     * It sends the DONE packet and waits until the receiver responds with
+     * a CHAO packet. This is a blocking operation.
+     */
+    void stop();
+
+    /**
+     * @param block_size one block size in bytes.
      */
     void set_block_size(size_t block_size);
 
-    void send_sets();
+    /**
+     * @param block_count the total ammount of blocks.
+     */
+    void set_block_count(size_t block_count);
 
-    void receive_hola();
+    /**
+     * @param file_size sets the block_count by dividing the file_size in the
+     *                  block_size.
+     */
+    void set_block_count_from_size(size_t file_size);
 
-    void receive_chao();
+    byte * get_buffer();
+
+    size_t get_block_size();
+
+    size_t get_block_cursor();
+
+    size_t get_block_count();
 };
 
 

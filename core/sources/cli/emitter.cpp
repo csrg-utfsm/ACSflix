@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "sources/emitter/Emitter.hpp"
+#include "../emitter/Emitter.hpp"
 
 int main(int argc, char* argv[])
 {
@@ -8,12 +8,6 @@ int main(int argc, char* argv[])
         std::cerr << "Please call with a file name argument" << std::endl;
         return 1;
     }
-
-    Emitter emitter;
-
-    emitter.set_block_size(1024);
-
-    emitter.start(argv[1], "AAAA");
 
     return 0;
 }

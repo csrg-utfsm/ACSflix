@@ -7,7 +7,7 @@ set(SOURCE_FILES
         sources/emitter/Emitter.cpp
         sources/receiver/Receiver.cpp
         sources/util/utils.cpp
-        sources/util/ProgressBar.cpp)
+        sources/util/ProgressBar.cpp usage_emitter.cpp)
 
-add_executable(emitter emitter.cpp ${SOURCE_FILES})
-add_executable(receiver receiver.cpp ${SOURCE_FILES})
+add_executable(emitter sources/cli/emitter.cpp ${SOURCE_FILES})
+add_executable(receiver sources/cli/receiver.cpp ${SOURCE_FILES})

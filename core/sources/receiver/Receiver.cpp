@@ -40,12 +40,13 @@ void Receiver::receive_sets()
     }
 
     std::cout << "[SETS] delimiter received." << std::endl;
-    zstr_free(&delimiter);
+    delete delimiter;
 
     // block size.
     char * block_size_str = zstr_recv(dealer);
+    block_size = (size_t) bdt::str_to_int(block_size_str);
     std::cout << "[SETS] block_size: " << block_size_str << std::endl;
-    zstr_free(&block_size_str);
+    delete block_size_str;
 }
 
 void Receiver::send_chao()
@@ -76,7 +77,6 @@ void Receiver::start(std::string file_path, std::string channel)
         }
 
         message = zmsg_recv(subscriber);
-
         if (message == NULL) {
             continue;
         }
@@ -85,15 +85,16 @@ void Receiver::start(std::string file_path, std::string channel)
         zframe_t * channel_frame = zmsg_pop(message);
         zframe_destroy(&channel_frame);
 
-        // given the architecture of the software, all messages
-        // consist on only just one frame.
+        // receive a TAKE or DONE packet.
         zframe_t * frame = zmsg_pop(message);
 
-        std::cout << zframe_size(frame) << std::endl;
-
-        if (zframe_size(frame) == (size_t) 0) {
-            // receive DONE packet is received, quit receiving.
+        if (zframe_size(frame) == 0) {
+            // DONE packet is received, quit.
             break;
+        }
+
+        if (zframe_size(frame) != block_size) {
+            std::cout << "[TAKE] packet size mismatch: " << zframe_size(frame) << ", id: " << blocks_received << std::endl;
         }
 
         consume(file, frame);
