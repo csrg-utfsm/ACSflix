@@ -4,10 +4,12 @@ project(publisher)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lzmq -lczmq -lpthread")
 
 set(SOURCE_FILES
-        sources/emitter/Emitter.cpp
-        sources/receiver/Receiver.cpp
         sources/util/utils.cpp
-        sources/util/ProgressBar.cpp usage_emitter.cpp)
+        sources/Sender.cpp
+        sources/Sender.h
+        sources/Worker.cpp
+        sources/Worker.h
+        )
 
-add_executable(emitter sources/cli/emitter.cpp ${SOURCE_FILES})
-add_executable(receiver sources/cli/receiver.cpp ${SOURCE_FILES})
+add_executable(sender sources/test_sender.cpp ${SOURCE_FILES})
+add_executable(worker sources/test_worker.cpp ${SOURCE_FILES})

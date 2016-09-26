@@ -1,7 +1,6 @@
 #include <iostream>
 
 #include "sources/emitter/Emitter.hpp"
-#include "sources/util/ProgressBar.hpp"
 
 FILE * file_open(std::string file_path)
 {
@@ -28,9 +27,6 @@ int main(int argc, char* argv[])
     emitter.set_block_size(1024 * 64);
     emitter.set_block_count_from_size(size);
 
-    // create a shiny progress bar.
-    ProgressBar bar((size_t) emitter.get_block_count());
-
     // starts the connection.
     emitter.start("A");
 
@@ -45,11 +41,6 @@ int main(int argc, char* argv[])
 
         // send the buffered data with the read size.
         emitter.send(buffer, sent_size);
-
-        // use the shiny progress bar.
-        if (emitter.get_block_cursor() % 200 == 0) {
-            bar.set_cursor((size_t) emitter.get_block_cursor());
-        }
     }
 
     fclose(file);
