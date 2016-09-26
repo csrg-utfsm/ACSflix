@@ -1,6 +1,10 @@
 #include <iostream>
 #include "Worker.h"
 
+#include "Dummy.pb.h"
+#include <iostream>
+#include <cstring>
+
 Worker::Worker(std::string connect, std::string identity) :
     context(zctx_new()),
     dealer(zsocket_new(context, ZMQ_DEALER))
@@ -20,5 +24,13 @@ void Worker::work()
 
     char * workload = zstr_recv(dealer);
 
-    std::cout << workload << std::endl;
+	DummyMessage dummyMessage;
+	int len = (int) strlen(workload);
+
+	dummyMessage.ParseFromArray(workload, len);
+
+	std::cout << dummyMessage.id() << std::endl;
+	std::cout << dummyMessage.message() << std::endl;
+
+    //std::cout << workload << std::endl;
 }
