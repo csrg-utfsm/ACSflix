@@ -30,17 +30,23 @@ set(SOURCE_FILES
         core/sources/Worker.h
         proto/Dummy.pb.cc
         proto/Dummy.pb.h
-        )
+        core/sources/PBSender.cpp core/sources/PBSender.h)
 
 set(BDR_LIB_FILES
         core/sources/interface/BulkDataZMQFlow.cc
         core/sources/interface/BulkDataZMQSenderFlow.cc
-        core/sources/interface/BulkDataZMQSenderFlow.h)
+        core/sources/interface/BulkDataZMQSenderFlow.h
+        core/sources/util/Buffer.cc
+        core/sources/util/Buffer.h
+        core/sources/util/BufferPool.cc
+        core/sources/util/BufferPool.h
+        core/sources/util/BufferPoolElement.cc
+        core/sources/util/BufferPoolElement.h)
 
 add_library(BulkDataReloaded ${BDR_LIB_FILES})
 
 add_executable(sender core/sources/test_sender.cpp ${SOURCE_FILES})
 add_executable(worker core/sources/test_worker.cpp ${SOURCE_FILES})
 
-target_link_libraries(sender ${LIBS})
-target_link_libraries(worker ${LIBS})
+target_link_libraries(sender ${LIBS} BulkDataReloaded)
+target_link_libraries(worker ${LIBS} BulkDataReloaded)

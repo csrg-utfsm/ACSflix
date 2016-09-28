@@ -18,19 +18,40 @@ Worker::~Worker()
     zctx_destroy(&context);
 }
 
+
+
 void Worker::work()
 {
     zstr_send(dealer, "");
 
     char * workload = zstr_recv(dealer);
+    std::cout << workload << std::endl;
+}
+
+void Worker::workMSG()
+{
+	zstr_send(dealer, "");
+
+	zmq_msg_t msg;
+	zmq_msg_init(&msg);
+	zmq_msg_recv(&msg, dealer, 0);
+
+	std::string string((char*)zmq_msg_data(&msg), zmq_msg_size(&msg));
+
+	std::cout << "Received " << zmq_msg_size(&msg)
+	          << " bytes:" << string << std::endl;
 
 	DummyMessage dummyMessage;
-	int len = (int) strlen(workload);
+	try {
+		dummyMessage.ParseFromArray(zmq_msg_data(&msg),
+		                            (int) zmq_msg_size(&msg));
 
-	dummyMessage.ParseFromArray(workload, len);
+		std::cout << "[" << dummyMessage.id() << "] "
+		          << dummyMessage.message() << std::endl;
 
-	std::cout << dummyMessage.id() << std::endl;
-	std::cout << dummyMessage.message() << std::endl;
+	} catch (google::protobuf::FatalException& fe) {
+		std::cout << "Ignored: " << fe.message() << std::endl;
+	}
 
-    //std::cout << workload << std::endl;
+	zmq_msg_close(&msg);
 }

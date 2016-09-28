@@ -15,7 +15,7 @@ namespace bdr
 		BulkDataZMQFlow(std::string name);
 		BulkDataZMQFlow(const char* name);
 
-		virtual BulkDataZMQFlow();
+		BulkDataZMQFlow();
 
 		std::string getName() const;
 

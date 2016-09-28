@@ -16,6 +16,7 @@ public:
     ~Worker();
 
     void work();
+	void workMSG();
 };
 
 

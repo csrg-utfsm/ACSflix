@@ -10,7 +10,7 @@ Sender::Sender(std::string bind) :
 
 Sender::~Sender()
 {
-    zctx_destroy(&context);
+	zctx_destroy(&context);
 }
 
 void Sender::send(unsigned char * data, size_t length)
@@ -25,4 +25,25 @@ void Sender::send(unsigned char * data, size_t length)
     // send message with an identity frame and content frame.
     zstr_sendm(router, identity);
     zmq_send(router, data, length, 0);
+}
+
+void Sender::send(zmq_msg_t *msg)
+{
+	char * identity = zstr_recv(router);
+
+	std::cout << "Sending " << zmq_msg_size(msg)
+	          << " bytes to " << identity
+	          << std::endl;
+
+	// ignore content.
+	zstr_recv(router);
+
+	// send message with an identity frame and content frame.
+	zstr_sendm(router, identity);
+	zmq_msg_send(msg, router, 0);
+}
+
+void Sender::join()
+{
+	zctx_set_linger(context, -1);
 }
