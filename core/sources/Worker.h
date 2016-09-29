@@ -17,6 +17,8 @@ public:
 
     void work();
 	void workMSG();
+
+	bool workPieces();
 };
 
 

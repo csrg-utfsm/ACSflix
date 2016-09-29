@@ -13,7 +13,7 @@ void on_release(void * data, void * hint)
 
 ZMQPooledBuffer::ZMQPooledBuffer(BufferPoolElement * element) :
 	ZMQBuffer(element->get_buffer().data(),
-	          element->get_buffer().size()),
+	          element->get_buffer().length()),
 	m_element(element)
 {
 }

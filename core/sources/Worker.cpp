@@ -55,3 +55,20 @@ void Worker::workMSG()
 
 	zmq_msg_close(&msg);
 }
+
+bool Worker::workPieces()
+{
+	zstr_send(dealer, "");
+
+	zmq_msg_t msg;
+	zmq_msg_init(&msg);
+	zmq_msg_recv(&msg, dealer, 0);
+
+	std::string piece((char*) zmq_msg_data(&msg), zmq_msg_size(&msg));
+	std::cout << "Received " << zmq_msg_size(&msg)
+	          << " bytes: " << piece << std::endl;
+
+	zmq_msg_close(&msg);
+
+	return piece != "END_OF_TRANSMISSION";
+}

@@ -23,6 +23,7 @@ public:
 
 	char * buffer();
 	size_t size();
+	void size(size_t size);
 };
 
 #endif //PUBLISHER_ZMQBUFFER_H

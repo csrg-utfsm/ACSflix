@@ -56,17 +56,26 @@ int main(int argc, char* argv[])
 	}*/
 
 	BufferPool pool;
-	PBSender sender("tcp://127.0.0.1:8080", pool);
+	//PBSender sender("tcp://127.0.0.1:8080", pool);
+	Sender sender("tcp://127.0.0.1:8080");
 
 	std::ifstream file;
 	file.open("test_file");
 
+	assert(file);
+
 	StreamSender ssender(sender, file);
 	ssender.attach_buffer_pool(pool);
-	ssender.chunk_size(100000); // 100kB
+	ssender.chunk_size(50);
+
+	sleep(10);
+
 	while (ssender.send_chunk());
 
-	DummyMessage dummy;
+	unsigned char * eot = (unsigned char *) "END_OF_TRANSMISSION";
+	sender.send(eot, strlen((const char *) eot));
+
+	/*DummyMessage dummy;
 	dummy.set_message("MESSAGE_CONTENT");
 
 	sleep(10);
@@ -74,7 +83,7 @@ int main(int argc, char* argv[])
 	for (int i = 0; i < 10; ++i) {
 		dummy.set_id(i);
 		sender.send(dummy);
-	}
+	}*/
 
     return 0;
 }

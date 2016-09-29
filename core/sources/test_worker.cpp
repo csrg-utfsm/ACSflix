@@ -9,8 +9,8 @@ int main(int argc, char* argv[])
 
     Worker worker("tcp://127.0.0.1:8080", identity);
 
-	for (int i = 0; i < 10; i++) {
-		worker.workMSG();
+	while (worker.workPieces()) {
+		//worker.workMSG();
 	}
 
     return 0;
