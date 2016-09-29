@@ -9,6 +9,9 @@
 #include "util/BufferPool.h"
 #include <google/protobuf/message_lite.h>
 
+/**
+ * ProtocolBuffers Sender
+ */
 class PBSender : public Sender
 {
 	BufferPool& pool;

@@ -6,6 +6,9 @@ Sender::Sender(std::string bind) :
         router(zsocket_new(context, ZMQ_ROUTER))
 {
     zsocket_bind(router, bind.c_str());
+
+	// infinite wait before shutting down
+	zctx_set_linger(context, -1);
 }
 
 Sender::~Sender()
@@ -41,9 +44,4 @@ void Sender::send(zmq_msg_t *msg)
 	// send message with an identity frame and content frame.
 	zstr_sendm(router, identity);
 	zmq_msg_send(msg, router, 0);
-}
-
-void Sender::join()
-{
-	zctx_set_linger(context, -1);
 }

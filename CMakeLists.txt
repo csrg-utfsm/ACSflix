@@ -30,7 +30,7 @@ set(SOURCE_FILES
         core/sources/Worker.h
         proto/Dummy.pb.cc
         proto/Dummy.pb.h
-        core/sources/PBSender.cpp core/sources/PBSender.h)
+        core/sources/PBSender.cpp core/sources/PBSender.h core/sources/StreamSender.cc core/sources/StreamSender.h core/sources/ZMQBuffer.h)
 
 set(BDR_LIB_FILES
         core/sources/interface/BulkDataZMQFlow.cc
@@ -41,7 +41,20 @@ set(BDR_LIB_FILES
         core/sources/util/BufferPool.cc
         core/sources/util/BufferPool.h
         core/sources/util/BufferPoolElement.cc
-        core/sources/util/BufferPoolElement.h)
+        core/sources/util/BufferPoolElement.h
+        core/sources/util/ScopedRef.hh
+        core/sources/SenderExtension.cc
+        core/sources/SenderExtension.h
+        core/sources/ZMQBufferFactory.h
+        core/sources/ZMQHeapBufferFactory.cc
+        core/sources/ZMQHeapBufferFactory.h
+        core/sources/ZMQHeapBuffer.cc
+        core/sources/ZMQHeapBuffer.h
+        core/sources/ZMQPooledBufferFactory.cc
+        core/sources/ZMQPooledBufferFactory.h
+        core/sources/ZMQPooledBuffer.cc
+        core/sources/ZMQPooledBuffer.h
+        core/sources/ZMQBuffer.cc)
 
 add_library(BulkDataReloaded ${BDR_LIB_FILES})
 

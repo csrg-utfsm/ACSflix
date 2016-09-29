@@ -23,5 +23,6 @@ public:
 	BufferPoolElement * get_and_retain(size_t size);
 };
 
+void pool_resource_release(void * data, void * element);
 
 #endif //PUBLISHER_BUFFERPOOL_H

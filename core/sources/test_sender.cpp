@@ -1,8 +1,10 @@
 #include <iostream>
 #include "Sender.h"
 #include "PBSender.h"
+#include "StreamSender.h"
 #include <Dummy.pb.h>
 #include <unistd.h>
+#include <fstream>
 
 void mfree(void * data, void * hint)
 {
@@ -56,6 +58,14 @@ int main(int argc, char* argv[])
 	BufferPool pool;
 	PBSender sender("tcp://127.0.0.1:8080", pool);
 
+	std::ifstream file;
+	file.open("test_file");
+
+	StreamSender ssender(sender, file);
+	ssender.attach_buffer_pool(pool);
+	ssender.chunk_size(100000); // 100kB
+	while (ssender.send_chunk());
+
 	DummyMessage dummy;
 	dummy.set_message("MESSAGE_CONTENT");
 
@@ -65,9 +75,6 @@ int main(int argc, char* argv[])
 		dummy.set_id(i);
 		sender.send(dummy);
 	}
-
-	// Theoretical solution to some problem
-	sender.join();
 
     return 0;
 }
