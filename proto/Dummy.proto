@@ -1,5 +1,0 @@
-message DummyMessage
-{
-    required int32 id = 1;
-    required string message = 2;
-}
