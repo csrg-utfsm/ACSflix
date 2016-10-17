@@ -1,7 +1,8 @@
 #include <iostream>
+#include <BdFileBlock.pb.h>
 
 #include "ProtobufSender.h"
-#include "Simple.pb.h"
+
 
 int main()
 {
@@ -9,12 +10,23 @@ int main()
 
     ProtobufSender sender("tcp://127.0.0.1:9999", pool);
 
-    Simple simple;
-    simple.set_message("rodolfoql");
+    BdFileBlock file_block;
 
-    for (int i = 0; i < 20; ++i) {
-        simple.set_id(i);
-        sender.send(simple);
+    FILE *file = fopen("CMakeLists.txt", "rb");
+    assert(file);
+
+    char buffer[1024];
+
+    size_t sent_size;
+
+    uint64_t i = 0;
+    while (!feof(file)) {
+        sent_size = fread(buffer, 1, 1024, file);
+
+        file_block.set_offset(i++);
+        file_block.set_data(buffer, sent_size);
+
+        sender.send(file_block);
     }
 
     return 0;
