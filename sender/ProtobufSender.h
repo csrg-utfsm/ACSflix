@@ -17,6 +17,8 @@ private:
 
     BufferPool & pool;
 
+    bool stopped;
+
 public:
     ProtobufSender(std::string bind, BufferPool & pool);
 
@@ -35,6 +37,11 @@ public:
      * @param message google protobuf message.
      */
     void send(const google::protobuf::MessageLite & message);
+
+    /**
+     * Stops sender and all workers, this is a blocking operation.
+     */
+    void stop();
 };
 
 

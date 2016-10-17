@@ -13,7 +13,8 @@ void on_buffer_release(void * data, void * hint)
 ProtobufSender::ProtobufSender(std::string bind, BufferPool & pool) :
         context(zctx_new()),
         router(zsocket_new(context, ZMQ_ROUTER)),
-        pool(pool)
+        pool(pool),
+        stopped(false)
 {
     zsocket_bind(router, bind.c_str());
 
@@ -21,6 +22,7 @@ ProtobufSender::ProtobufSender(std::string bind, BufferPool & pool) :
     // TODO: consider a timeout.
     zctx_set_linger(context, -1);
 }
+
 
 ProtobufSender::~ProtobufSender()
 {
@@ -46,6 +48,7 @@ void ProtobufSender::send(zmq_msg_t * msg)
     zmq_msg_send(msg, router, 0);
 }
 
+
 void ProtobufSender::send(const google::protobuf::MessageLite & message)
 {
     std::cout << "Send invoked" << std::endl;
@@ -69,4 +72,10 @@ void ProtobufSender::send(const google::protobuf::MessageLite & message)
                       element);
 
     send(&msg);
+}
+
+
+void ProtobufSender::stop()
+{
+    // Todo: Implement Token + Timeout Way
 }
