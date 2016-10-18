@@ -14,7 +14,8 @@ ProtobufSender::ProtobufSender(std::string bind, BufferPool & pool) :
         context(zctx_new()),
         router(zsocket_new(context, ZMQ_ROUTER)),
         pool(pool),
-        stopped(false)
+        stopped(false),
+        stop_timeout(1000)
 {
     zsocket_bind(router, bind.c_str());
 
@@ -77,5 +78,24 @@ void ProtobufSender::send(const google::protobuf::MessageLite & message)
 
 void ProtobufSender::stop()
 {
-    // Todo: Implement Token + Timeout Way
+    std::cout << "Stop invoked" << std::endl;
+
+    int timeout = 1000;
+    zmq_setsockopt(router, ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
+
+    while (1) {
+        char * identity = zstr_recv(router);
+
+        if (identity == NULL) {
+            return;
+        }
+
+        zstr_sendm(router, identity);
+        zstr_send(router, "");
+    }
+}
+
+void ProtobufSender::set_stop_timeout(int stop_timeout)
+{
+    this->stop_timeout = stop_timeout;
 }

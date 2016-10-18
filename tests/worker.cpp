@@ -1,5 +1,4 @@
 #include <iostream>
-#include <Simple.pb.h>
 #include <BdFileBlock.pb.h>
 
 #include "ProtobufWorker.h"

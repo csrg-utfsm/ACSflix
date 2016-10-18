@@ -9,6 +9,7 @@ int main()
     BufferPool pool;
 
     ProtobufSender sender("tcp://127.0.0.1:9999", pool);
+    sender.set_stop_timeout(1000);
 
     BdFileBlock file_block;
 
@@ -28,6 +29,8 @@ int main()
 
         sender.send(file_block);
     }
+
+    sender.stop();
 
     return 0;
 }

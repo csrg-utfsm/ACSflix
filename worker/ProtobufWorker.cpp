@@ -26,6 +26,10 @@ bool ProtobufWorker::work(google::protobuf::MessageLite & message)
     zmq_msg_init(&msg);
     zmq_msg_recv(&msg, dealer, 0);
 
+    if (zmq_msg_size(&msg) == 0) {
+        return false;
+    }
+
     message.ParseFromArray(zmq_msg_data(&msg), (int) zmq_msg_size(&msg));
 
     zmq_msg_close(&msg);

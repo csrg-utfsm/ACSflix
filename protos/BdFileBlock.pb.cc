@@ -7,6 +7,7 @@
 #include <algorithm>
 
 #include <google/protobuf/stubs/common.h>
+#include <google/protobuf/stubs/port.h>
 #include <google/protobuf/stubs/once.h>
 #include <google/protobuf/io/coded_stream.h>
 #include <google/protobuf/wire_format_lite_inl.h>
@@ -25,6 +26,7 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 }  // namespace
 
 
+void protobuf_AssignDesc_BdFileBlock_2eproto() GOOGLE_ATTRIBUTE_COLD;
 void protobuf_AssignDesc_BdFileBlock_2eproto() {
   protobuf_AddDesc_BdFileBlock_2eproto();
   const ::google::protobuf::FileDescriptor* file =
@@ -37,55 +39,69 @@ void protobuf_AssignDesc_BdFileBlock_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BdFileBlock, data_),
   };
   BdFileBlock_reflection_ =
-    new ::google::protobuf::internal::GeneratedMessageReflection(
+    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
       BdFileBlock_descriptor_,
-      BdFileBlock::default_instance_,
+      BdFileBlock::internal_default_instance(),
       BdFileBlock_offsets_,
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BdFileBlock, _has_bits_[0]),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BdFileBlock, _unknown_fields_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BdFileBlock, _has_bits_),
       -1,
-      ::google::protobuf::DescriptorPool::generated_pool(),
-      ::google::protobuf::MessageFactory::generated_factory(),
-      sizeof(BdFileBlock));
+      -1,
+      sizeof(BdFileBlock),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BdFileBlock, _internal_metadata_));
 }
 
 namespace {
 
 GOOGLE_PROTOBUF_DECLARE_ONCE(protobuf_AssignDescriptors_once_);
-inline void protobuf_AssignDescriptorsOnce() {
+void protobuf_AssignDescriptorsOnce() {
   ::google::protobuf::GoogleOnceInit(&protobuf_AssignDescriptors_once_,
                  &protobuf_AssignDesc_BdFileBlock_2eproto);
 }
 
+void protobuf_RegisterTypes(const ::std::string&) GOOGLE_ATTRIBUTE_COLD;
 void protobuf_RegisterTypes(const ::std::string&) {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-    BdFileBlock_descriptor_, &BdFileBlock::default_instance());
+      BdFileBlock_descriptor_, BdFileBlock::internal_default_instance());
 }
 
 }  // namespace
 
 void protobuf_ShutdownFile_BdFileBlock_2eproto() {
-  delete BdFileBlock::default_instance_;
+  BdFileBlock_default_instance_.Shutdown();
   delete BdFileBlock_reflection_;
 }
 
-void protobuf_AddDesc_BdFileBlock_2eproto() {
-  static bool already_here = false;
-  if (already_here) return;
-  already_here = true;
+void protobuf_InitDefaults_BdFileBlock_2eproto_impl() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
+  ::google::protobuf::internal::GetEmptyString();
+  BdFileBlock_default_instance_.DefaultConstruct();
+  BdFileBlock_default_instance_.get_mutable()->InitAsDefaultInstance();
+}
+
+GOOGLE_PROTOBUF_DECLARE_ONCE(protobuf_InitDefaults_BdFileBlock_2eproto_once_);
+void protobuf_InitDefaults_BdFileBlock_2eproto() {
+  ::google::protobuf::GoogleOnceInit(&protobuf_InitDefaults_BdFileBlock_2eproto_once_,
+                 &protobuf_InitDefaults_BdFileBlock_2eproto_impl);
+}
+void protobuf_AddDesc_BdFileBlock_2eproto_impl() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  protobuf_InitDefaults_BdFileBlock_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\021BdFileBlock.proto\"+\n\013BdFileBlock\022\016\n\006of"
     "fset\030\001 \002(\004\022\014\n\004data\030\002 \002(\014", 64);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "BdFileBlock.proto", &protobuf_RegisterTypes);
-  BdFileBlock::default_instance_ = new BdFileBlock();
-  BdFileBlock::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_BdFileBlock_2eproto);
 }
 
+GOOGLE_PROTOBUF_DECLARE_ONCE(protobuf_AddDesc_BdFileBlock_2eproto_once_);
+void protobuf_AddDesc_BdFileBlock_2eproto() {
+  ::google::protobuf::GoogleOnceInit(&protobuf_AddDesc_BdFileBlock_2eproto_once_,
+                 &protobuf_AddDesc_BdFileBlock_2eproto_impl);
+}
 // Force AddDescriptors() to be called at static initialization time.
 struct StaticDescriptorInitializer_BdFileBlock_2eproto {
   StaticDescriptorInitializer_BdFileBlock_2eproto() {
@@ -93,44 +109,54 @@ struct StaticDescriptorInitializer_BdFileBlock_2eproto {
   }
 } static_descriptor_initializer_BdFileBlock_2eproto_;
 
+namespace {
+
+static void MergeFromFail(int line) GOOGLE_ATTRIBUTE_COLD GOOGLE_ATTRIBUTE_NORETURN;
+static void MergeFromFail(int line) {
+  ::google::protobuf::internal::MergeFromFail(__FILE__, line);
+}
+
+}  // namespace
+
+
 // ===================================================================
 
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int BdFileBlock::kOffsetFieldNumber;
 const int BdFileBlock::kDataFieldNumber;
-#endif  // !_MSC_VER
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 BdFileBlock::BdFileBlock()
-  : ::google::protobuf::Message() {
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  if (this != internal_default_instance()) protobuf_InitDefaults_BdFileBlock_2eproto();
   SharedCtor();
+  // @@protoc_insertion_point(constructor:BdFileBlock)
 }
 
 void BdFileBlock::InitAsDefaultInstance() {
 }
 
 BdFileBlock::BdFileBlock(const BdFileBlock& from)
-  : ::google::protobuf::Message() {
+  : ::google::protobuf::Message(),
+    _internal_metadata_(NULL) {
   SharedCtor();
-  MergeFrom(from);
+  UnsafeMergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:BdFileBlock)
 }
 
 void BdFileBlock::SharedCtor() {
   _cached_size_ = 0;
+  data_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   offset_ = GOOGLE_ULONGLONG(0);
-  data_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
 BdFileBlock::~BdFileBlock() {
+  // @@protoc_insertion_point(destructor:BdFileBlock)
   SharedDtor();
 }
 
 void BdFileBlock::SharedDtor() {
-  if (data_ != &::google::protobuf::internal::kEmptyString) {
-    delete data_;
-  }
-  if (this != default_instance_) {
-  }
+  data_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
 void BdFileBlock::SetCachedSize(int size) const {
@@ -144,45 +170,53 @@ const ::google::protobuf::Descriptor* BdFileBlock::descriptor() {
 }
 
 const BdFileBlock& BdFileBlock::default_instance() {
-  if (default_instance_ == NULL) protobuf_AddDesc_BdFileBlock_2eproto();
-  return *default_instance_;
+  protobuf_InitDefaults_BdFileBlock_2eproto();
+  return *internal_default_instance();
 }
 
-BdFileBlock* BdFileBlock::default_instance_ = NULL;
+::google::protobuf::internal::ExplicitlyConstructed<BdFileBlock> BdFileBlock_default_instance_;
 
-BdFileBlock* BdFileBlock::New() const {
-  return new BdFileBlock;
+BdFileBlock* BdFileBlock::New(::google::protobuf::Arena* arena) const {
+  BdFileBlock* n = new BdFileBlock;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
 }
 
 void BdFileBlock::Clear() {
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+// @@protoc_insertion_point(message_clear_start:BdFileBlock)
+  if (_has_bits_[0 / 32] & 3u) {
     offset_ = GOOGLE_ULONGLONG(0);
     if (has_data()) {
-      if (data_ != &::google::protobuf::internal::kEmptyString) {
-        data_->clear();
-      }
+      data_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
     }
   }
-  ::memset(_has_bits_, 0, sizeof(_has_bits_));
-  mutable_unknown_fields()->Clear();
+  _has_bits_.Clear();
+  if (_internal_metadata_.have_unknown_fields()) {
+    mutable_unknown_fields()->Clear();
+  }
 }
 
 bool BdFileBlock::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  while ((tag = input->ReadTag()) != 0) {
+  // @@protoc_insertion_point(parse_start:BdFileBlock)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
       // required uint64 offset = 1;
       case 1: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+        if (tag == 8) {
+          set_has_offset();
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::uint64, ::google::protobuf::internal::WireFormatLite::TYPE_UINT64>(
                  input, &offset_)));
-          set_has_offset();
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
         if (input->ExpectTag(18)) goto parse_data;
         break;
@@ -190,23 +224,23 @@ bool BdFileBlock::MergePartialFromCodedStream(
 
       // required bytes data = 2;
       case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+        if (tag == 18) {
          parse_data:
           DO_(::google::protobuf::internal::WireFormatLite::ReadBytes(
                 input, this->mutable_data()));
         } else {
-          goto handle_uninterpreted;
+          goto handle_unusual;
         }
-        if (input->ExpectAtEnd()) return true;
+        if (input->ExpectAtEnd()) goto success;
         break;
       }
 
       default: {
-      handle_uninterpreted:
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
-          return true;
+          goto success;
         }
         DO_(::google::protobuf::internal::WireFormat::SkipField(
               input, tag, mutable_unknown_fields()));
@@ -214,12 +248,18 @@ bool BdFileBlock::MergePartialFromCodedStream(
       }
     }
   }
+success:
+  // @@protoc_insertion_point(parse_success:BdFileBlock)
   return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:BdFileBlock)
+  return false;
 #undef DO_
 }
 
 void BdFileBlock::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:BdFileBlock)
   // required uint64 offset = 1;
   if (has_offset()) {
     ::google::protobuf::internal::WireFormatLite::WriteUInt64(1, this->offset(), output);
@@ -227,18 +267,21 @@ void BdFileBlock::SerializeWithCachedSizes(
 
   // required bytes data = 2;
   if (has_data()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBytes(
+    ::google::protobuf::internal::WireFormatLite::WriteBytesMaybeAliased(
       2, this->data(), output);
   }
 
-  if (!unknown_fields().empty()) {
+  if (_internal_metadata_.have_unknown_fields()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
   }
+  // @@protoc_insertion_point(serialize_end:BdFileBlock)
 }
 
-::google::protobuf::uint8* BdFileBlock::SerializeWithCachedSizesToArray(
-    ::google::protobuf::uint8* target) const {
+::google::protobuf::uint8* BdFileBlock::InternalSerializeWithCachedSizesToArray(
+    bool deterministic, ::google::protobuf::uint8* target) const {
+  (void)deterministic; // Unused
+  // @@protoc_insertion_point(serialize_to_array_start:BdFileBlock)
   // required uint64 offset = 1;
   if (has_offset()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt64ToArray(1, this->offset(), target);
@@ -251,78 +294,117 @@ void BdFileBlock::SerializeWithCachedSizes(
         2, this->data(), target);
   }
 
-  if (!unknown_fields().empty()) {
+  if (_internal_metadata_.have_unknown_fields()) {
     target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
         unknown_fields(), target);
   }
+  // @@protoc_insertion_point(serialize_to_array_end:BdFileBlock)
   return target;
 }
 
-int BdFileBlock::ByteSize() const {
-  int total_size = 0;
+size_t BdFileBlock::RequiredFieldsByteSizeFallback() const {
+// @@protoc_insertion_point(required_fields_byte_size_fallback_start:BdFileBlock)
+  size_t total_size = 0;
 
-  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+  if (has_offset()) {
     // required uint64 offset = 1;
-    if (has_offset()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::UInt64Size(
-          this->offset());
-    }
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt64Size(
+        this->offset());
+  }
+
+  if (has_data()) {
+    // required bytes data = 2;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::BytesSize(
+        this->data());
+  }
+
+  return total_size;
+}
+size_t BdFileBlock::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:BdFileBlock)
+  size_t total_size = 0;
+
+  if (((_has_bits_[0] & 0x00000003) ^ 0x00000003) == 0) {  // All required fields are present.
+    // required uint64 offset = 1;
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::UInt64Size(
+        this->offset());
 
     // required bytes data = 2;
-    if (has_data()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::BytesSize(
-          this->data());
-    }
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::BytesSize(
+        this->data());
 
+  } else {
+    total_size += RequiredFieldsByteSizeFallback();
   }
-  if (!unknown_fields().empty()) {
+  if (_internal_metadata_.have_unknown_fields()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
         unknown_fields());
   }
+  int cached_size = ::google::protobuf::internal::ToCachedSize(total_size);
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
-  _cached_size_ = total_size;
+  _cached_size_ = cached_size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
   return total_size;
 }
 
 void BdFileBlock::MergeFrom(const ::google::protobuf::Message& from) {
-  GOOGLE_CHECK_NE(&from, this);
+// @@protoc_insertion_point(generalized_merge_from_start:BdFileBlock)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
   const BdFileBlock* source =
-    ::google::protobuf::internal::dynamic_cast_if_available<const BdFileBlock*>(
-      &from);
+      ::google::protobuf::internal::DynamicCastToGenerated<const BdFileBlock>(
+          &from);
   if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:BdFileBlock)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
-    MergeFrom(*source);
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:BdFileBlock)
+    UnsafeMergeFrom(*source);
   }
 }
 
 void BdFileBlock::MergeFrom(const BdFileBlock& from) {
-  GOOGLE_CHECK_NE(&from, this);
+// @@protoc_insertion_point(class_specific_merge_from_start:BdFileBlock)
+  if (GOOGLE_PREDICT_TRUE(&from != this)) {
+    UnsafeMergeFrom(from);
+  } else {
+    MergeFromFail(__LINE__);
+  }
+}
+
+void BdFileBlock::UnsafeMergeFrom(const BdFileBlock& from) {
+  GOOGLE_DCHECK(&from != this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_offset()) {
       set_offset(from.offset());
     }
     if (from.has_data()) {
-      set_data(from.data());
+      set_has_data();
+      data_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.data_);
     }
   }
-  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+  if (from._internal_metadata_.have_unknown_fields()) {
+    ::google::protobuf::UnknownFieldSet::MergeToInternalMetdata(
+      from.unknown_fields(), &_internal_metadata_);
+  }
 }
 
 void BdFileBlock::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:BdFileBlock)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void BdFileBlock::CopyFrom(const BdFileBlock& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:BdFileBlock)
   if (&from == this) return;
   Clear();
-  MergeFrom(from);
+  UnsafeMergeFrom(from);
 }
 
 bool BdFileBlock::IsInitialized() const {
@@ -332,13 +414,15 @@ bool BdFileBlock::IsInitialized() const {
 }
 
 void BdFileBlock::Swap(BdFileBlock* other) {
-  if (other != this) {
-    std::swap(offset_, other->offset_);
-    std::swap(data_, other->data_);
-    std::swap(_has_bits_[0], other->_has_bits_[0]);
-    _unknown_fields_.Swap(&other->_unknown_fields_);
-    std::swap(_cached_size_, other->_cached_size_);
-  }
+  if (other == this) return;
+  InternalSwap(other);
+}
+void BdFileBlock::InternalSwap(BdFileBlock* other) {
+  std::swap(offset_, other->offset_);
+  data_.Swap(&other->data_);
+  std::swap(_has_bits_[0], other->_has_bits_[0]);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  std::swap(_cached_size_, other->_cached_size_);
 }
 
 ::google::protobuf::Metadata BdFileBlock::GetMetadata() const {
@@ -349,6 +433,91 @@ void BdFileBlock::Swap(BdFileBlock* other) {
   return metadata;
 }
 
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// BdFileBlock
+
+// required uint64 offset = 1;
+bool BdFileBlock::has_offset() const {
+  return (_has_bits_[0] & 0x00000001u) != 0;
+}
+void BdFileBlock::set_has_offset() {
+  _has_bits_[0] |= 0x00000001u;
+}
+void BdFileBlock::clear_has_offset() {
+  _has_bits_[0] &= ~0x00000001u;
+}
+void BdFileBlock::clear_offset() {
+  offset_ = GOOGLE_ULONGLONG(0);
+  clear_has_offset();
+}
+::google::protobuf::uint64 BdFileBlock::offset() const {
+  // @@protoc_insertion_point(field_get:BdFileBlock.offset)
+  return offset_;
+}
+void BdFileBlock::set_offset(::google::protobuf::uint64 value) {
+  set_has_offset();
+  offset_ = value;
+  // @@protoc_insertion_point(field_set:BdFileBlock.offset)
+}
+
+// required bytes data = 2;
+bool BdFileBlock::has_data() const {
+  return (_has_bits_[0] & 0x00000002u) != 0;
+}
+void BdFileBlock::set_has_data() {
+  _has_bits_[0] |= 0x00000002u;
+}
+void BdFileBlock::clear_has_data() {
+  _has_bits_[0] &= ~0x00000002u;
+}
+void BdFileBlock::clear_data() {
+  data_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  clear_has_data();
+}
+const ::std::string& BdFileBlock::data() const {
+  // @@protoc_insertion_point(field_get:BdFileBlock.data)
+  return data_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+void BdFileBlock::set_data(const ::std::string& value) {
+  set_has_data();
+  data_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:BdFileBlock.data)
+}
+void BdFileBlock::set_data(const char* value) {
+  set_has_data();
+  data_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:BdFileBlock.data)
+}
+void BdFileBlock::set_data(const void* value, size_t size) {
+  set_has_data();
+  data_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:BdFileBlock.data)
+}
+::std::string* BdFileBlock::mutable_data() {
+  set_has_data();
+  // @@protoc_insertion_point(field_mutable:BdFileBlock.data)
+  return data_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+::std::string* BdFileBlock::release_data() {
+  // @@protoc_insertion_point(field_release:BdFileBlock.data)
+  clear_has_data();
+  return data_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+void BdFileBlock::set_allocated_data(::std::string* data) {
+  if (data != NULL) {
+    set_has_data();
+  } else {
+    clear_has_data();
+  }
+  data_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), data);
+  // @@protoc_insertion_point(field_set_allocated:BdFileBlock.data)
+}
+
+inline const BdFileBlock* BdFileBlock::internal_default_instance() {
+  return &BdFileBlock_default_instance_.get();
+}
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
 
 // @@protoc_insertion_point(namespace_scope)
 
