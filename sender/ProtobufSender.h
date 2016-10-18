@@ -21,17 +21,17 @@ private:
 
     int stop_timeout;
 
-public:
-    ProtobufSender(std::string bind, BufferPool & pool);
-
-    ~ProtobufSender();
-
     /**
      * Sends a ZMQ message as is to any available worker.
      *
      * @param msg message to send.
      */
     void send(zmq_msg_t * msg);
+
+public:
+    ProtobufSender(std::string bind, BufferPool & pool, int linger = 10000);
+
+    ~ProtobufSender();
 
     /**
      * Sends a Google Protobuf message to any available worker.

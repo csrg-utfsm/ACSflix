@@ -10,7 +10,7 @@ void on_buffer_release(void * data, void * hint)
 }
 
 
-ProtobufSender::ProtobufSender(std::string bind, BufferPool & pool) :
+ProtobufSender::ProtobufSender(std::string bind, BufferPool & pool, int linger) :
         context(zctx_new()),
         router(zsocket_new(context, ZMQ_ROUTER)),
         pool(pool),
@@ -21,7 +21,7 @@ ProtobufSender::ProtobufSender(std::string bind, BufferPool & pool) :
 
     // infinite wait before shutting down.
     // TODO: consider a timeout.
-    zctx_set_linger(context, -1);
+    zctx_set_linger(context, linger);
 }
 
 
@@ -33,13 +33,17 @@ ProtobufSender::~ProtobufSender()
 
 void ProtobufSender::send(zmq_msg_t * msg)
 {
+#ifdef DEBUG
     std::cout << "Waiting for worker..." << std::endl;
+#endif
 
     char * identity = zstr_recv(router);
 
+#ifdef DEBUG
     std::cout << "Sending " << zmq_msg_size(msg)
               << " bytes to " << identity
               << std::endl;
+#endif
 
     // ignore content.
     zstr_recv(router);
@@ -52,7 +56,11 @@ void ProtobufSender::send(zmq_msg_t * msg)
 
 void ProtobufSender::send(const google::protobuf::MessageLite & message)
 {
+    assert(!stopped);
+
+#ifdef DEBUG
     std::cout << "Send invoked" << std::endl;
+#endif
 
     // Get buffer from pool
     BufferPoolElement * element =
@@ -78,7 +86,11 @@ void ProtobufSender::send(const google::protobuf::MessageLite & message)
 
 void ProtobufSender::stop()
 {
+#ifdef DEBUG
     std::cout << "Stop invoked" << std::endl;
+#endif
+
+    stopped = true;
 
     int timeout = 1000;
     zmq_setsockopt(router, ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
@@ -87,12 +99,20 @@ void ProtobufSender::stop()
         char * identity = zstr_recv(router);
 
         if (identity == NULL) {
-            return;
+            break;
         }
 
         zstr_sendm(router, identity);
         zstr_send(router, "");
+
+#ifdef DEBUG
+        std::cout << "Stopped a worker" << std::endl;
+#endif
     }
+
+#ifdef DEBUG
+    std::cout << "Done" << std::endl;
+#endif
 }
 
 void ProtobufSender::set_stop_timeout(int stop_timeout)
