@@ -29,7 +29,8 @@ set(SOURCE_FILES
         bufpool/BufferPool.cpp
         bufpool/BufferPoolElement.cpp
         bufpool/Buffer.cpp
-        protos/BdFileBlock.pb.cc)
+        protos/BdFileBlock.pb.cc
+        sender/SenderStream.cpp)
 
 add_executable(worker tests/worker.cpp ${SOURCE_FILES})
 add_executable(sender tests/sender.cpp ${SOURCE_FILES})

@@ -13,16 +13,16 @@ int main()
 
     BdFileBlock file_block;
 
-    FILE *file = fopen("CMakeLists.txt", "rb");
+    FILE * file = fopen("test.iso", "rb");
     assert(file);
 
-    char buffer[1024];
+    char buffer[1024 * 1024];
 
     size_t sent_size;
 
     uint64_t i = 0;
     while (!feof(file)) {
-        sent_size = fread(buffer, 1, 1024, file);
+        sent_size = fread(buffer, 1, sizeof(buffer), file);
 
         file_block.set_offset(i++);
         file_block.set_data(buffer, sent_size);

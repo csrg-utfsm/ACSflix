@@ -5,7 +5,12 @@
 
 int main()
 {
-    ProtobufWorker worker("tcp://127.0.0.1:9999", "A");
+    std::string identity;
+
+    std::cout << "Identity: ";
+    std::cin >> identity;
+
+    ProtobufWorker worker("tcp://127.0.0.1:9999", identity);
 
     BdFileBlock file_block;
 
