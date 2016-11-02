@@ -108,8 +108,3 @@ void SenderFlow::detach_buffer_pool()
 	delete m_buffer_factory;
 	m_buffer_factory = new ZMQHeapBufferFactory();
 }
-
-void SenderFlow::detach_buffer_pool()
-{
-
-}
