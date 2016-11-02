@@ -4,7 +4,7 @@
 
 #include <string>
 #include <map>
-#include "ProtobufSender.h"
+#include "SenderFlow.h"
 
 class SenderStream
 {
@@ -12,7 +12,7 @@ private:
     /**
      * Storage of all flows.
      */
-    std::map<std::string, ProtobufSender*> flows;
+    std::map<std::string, SenderFlow*> flows;
 
     /**
      * A buffer pool dependency used for flows.
@@ -42,7 +42,8 @@ public:
      * @param connect connect string.
      * @return the created flow.
      */
-    ProtobufSender * create_flow(std::string flow_name, std::string connect);
+    template <class T>
+    T * create_flow(std::string flow_name, std::string connect);
 
     /**
      * Returns the flow for the given name.
@@ -50,7 +51,7 @@ public:
      * @param name name of the flow to get.
      * @return the flow, or NULL.
      */
-    ProtobufSender * get_flow(std::string name);
+    SenderFlow * get_flow(std::string name);
 
     /**
      * Checks if a flow exists.
