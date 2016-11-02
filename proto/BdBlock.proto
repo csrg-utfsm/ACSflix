@@ -1,0 +1,5 @@
+message BdBlock
+{
+    required uint32 offset = 1;
+    required string message = 2;
+}
