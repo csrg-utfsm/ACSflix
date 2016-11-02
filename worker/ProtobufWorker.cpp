@@ -1,7 +1,5 @@
 #include "ProtobufWorker.h"
 
-#include <iostream>
-
 ProtobufWorker::ProtobufWorker(std::string connect, std::string identity) :
         context(zctx_new()),
         dealer(zsocket_new(context, ZMQ_DEALER))

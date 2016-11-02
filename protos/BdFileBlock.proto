@@ -1,4 +1,0 @@
-message BdFileBlock {
-    required uint64 offset = 1;
-    required bytes data = 2;
-}

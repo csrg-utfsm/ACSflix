@@ -25,16 +25,22 @@ include_directories(proto)
 include_directories(utils)
 
 set(SOURCE_FILES
-        sender/ProtobufSender.cpp
+        sender/ProtobufSenderFlow.cpp
         worker/ProtobufWorker.cpp
         bufpool/BufferPool.cpp
         bufpool/BufferPoolElement.cpp
+        bufpool/ZMQBuffer.cpp
+        bufpool/ZMQHeapBuffer.cpp
+        bufpool/ZMQHeapBufferFactory.cpp
+        bufpool/ZMQPooledBuffer.cpp
+        bufpool/ZMQPooledBufferFactory.cpp
         bufpool/Buffer.cpp
-        protos/BdFileBlock.pb.cc
-        sender/SenderStream.cpp)
+        sender/SenderStream.cpp
+        sender/SenderFlow.cpp
+        proto/BdBlock.pb.cc)
 
 add_executable(worker tests/worker.cpp ${SOURCE_FILES})
-add_executable(sender tests/sender.cpp ${SOURCE_FILES} sender/SenderFlow.cpp sender/SenderFlow.h)
+add_executable(sender tests/sender_stream.cpp ${SOURCE_FILES})
 
 target_link_libraries(sender ${EXTERNAL_LIBS})
 target_link_libraries(worker ${EXTERNAL_LIBS})

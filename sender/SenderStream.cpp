@@ -16,17 +16,6 @@ SenderStream::~SenderStream()
     }
 }
 
-template <class T>
-T * SenderStream::create_flow(std::string flow_name, std::string connect)
-{
-    T * flow = new T(connect, linger);
-    flow->attach_buffer_pool(pool);
-
-    flows[flow_name] = flow;
-
-    return flow;
-}
-
 SenderFlow * SenderStream::get_flow(std::string name)
 {
     if (exist_flow(name)) {

@@ -1,5 +1,5 @@
 #include <iostream>
-#include <BdFileBlock.pb.h>
+#include <BdBlock.pb.h>
 
 #include "ProtobufWorker.h"
 
@@ -10,12 +10,12 @@ int main()
     std::cout << "Identity: ";
     std::cin >> identity;
 
-    ProtobufWorker worker("tcp://127.0.0.1:9999", identity);
+    ProtobufWorker worker("tcp://127.0.0.1:9991", identity);
 
-    BdFileBlock file_block;
+    BdBlock file_block;
 
     while (worker.work(file_block)) {
-        std::cout << file_block.offset() << ": " << file_block.data().length() << std::endl;
+        std::cout << file_block.offset() << ": " << file_block.message().length() << std::endl;
     }
 
     return 0;

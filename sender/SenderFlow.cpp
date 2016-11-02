@@ -1,18 +1,6 @@
-//
-// Created by Rodolfo Castillo Mateluna on 10/18/16.
-//
-
 #include <iostream>
 #include <cassert>
 #include "SenderFlow.h"
-
-
-void on_buffer_release(void * data, void * hint)
-{
-	BufferPoolElement * element = static_cast<BufferPoolElement*>(hint);
-	assert(element->get_buffer().data() == data);
-	element->release(); // Release buffer to be used in cache
-}
 
 
 SenderFlow::SenderFlow(std::string bind, int linger) :
@@ -40,7 +28,7 @@ SenderFlow::~SenderFlow()
 void SenderFlow::send(zmq_msg_t * msg)
 {
 	assert(!stopped);
-	
+
 #ifdef DEBUG
 	std::cout << "Waiting for worker..." << std::endl;
 #endif

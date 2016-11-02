@@ -1,7 +1,6 @@
 #include <iostream>
 #include <BdFileBlock.pb.h>
-
-#include "ProtobufSender.h"
+#include <SenderStream.hpp>
 
 
 int main()
@@ -13,7 +12,7 @@ int main()
 
     BdFileBlock file_block;
 
-    FILE * file = fopen("test.iso", "rb");
+    FILE * file = fopen("CMakeLists.txt", "rb");
     assert(file);
 
     char buffer[1024 * 1024];

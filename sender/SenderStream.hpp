@@ -43,7 +43,15 @@ public:
      * @return the created flow.
      */
     template <class T>
-    T * create_flow(std::string flow_name, std::string connect);
+    T * create_flow(std::string flow_name, std::string connect)
+    {
+        T * flow = new T(connect, linger);
+        flow->attach_buffer_pool(pool);
+
+        flows[flow_name] = flow;
+
+        return flow;
+    }
 
     /**
      * Returns the flow for the given name.
