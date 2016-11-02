@@ -22,6 +22,7 @@ include_directories(worker)
 include_directories(sender)
 include_directories(bufpool)
 include_directories(proto)
+include_directories(utils)
 
 set(SOURCE_FILES
         sender/ProtobufSender.cpp

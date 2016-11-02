@@ -7,6 +7,9 @@
 
 #include <string>
 #include <czmq.h>
+#include <ZMQBufferFactory.h>
+#include <ZMQHeapBufferFactory.h>
+#include <ZMQPooledBufferFactory.h>
 #include "google/protobuf/message_lite.h"
 #include "BufferPool.h"
 
@@ -17,11 +20,12 @@ private:
 
 	void * router;
 
-	BufferPool & pool;
-
 	bool stopped;
 
 	int stop_timeout;
+
+protected:
+	ZMQBufferFactory * m_buffer_factory;
 
 	/**
 	 * Sends a ZMQ message as is to any available worker.
@@ -31,9 +35,13 @@ private:
 	void send(zmq_msg_t * msg);
 
 public:
-	SenderFlow(std::string bind, BufferPool & pool, int linger = 10000);
+	SenderFlow(std::string bind, int linger = 10000);
 
 	~SenderFlow();
+
+	void attach_buffer_pool(BufferPool & pool);
+
+	void detach_buffer_pool();
 
 	/**
 	 * Stops sender and all workers, this is a blocking operation.

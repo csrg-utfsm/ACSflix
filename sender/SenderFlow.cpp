@@ -15,12 +15,12 @@ void on_buffer_release(void * data, void * hint)
 }
 
 
-SenderFlow::SenderFlow(std::string bind, BufferPool & pool, int linger) :
+SenderFlow::SenderFlow(std::string bind, int linger) :
 		context(zctx_new()),
 		router(zsocket_new(context, ZMQ_ROUTER)),
-		pool(pool),
 		stopped(false),
-		stop_timeout(1000)
+		stop_timeout(1000),
+        m_buffer_factory(new ZMQHeapBufferFactory)
 {
 	zsocket_bind(router, bind.c_str());
 
@@ -33,6 +33,7 @@ SenderFlow::SenderFlow(std::string bind, BufferPool & pool, int linger) :
 SenderFlow::~SenderFlow()
 {
 	zctx_destroy(&context);
+	delete m_buffer_factory;
 }
 
 
@@ -92,4 +93,21 @@ void SenderFlow::stop()
 void SenderFlow::set_stop_timeout(int stop_timeout)
 {
 	this->stop_timeout = stop_timeout;
+}
+
+void SenderFlow::attach_buffer_pool(BufferPool &pool)
+{
+	delete m_buffer_factory;
+	m_buffer_factory = new ZMQPooledBufferFactory(pool);
+}
+
+void SenderFlow::detach_buffer_pool()
+{
+	delete m_buffer_factory;
+	m_buffer_factory = new ZMQHeapBufferFactory();
+}
+
+void SenderFlow::detach_buffer_pool()
+{
+
 }
