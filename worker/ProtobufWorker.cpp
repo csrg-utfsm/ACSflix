@@ -8,12 +8,10 @@ ProtobufWorker::ProtobufWorker(std::string connect, std::string identity) :
     zsocket_connect(dealer, connect.c_str());
 }
 
-
 ProtobufWorker::~ProtobufWorker()
 {
     zctx_destroy(&context);
 }
-
 
 bool ProtobufWorker::work(google::protobuf::MessageLite & message)
 {
@@ -25,6 +23,7 @@ bool ProtobufWorker::work(google::protobuf::MessageLite & message)
     zmq_msg_recv(&msg, dealer, 0);
 
     if (zmq_msg_size(&msg) == 0) {
+        zmq_msg_close(&msg);
         return false;
     }
 

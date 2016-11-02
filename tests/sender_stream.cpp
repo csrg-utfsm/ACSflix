@@ -4,8 +4,6 @@
 
 #include "SenderStream.hpp"
 
-
-
 int main()
 {
     BufferPool pool;

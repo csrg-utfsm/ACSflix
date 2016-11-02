@@ -41,7 +41,7 @@ set(SOURCE_FILES
         proto/BdBlock.pb.cc)
 
 add_executable(worker tests/worker.cpp ${SOURCE_FILES})
-add_executable(sender tests/sender_stream.cpp ${SOURCE_FILES})
+add_executable(sender tests/sender_stream.cpp ${SOURCE_FILES} worker/WorkerFlow.cpp worker/WorkerFlow.h)
 
 target_link_libraries(sender ${EXTERNAL_LIBS})
 target_link_libraries(worker ${EXTERNAL_LIBS})
