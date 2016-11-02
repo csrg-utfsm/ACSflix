@@ -25,6 +25,7 @@ include_directories(proto)
 include_directories(utils)
 
 set(SOURCE_FILES
+        sender/BytesSenderFlow.cpp
         sender/ProtobufSenderFlow.cpp
         worker/ProtobufWorker.cpp
         bufpool/BufferPool.cpp

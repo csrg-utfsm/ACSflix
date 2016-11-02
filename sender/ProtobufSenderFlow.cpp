@@ -2,15 +2,6 @@
 
 #include "ProtobufSenderFlow.h"
 
-
-void on_buffer_release(void * data, void * hint)
-{
-    BufferPoolElement * element = static_cast<BufferPoolElement *>(hint);
-    assert(element->get_buffer().data() == data);
-    element->release(); // Release buffer to be used in cache
-}
-
-
 ProtobufSenderFlow::ProtobufSenderFlow(const std::string & bind, int linger) :
         SenderFlow(bind, linger)
 {}
