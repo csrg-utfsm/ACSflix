@@ -21,7 +21,7 @@ include_directories(${PROTOBUF_INCLUDE_DIRS})
 include_directories(worker)
 include_directories(sender)
 include_directories(bufpool)
-include_directories(protos)
+include_directories(proto)
 
 set(SOURCE_FILES
         sender/ProtobufSender.cpp
@@ -33,7 +33,7 @@ set(SOURCE_FILES
         sender/SenderStream.cpp)
 
 add_executable(worker tests/worker.cpp ${SOURCE_FILES})
-add_executable(sender tests/sender.cpp ${SOURCE_FILES})
+add_executable(sender tests/sender.cpp ${SOURCE_FILES} sender/SenderFlow.cpp sender/SenderFlow.h)
 
 target_link_libraries(sender ${EXTERNAL_LIBS})
 target_link_libraries(worker ${EXTERNAL_LIBS})
