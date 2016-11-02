@@ -1,0 +1,11 @@
+#ifndef BDT_ENGINE_WORKERCALLBACK_HPP
+#define BDT_ENGINE_WORKERCALLBACK_HPP
+
+
+class WorkerCallback
+{
+
+};
+
+
+#endif //BDT_ENGINE_WORKERCALLBACK_HPP

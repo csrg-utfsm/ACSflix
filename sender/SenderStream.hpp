@@ -39,13 +39,13 @@ public:
      * Creates a flow with a name that will be bound to this stream.
      *
      * @param flow_name name assigned to the flow.
-     * @param connect connect string.
+     * @param bind connect string.
      * @return the created flow.
      */
     template <class T>
-    T * create_flow(std::string flow_name, std::string connect)
+    T * create_flow(std::string flow_name, std::string bind)
     {
-        T * flow = new T(connect, linger);
+        T * flow = new T(bind, linger);
         flow->attach_buffer_pool(pool);
 
         flows[flow_name] = flow;
