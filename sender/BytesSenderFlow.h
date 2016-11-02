@@ -4,6 +4,7 @@
 
 #include "SenderFlow.h"
 
+// TODO: test
 class BytesSender : public SenderFlow
 {
 public:

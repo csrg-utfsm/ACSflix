@@ -11,12 +11,12 @@ WorkerFlow::WorkerFlow(std::string connect,
 	zsocket_connect(m_dealer, connect.c_str());
 }
 
-WorkerFlow::WorkerFlow()
+WorkerFlow::~WorkerFlow()
 {
 	zctx_destroy(&m_context);
 }
 
-WorkerFlowCallback *WorkerFlow::callback()
+WorkerFlowCallback * WorkerFlow::callback()
 {
 	return m_callback;
 }

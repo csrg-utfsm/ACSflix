@@ -1,22 +1,41 @@
 #include <iostream>
 #include <BdBlock.pb.h>
+#include <WorkerStream.hpp>
 
 #include "ProtobufWorker.h"
 
-int main()
+
+class SampleWorkerFlowCallback : public WorkerFlowCallback
 {
-    std::string identity;
-
-    std::cout << "Identity: ";
-    std::cin >> identity;
-
-    ProtobufWorker worker("tcp://127.0.0.1:9991", identity);
-
+private:
     BdBlock file_block;
 
-    while (worker.work(file_block)) {
-        std::cout << file_block.offset() << ": " << file_block.message().length() << std::endl;
+public:
+    virtual void on_start() override
+    {
+
     }
+
+    virtual void on_workload(const char * buffer, size_t size) override
+    {
+        file_block.ParseFromArray(buffer, (int) size);
+        std::cout << "Received message of size: " << file_block.message().size() << std::endl;
+    }
+
+    virtual void on_stop() override
+    {
+
+    }
+};
+
+
+int main()
+{
+    WorkerStream stream;
+
+    SampleWorkerFlowCallback callback;
+    stream.create_flow("Flow1", "tcp://127.0.0.1:9991", &callback);
+    stream.start();
 
     return 0;
 }

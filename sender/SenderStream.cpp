@@ -12,7 +12,7 @@ SenderStream::~SenderStream()
     // delete all allocated flows.
     typedef std::map<std::string, SenderFlow*>::iterator it_type;
     for(it_type iterator = flows.begin(); iterator != flows.end(); iterator++) {
-        delete(flows[iterator->first]);
+        delete flows[iterator->first];
     }
 }
 

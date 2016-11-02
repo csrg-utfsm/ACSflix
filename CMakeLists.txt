@@ -38,10 +38,12 @@ set(SOURCE_FILES
         bufpool/Buffer.cpp
         sender/SenderStream.cpp
         sender/SenderFlow.cpp
-        proto/BdBlock.pb.cc)
+        proto/BdBlock.pb.cc
+        worker/WorkerFlow.cpp
+        worker/WorkerStream.cpp)
 
 add_executable(worker tests/worker.cpp ${SOURCE_FILES})
-add_executable(sender tests/sender_stream.cpp ${SOURCE_FILES} worker/WorkerFlow.cpp worker/WorkerFlow.h)
+add_executable(sender tests/sender_stream.cpp ${SOURCE_FILES})
 
 target_link_libraries(sender ${EXTERNAL_LIBS})
 target_link_libraries(worker ${EXTERNAL_LIBS})

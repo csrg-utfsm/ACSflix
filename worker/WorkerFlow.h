@@ -20,7 +20,7 @@ public:
 	           std::string identity,
 	           WorkerFlowCallback * callback);
 
-	virtual WorkerFlow();
+	virtual ~WorkerFlow();
 
 	WorkerFlowCallback * callback();
 

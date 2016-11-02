@@ -4,6 +4,7 @@
 
 #include <czmq.h>
 #include <google/protobuf/message_lite.h>
+#include "WorkerFlowCallback.hpp"
 
 class ProtobufWorker
 {
@@ -11,6 +12,8 @@ private:
     zctx_t * context;
 
     void * dealer;
+
+    WorkerFlowCallback * callback;
 
     // TODO: save working state for exit checks.
 
