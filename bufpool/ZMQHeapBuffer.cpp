@@ -1,7 +1,3 @@
-//
-// Created by Rodolfo Castillo Mateluna on 9/29/16.
-//
-
 #include "ZMQHeapBuffer.h"
 
 void on_free(void * data, void * hint)

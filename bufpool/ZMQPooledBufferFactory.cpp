@@ -1,7 +1,3 @@
-//
-// Created by Rodolfo Castillo Mateluna on 9/29/16.
-//
-
 #include "ZMQPooledBufferFactory.h"
 #include "ZMQPooledBuffer.h"
 

@@ -1,7 +1,3 @@
-//
-// Created by Rodolfo Castillo Mateluna on 9/29/16.
-//
-
 #ifndef PUBLISHER_ZMQBUFFERFACTORY_H
 #define PUBLISHER_ZMQBUFFERFACTORY_H
 

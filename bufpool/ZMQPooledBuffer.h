@@ -1,14 +1,10 @@
-//
-// Created by Rodolfo Castillo Mateluna on 9/29/16.
-//
-
 #ifndef PUBLISHER_ZMQPOOLEDBUFFER_H
 #define PUBLISHER_ZMQPOOLEDBUFFER_H
 
 
 #include "ZMQBuffer.h"
 #include <cassert>
-#include "../../../Downloads/ACSflix-lbimpl/core/sources/util/BufferPoolElement.h"
+#include "BufferPoolElement.h"
 
 class ZMQPooledBuffer : public ZMQBuffer
 {

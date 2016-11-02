@@ -1,7 +1,3 @@
-//
-// Created by Rodolfo Castillo Mateluna on 10/18/16.
-//
-
 #ifndef BDT_ENGINE_FLOW_H
 #define BDT_ENGINE_FLOW_H
 
