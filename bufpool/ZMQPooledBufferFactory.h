@@ -1,13 +1,9 @@
-//
-// Created by Rodolfo Castillo Mateluna on 9/29/16.
-//
-
 #ifndef PUBLISHER_ZMQPOOLEDBUFFERFACTORY_H
 #define PUBLISHER_ZMQPOOLEDBUFFERFACTORY_H
 
 
 #include "ZMQBufferFactory.h"
-#include "../../../Downloads/ACSflix-lbimpl/core/sources/util/BufferPool.h"
+#include "BufferPool.h"
 
 class ZMQPooledBufferFactory : public ZMQBufferFactory
 {

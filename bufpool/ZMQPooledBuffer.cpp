@@ -1,7 +1,3 @@
-//
-// Created by Rodolfo Castillo Mateluna on 9/29/16.
-//
-
 #include "ZMQPooledBuffer.h"
 
 void on_release(void * data, void * hint)
