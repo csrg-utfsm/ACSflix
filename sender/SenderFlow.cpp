@@ -38,6 +38,8 @@ SenderFlow::~SenderFlow()
 
 void SenderFlow::send(zmq_msg_t * msg)
 {
+	assert(!stopped);
+	
 #ifdef DEBUG
 	std::cout << "Waiting for worker..." << std::endl;
 #endif
