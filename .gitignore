@@ -3,3 +3,4 @@
 .DS_Store
 *.testfile
 build/
+test.file

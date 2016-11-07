@@ -11,9 +11,11 @@ WorkerStream::~WorkerStream()
 }
 
 
-WorkerFlow * WorkerStream::create_flow(std::string name, std::string connect, WorkerFlowCallback * callback)
+WorkerFlow * WorkerStream::create_flow(std::string name, std::string connect, WorkerFlowCallback * callback,
+        size_t tokens)
 {
     WorkerFlow * flow = new WorkerFlow(connect, name, callback);
+    flow->set_tokens(tokens);
     flows[name] = new WorkerData(flow);
     return flow;
 }
@@ -32,7 +34,7 @@ void WorkerStream::prepare_flows()
     typedef std::map<std::string, WorkerData*>::iterator it_type;
 
     for (it_type it = flows.begin(); it != flows.end(); it++) {
-        it->second->flow->callback()->on_start();
+        it->second->flow->callback()->on_start(it->second->flow);
     }
 }
 

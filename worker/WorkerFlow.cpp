@@ -5,7 +5,8 @@ WorkerFlow::WorkerFlow(std::string connect,
                        WorkerFlowCallback * callback) :
 	m_context(zctx_new()),
     m_dealer(zsocket_new(m_context, ZMQ_DEALER)),
-    m_callback(callback)
+    m_callback(callback),
+    m_tokens(1)
 {
 	zsocket_set_identity(m_dealer, identity.c_str());
 	zsocket_connect(m_dealer, connect.c_str());
@@ -23,12 +24,17 @@ WorkerFlowCallback * WorkerFlow::callback()
 
 bool WorkerFlow::work()
 {
-	// send notification to router.
-	zstr_send(m_dealer, "");
+	// send notifications to router.
+	while (m_tokens) {
+		zstr_send(m_dealer, "");
+		m_tokens--;
+	}
 
 	zmq_msg_t msg;
 	zmq_msg_init(&msg);
 	zmq_msg_recv(&msg, m_dealer, 0);
+
+    m_tokens++;
 
 	if (zmq_msg_size(&msg) == 0) {
 		zmq_msg_close(&msg);
@@ -43,3 +49,12 @@ bool WorkerFlow::work()
 	return true;
 }
 
+void WorkerFlow::set_tokens(size_t tokens)
+{
+    m_tokens = tokens;
+}
+
+size_t WorkerFlow::get_tokens()
+{
+    return m_tokens;
+}

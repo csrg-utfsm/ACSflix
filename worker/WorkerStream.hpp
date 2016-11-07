@@ -38,7 +38,8 @@ private:
     void on_stop_flows();
 
 public:
-    WorkerFlow * create_flow(std::string name, std::string connect, WorkerFlowCallback * callback);
+    WorkerFlow * create_flow(std::string name, std::string connect, WorkerFlowCallback * callback,
+            size_t tokens = 1);
 
     ~WorkerStream();
 

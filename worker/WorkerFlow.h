@@ -11,6 +11,8 @@ class WorkerFlow
 
 	void * m_dealer;
 
+	size_t m_tokens;
+
 	WorkerFlowCallback * m_callback;
 
 	// TODO: save working state for exit checks.
@@ -25,6 +27,10 @@ public:
 	WorkerFlowCallback * callback();
 
 	bool work();
+
+    void set_tokens(size_t tokens);
+
+    size_t get_tokens();
 };
 
 

@@ -14,7 +14,7 @@ int main()
     // send data.
     BdBlock file_block;
 
-    FILE * file = fopen("CMakeLists.txt", "rb");
+    FILE * file = fopen("test.file", "rb");
     assert(file);
 
     char buffer[1024 * 1024];
