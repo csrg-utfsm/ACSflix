@@ -4,3 +4,4 @@
 *.testfile
 build/
 test.file
+plain.file

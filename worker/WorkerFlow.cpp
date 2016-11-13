@@ -6,7 +6,8 @@ WorkerFlow::WorkerFlow(std::string connect,
 	m_context(zctx_new()),
     m_dealer(zsocket_new(m_context, ZMQ_DEALER)),
     m_callback(callback),
-    m_tokens(1)
+    m_tokens(1),
+    m_identity(identity)
 {
 	zsocket_set_identity(m_dealer, identity.c_str());
 	zsocket_connect(m_dealer, connect.c_str());
@@ -57,4 +58,9 @@ void WorkerFlow::set_tokens(size_t tokens)
 size_t WorkerFlow::get_tokens()
 {
     return m_tokens;
+}
+
+std::string WorkerFlow::get_identity()
+{
+    return m_identity;
 }

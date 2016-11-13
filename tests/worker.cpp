@@ -9,17 +9,20 @@ class SampleWorkerFlowCallback : public WorkerFlowCallback
 {
 private:
     BdBlock file_block;
+    WorkerFlow * flow;
 
 public:
     virtual void on_start(WorkerFlow * flow) override
     {
-        std::cout << "Started flow with " << flow->get_tokens() << " tokens." << std::endl;
+        this->flow = flow;
+
+        std::cout << "Started flow " << flow->get_identity() << " with "
+                  << flow->get_tokens() << " tokens." << std::endl;
     }
 
     virtual void on_workload(const char * buffer, size_t size) override
     {
         file_block.ParseFromArray(buffer, (int) size);
-        std::cout << "Received message of size: " << file_block.message().size() << std::endl;
     }
 
     virtual void on_stop() override

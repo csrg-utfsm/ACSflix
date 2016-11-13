@@ -13,6 +13,8 @@ class WorkerFlow
 
 	size_t m_tokens;
 
+    std::string m_identity;
+
 	WorkerFlowCallback * m_callback;
 
 	// TODO: save working state for exit checks.
@@ -31,6 +33,8 @@ public:
     void set_tokens(size_t tokens);
 
     size_t get_tokens();
+
+    std::string get_identity();
 };
 
 

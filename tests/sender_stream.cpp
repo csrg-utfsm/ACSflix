@@ -1,6 +1,7 @@
 #include <iostream>
 #include <ProtobufSenderFlow.h>
 #include <BdBlock.pb.h>
+#include <ctime>
 
 #include "SenderStream.hpp"
 
@@ -21,6 +22,8 @@ int main()
 
     size_t sent_size;
 
+    clock_t begin = clock();
+
     uint32_t i = 0;
     while (!feof(file)) {
         sent_size = fread(buffer, 1, sizeof(buffer), file);
@@ -30,6 +33,12 @@ int main()
 
         flow1->send(file_block);
     }
+
+    clock_t end = clock();
+
+    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
+
+    std::cout << "Seconds: " << elapsed_secs << std::endl;
 
     flow1->stop();
 
