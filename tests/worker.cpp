@@ -37,7 +37,7 @@ int main(int argc, char * argv[])
     WorkerStream stream;
 
     SampleWorkerFlowCallback callback;
-    stream.create_flow(argv[1], "tcp://127.0.0.1:9991", &callback, (size_t) std::stoi(argv[2]));
+    stream.create_flow(argv[1], argv[2], &callback, 1);
     stream.start();
 
     return 0;
