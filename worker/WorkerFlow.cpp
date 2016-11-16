@@ -9,7 +9,8 @@ WorkerFlow::WorkerFlow(std::string connect,
     m_tokens(1),
     m_identity(identity)
 {
-	zsocket_set_identity(m_dealer, identity.c_str());
+  char * identity_cpy = strdup(identity.c_str());
+	zsocket_set_identity(m_dealer, identity_cpy);
 	zsocket_connect(m_dealer, connect.c_str());
 }
 

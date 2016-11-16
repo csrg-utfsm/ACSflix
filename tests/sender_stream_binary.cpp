@@ -1,6 +1,5 @@
 #include <iostream>
-#include <ProtobufSenderFlow.h>
-#include <BdBlock.pb.h>
+#include <BytesSenderFlow.h>
 #include <ctime>
 
 #include "SenderStream.hpp"
@@ -10,10 +9,7 @@ int main(int argc, char * argv[])
     BufferPool pool;
     SenderStream stream(pool, 1000);
 
-    ProtobufSenderFlow * flow1 = stream.create_flow<ProtobufSenderFlow>("Flow1", "tcp://*:9991");
-
-    // send data.
-    BdBlock file_block;
+    BytesSenderFlow * flow1 = stream.create_flow<BytesSenderFlow>("Flow1", "tcp://*:9991");
 
     FILE * file = fopen(argv[1], "rb");
     assert(file);
@@ -27,11 +23,7 @@ int main(int argc, char * argv[])
     uint32_t i = 0;
     while (!feof(file)) {
         sent_size = fread(buffer, 1, sizeof(buffer), file);
-
-        file_block.set_offset(i++);
-        file_block.set_message(buffer, sent_size);
-
-        flow1->send(file_block);
+        flow1->send(buffer, sent_size);
     }
 
     clock_t end = clock();
