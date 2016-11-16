@@ -4,14 +4,14 @@
 
 #include "SenderStream.hpp"
 
-int main()
+int main(int argc, char * argv[])
 {
     BufferPool pool;
     SenderStream stream(pool, 1000);
 
     BytesSenderFlow * flow1 = stream.create_flow<BytesSenderFlow>("Flow1", "tcp://*:9991");
 
-    FILE * file = fopen("test.file", "rb");
+    FILE * file = fopen(argv[1], "rb");
     assert(file);
 
     char buffer[1024 * 1024];

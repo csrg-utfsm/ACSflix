@@ -5,7 +5,7 @@
 
 #include "SenderStream.hpp"
 
-int main()
+int main(int argc, char * argv[])
 {
     BufferPool pool;
     SenderStream stream(pool, 1000);
@@ -15,7 +15,7 @@ int main()
     // send data.
     BdBlock file_block;
 
-    FILE * file = fopen("test.file", "rb");
+    FILE * file = fopen(argv[1], "rb");
     assert(file);
 
     char buffer[1024 * 1024];
