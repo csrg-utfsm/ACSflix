@@ -5,10 +5,10 @@
 #include "SenderFlow.h"
 
 // TODO: test
-class BytesSender : public SenderFlow
+class BytesSenderFlow : public SenderFlow
 {
 public:
-	BytesSender(const std::string &bind, int linger);
+	BytesSenderFlow(const std::string &bind, int linger);
 
 	void send(const char * buffer, size_t size);
 };
