@@ -1,4 +1,7 @@
 #include "WorkerFlow.h"
+#include <iostream>
+#include <cerrno>
+#include <cstring>
 
 WorkerFlow::WorkerFlow(std::string connect,
                        std::string identity,
@@ -26,17 +29,36 @@ WorkerFlowCallback * WorkerFlow::callback()
 
 bool WorkerFlow::work()
 {
+	char id[256];
+	size_t id_size = 256;
+
+	zmq_getsockopt(m_dealer, ZMQ_IDENTITY, id, &id_size);
+	std::cout << "id: " << id << std::endl;
+
 	// send notifications to router.
 	while (m_tokens) {
 		zstr_send(m_dealer, "");
 		m_tokens--;
 	}
 
+	m_tokens++;
+
 	zmq_msg_t msg;
 	zmq_msg_init(&msg);
-	zmq_msg_recv(&msg, m_dealer, 0);
+	int sret;
 
-    m_tokens++;
+	while ((sret = zmq_msg_recv(&msg, m_dealer, 0)) == -1) {
+		if (errno != EINTR) {
+			return false;
+		}
+		std::cout << "Trying again... " << std::endl;
+	}
+
+	//assert(sret == zmq_msg_size(&msg));
+	//std::cout << "sret: " << sret << std::endl;
+	//std::cout << "zmsize: " << zmq_msg_size(&msg) << std::endl;
+	
+    //m_tokens++;
 
 	if (zmq_msg_size(&msg) == 0) {
 		zmq_msg_close(&msg);

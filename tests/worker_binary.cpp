@@ -1,6 +1,6 @@
 #include <iostream>
 #include <WorkerStream.hpp>
-
+#include <stdlib.h>
 #include "ProtobufWorker.h"
 
 
@@ -24,6 +24,7 @@ public:
     virtual void on_workload(const char * buffer, size_t size) override
     {
 		    accumulated += size;
+		std::cout << accumulated << std::endl;
     }
 
     virtual void on_stop() override
@@ -35,10 +36,17 @@ public:
 
 int main(int argc, char * argv[])
 {
+    if (argc != 4) {
+	std::cout << "Usage: " << *argv << " name connect tokens" << std::endl;
+	return 1;
+    }
+
     WorkerStream stream;
 
+    size_t tokens = strtol(argv[3], NULL, 10); // Assume correct input
+
     SampleWorkerFlowCallback callback;
-    stream.create_flow(argv[1], argv[2], &callback, 1);
+    stream.create_flow(argv[1], argv[2], &callback, tokens);
     stream.start();
 
     return 0;
