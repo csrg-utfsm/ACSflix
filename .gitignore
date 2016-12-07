@@ -5,3 +5,5 @@
 build/
 test.file
 plain.file
+own/
+proto/*.pb.*

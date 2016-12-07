@@ -42,8 +42,8 @@ set(SOURCE_FILES
         worker/WorkerFlow.cpp
         worker/WorkerStream.cpp)
 
-add_executable(worker tests/worker_binary.cpp ${SOURCE_FILES})
 add_executable(sender tests/sender_stream_binary.cpp ${SOURCE_FILES})
+add_executable(worker tests/worker_binary.cpp ${SOURCE_FILES})
 
 target_link_libraries(sender ${EXTERNAL_LIBS})
 target_link_libraries(worker ${EXTERNAL_LIBS})

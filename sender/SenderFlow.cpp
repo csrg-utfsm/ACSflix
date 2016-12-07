@@ -35,7 +35,7 @@ void SenderFlow::send(zmq_msg_t * msg)
 
 	char * identity = zstr_recv(router);
 
-	std::cout << identity[4] << " ";
+	std::cout << identity << " " << std::endl;
 
 #ifdef DEBUG
 	std::cout << "Sending " << zmq_msg_size(msg)

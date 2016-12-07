@@ -43,10 +43,12 @@ int main(int argc, char * argv[])
 
     WorkerStream stream;
 
-    size_t tokens = strtol(argv[3], NULL, 10); // Assume correct input
+    size_t tokens = (size_t) strtol(argv[3], NULL, 10); // Assume correct input
+
+    std::string identity(argv[1], strlen(argv[1]));
 
     SampleWorkerFlowCallback callback;
-    stream.create_flow(argv[1], argv[2], &callback, tokens);
+    stream.create_flow(identity, argv[2], &callback, tokens);
     stream.start();
 
     return 0;
