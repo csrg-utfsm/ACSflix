@@ -11,7 +11,7 @@ private:
     size_t accumulated;
 
 public:
-    virtual void on_start(WorkerFlow * flow) override
+    virtual void on_start(WorkerFlow * flow)
     {
         this->flow = flow;
 
@@ -21,13 +21,13 @@ public:
                   << flow->get_tokens() << " tokens." << std::endl;
     }
 
-    virtual void on_workload(const char * buffer, size_t size) override
+    virtual void on_workload(const char * buffer, size_t size)
     {
 		    accumulated += size;
 		    //std::cout << accumulated << std::endl;
     }
 
-    virtual void on_stop() override
+    virtual void on_stop()
     {
 		    std::cout << "Received: " << accumulated << std::endl;
     }
