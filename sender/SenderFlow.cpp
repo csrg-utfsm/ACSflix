@@ -52,13 +52,13 @@ void SenderFlow::send(zmq_msg_t * msg)
 	    std::cout << "Tried too many times... Aborting!" << std::endl;
 	    assert(size != -1);
 	    }*/
-	  std::cout << "Trying again..." << std::endl;
+	  //std::cout << "Trying again..." << std::endl;
 	} 
 
 	identity[size] = 0;
 
-	std::cout << identity << " " << std::endl;
-	std::cout << "size: " << size << std::endl;
+	//std::cout << identity << " " << std::endl;
+	//std::cout << "size: " << size << std::endl;
 
 	
 

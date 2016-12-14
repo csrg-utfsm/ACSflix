@@ -57,7 +57,7 @@ bool WorkerFlow::work()
 	  std::cout << "Tried too many times... Aborting!" << std::endl;
 	  return false;
 	  }*/
-        std::cout << "Trying again... " << std::endl;
+        //std::cout << "Trying again... " << std::endl;
     }
 
     //assert(sret == zmq_msg_size(&msg));
