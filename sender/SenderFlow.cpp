@@ -60,16 +60,19 @@ void SenderFlow::send(zmq_msg_t * msg)
 	//std::cout << identity << " " << std::endl;
 	//std::cout << "size: " << size << std::endl;
 
-	
-
 #ifdef DEBUG
 	std::cout << "Sending " << zmq_msg_size(msg)
               << " bytes to " << identity
               << std::endl;
 #endif
 
-	// ignore content.
-	zstr_recv(router);
+	// ignore delimiter.
+	char * ignore = zstr_recv(router);
+    zstr_free(&ignore);
+
+    // ignore worker content.
+    ignore = zstr_recv(router);
+    zstr_free(&ignore);
 
 	// send message with an identity frame and content frame.
 	zstr_sendm(router, identity);

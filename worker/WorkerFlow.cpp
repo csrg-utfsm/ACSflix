@@ -11,7 +11,7 @@ WorkerFlow::WorkerFlow(std::string connect,
         m_callback(callback),
         m_tokens(1),
         m_identity(identity),
-	m_eintr_count(0)
+        m_eintr_count(0)
 {
     char * identity_cpy = strdup(identity.c_str());
     zsocket_set_identity(m_dealer, identity_cpy);
@@ -38,11 +38,11 @@ bool WorkerFlow::work()
 
     // send notifications to router.
     while (m_tokens) {
-        zstr_send(m_dealer, "");
+        zstr_sendm(m_dealer, "");
+        zstr_send(m_dealer, "T");
+
         m_tokens--;
     }
-
-    m_tokens++;
 
     zmq_msg_t msg;
     zmq_msg_init(&msg);
@@ -52,11 +52,13 @@ bool WorkerFlow::work()
         if (errno != EINTR) {
             return false;
         }
-	m_eintr_count++;
-	/*if (m_eintr_count++ == 5) {
-	  std::cout << "Tried too many times... Aborting!" << std::endl;
-	  return false;
-	  }*/
+
+        m_eintr_count++;
+
+        /*if (m_eintr_count++ == 5) {
+          std::cout << "Tried too many times... Aborting!" << std::endl;
+          return false;
+          }*/
         //std::cout << "Trying again... " << std::endl;
     }
 
@@ -64,10 +66,10 @@ bool WorkerFlow::work()
     //std::cout << "sret: " << sret << std::endl;
     //std::cout << "zmsize: " << zmq_msg_size(&msg) << std::endl;
 
-    //m_tokens++;
+    m_tokens++;
 
     if (zmq_msg_size(&msg) == 0) {
-      std::cout << "Total failures: " << m_eintr_count << std::endl;
+        std::cout << "Total failures: " << m_eintr_count << std::endl;
         zmq_msg_close(&msg);
         return false;
     }
