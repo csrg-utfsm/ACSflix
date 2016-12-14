@@ -17,6 +17,8 @@ class WorkerFlow
 
 	WorkerFlowCallback * m_callback;
 
+	int m_eintr_count;
+
 	// TODO: save working state for exit checks.
 
 public:
