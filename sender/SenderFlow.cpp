@@ -2,13 +2,16 @@
 #include <cassert>
 #include "SenderFlow.h"
 
+#include <cerrno>
+#include <cstring>
 
 SenderFlow::SenderFlow(std::string bind, int linger) :
 		context(zctx_new()),
 		router(zsocket_new(context, ZMQ_ROUTER)),
 		stopped(false),
 		stop_timeout(1000),
-        m_buffer_factory(new ZMQHeapBufferFactory)
+		m_buffer_factory(new ZMQHeapBufferFactory),
+		m_eintr_count(0)
 {
 	zsocket_bind(router, bind.c_str());
 
@@ -33,9 +36,31 @@ void SenderFlow::send(zmq_msg_t * msg)
 	std::cout << "Waiting for worker..." << std::endl;
 #endif
 
-	char * identity = zstr_recv(router);
+	//char * identity = zstr_recv(router);
+	char identity[256];
+	int size;
+
+	while ((size = zmq_recv(router, identity, 256, 0)) == -1) {
+	  if (errno != EINTR) {
+	    std::cout << strerror(errno) << "(" << errno << ")" << std::endl;
+	    assert(size != -1); // WILL FAIL!
+	  }
+
+	  m_eintr_count++;
+
+	  /*if (m_eintr_count++ == 5) {
+	    std::cout << "Tried too many times... Aborting!" << std::endl;
+	    assert(size != -1);
+	    }*/
+	  std::cout << "Trying again..." << std::endl;
+	} 
+
+	identity[size] = 0;
 
 	std::cout << identity << " " << std::endl;
+	std::cout << "size: " << size << std::endl;
+
+	
 
 #ifdef DEBUG
 	std::cout << "Sending " << zmq_msg_size(msg)
@@ -76,6 +101,8 @@ void SenderFlow::stop()
 		std::cout << "Stopped a worker" << std::endl;
 #endif
 	}
+
+	std::cout << "Total failures: " << m_eintr_count << std::endl;
 
 #ifdef DEBUG
 	std::cout << "Done" << std::endl;

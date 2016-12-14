@@ -20,6 +20,8 @@ private:
 
 	int stop_timeout;
 
+	int m_eintr_count;
+
 protected:
 	ZMQBufferFactory * m_buffer_factory;
 
