@@ -14,7 +14,7 @@ int main(int argc, char * argv[])
     FILE * file = fopen(argv[1], "rb");
     assert(file);
 
-    char buffer[1];
+    char buffer[524288]; // 512KB
 
     size_t sent_size;
 

@@ -14,9 +14,6 @@ SenderFlow::SenderFlow(std::string bind, int linger) :
 		m_eintr_count(0)
 {
 	zsocket_bind(router, bind.c_str());
-
-	// infinite wait before shutting down.
-	// TODO: consider a timeout.
 	zctx_set_linger(context, linger);
 }
 
