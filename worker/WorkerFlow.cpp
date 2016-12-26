@@ -10,6 +10,7 @@ void gen_uuid(char uuid_str[37])
     uuid_generate(uuid);
     uuid_unparse_lower(uuid, uuid_str);
     std::cout << "uuid: " << uuid_str << std::endl;
+    std::cout.flush();
 }
 
 WorkerFlow::WorkerFlow(std::string connect,
@@ -64,6 +65,7 @@ bool WorkerFlow::work()
         }
 
 	// Change identity
+	gen_uuid(m_identity_uuid);
 	zmq_setsockopt(m_dealer, ZMQ_IDENTITY, m_identity_uuid, sizeof(m_identity_uuid));
 
         m_eintr_count++;
