@@ -64,8 +64,8 @@ bool WorkerFlow::work()
 
     while ((sret = zmq_msg_recv(&msg, m_dealer, 0)) == -1) {
 	if (errno == EAGAIN) {
-	    std:cout << "Halt detected!" << std::endl;
-	    return;
+	    std::cout << "Halt detected!" << std::endl;
+	    return false;
 	    
 	} else if (errno != EINTR) {
             return false;
