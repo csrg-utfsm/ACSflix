@@ -8,7 +8,7 @@ void gen_uuid(char uuid_str[37])
 {
     uuid_t uuid;
     uuid_generate(uuid);
-    uuid_unparse_lower(uuid, uuid);
+    uuid_unparse_lower(uuid, uuid_str);
 }
 
 WorkerFlow::WorkerFlow(std::string connect,
