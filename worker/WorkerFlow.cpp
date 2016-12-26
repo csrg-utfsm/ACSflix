@@ -2,6 +2,14 @@
 #include <iostream>
 #include <cerrno>
 #include <cstring>
+#include <uuid/uuid.h>
+
+void gen_uuid(char uuid_str[37])
+{
+    uuid_t uuid;
+    uuid_generate(uuid);
+    uuid_unparse_lower(uuid, uuid);
+}
 
 WorkerFlow::WorkerFlow(std::string connect,
         std::string identity,
@@ -13,8 +21,9 @@ WorkerFlow::WorkerFlow(std::string connect,
         m_identity(identity),
         m_eintr_count(0)
 {
-    char * identity_cpy = strdup(identity.c_str());
-    zsocket_set_identity(m_dealer, identity_cpy);
+    gen_uuid(m_identity_uuid);
+    //char * identity_cpy = strdup(identity.c_str());
+    zsocket_set_identity(m_dealer, m_identity_uuid);
     zsocket_connect(m_dealer, connect.c_str());
 }
 
@@ -52,6 +61,9 @@ bool WorkerFlow::work()
         if (errno != EINTR) {
             return false;
         }
+
+	// Change identity
+	zmq_setsockopt(m_dealer, ZMQ_IDENTITY, m_identity_uuid, sizeof(m_identity_uuid));
 
         m_eintr_count++;
 

@@ -14,6 +14,7 @@ class WorkerFlow
 	size_t m_tokens;
 
     std::string m_identity;
+    char m_identity_uuid[37];
 
 	WorkerFlowCallback * m_callback;
 
