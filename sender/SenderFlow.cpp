@@ -15,6 +15,8 @@ SenderFlow::SenderFlow(std::string bind, int linger) :
 {
 	zsocket_bind(router, bind.c_str());
 	zctx_set_linger(context, linger);
+	int timeout = 5000; // 5s
+	zmq_setsockopt(router, ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
 }
 
 
@@ -38,10 +40,14 @@ void SenderFlow::send(zmq_msg_t * msg)
 	int size;
 
 	while ((size = zmq_recv(router, identity, 256, 0)) == -1) {
-	  if (errno != EINTR) {
-	    std::cout << strerror(errno) << "(" << errno << ")" << std::endl;
-	    assert(size != -1); // WILL FAIL!
-	  }
+	    if (errno == EAGAIN) {
+		std::cout << "Halt detected!" << std::endl;
+		return;
+		
+	    } else if (errno != EINTR) {
+		std::cout << strerror(errno) << "(" << errno << ")" << std::endl;
+		assert(size != -1); // WILL FAIL!
+	    }
 
 	  m_eintr_count++;
 

@@ -27,6 +27,9 @@ WorkerFlow::WorkerFlow(std::string connect,
     //char * identity_cpy = strdup(identity.c_str());
     zsocket_set_identity(m_dealer, m_identity_uuid);
     zsocket_connect(m_dealer, connect.c_str());
+
+    int timeout = 5000; // 5s
+    zmq_setsockopt(m_dealer, ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
 }
 
 WorkerFlow::~WorkerFlow()
@@ -60,7 +63,11 @@ bool WorkerFlow::work()
     int sret;
 
     while ((sret = zmq_msg_recv(&msg, m_dealer, 0)) == -1) {
-        if (errno != EINTR) {
+	if (errno == EAGAIN) {
+	    std:cout << "Halt detected!" << std::endl;
+	    return;
+	    
+	} else if (errno != EINTR) {
             return false;
         }
 
