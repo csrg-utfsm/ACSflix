@@ -12,7 +12,7 @@
 class SenderFlow
 {
 private:
-	zctx_t * context;
+	zsock * context;
 
 	void * router;
 
