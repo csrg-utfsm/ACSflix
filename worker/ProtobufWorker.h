@@ -9,7 +9,7 @@
 class ProtobufWorker
 {
 private:
-    zctx_t * context;
+    zsock_t * context;
 
     void * dealer;
 

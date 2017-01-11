@@ -1,7 +1,7 @@
 #include "ProtobufWorker.h"
 
 ProtobufWorker::ProtobufWorker(std::string connect, std::string identity) :
-        context(zctx_new()),
+        context(zsock_new()),
         dealer(zsocket_new(context, ZMQ_DEALER))
 {
     zsocket_set_identity(dealer, (char *) identity.c_str());
@@ -10,7 +10,7 @@ ProtobufWorker::ProtobufWorker(std::string connect, std::string identity) :
 
 ProtobufWorker::~ProtobufWorker()
 {
-    zctx_destroy(&context);
+    zsock_destroy(&context);
 }
 
 bool ProtobufWorker::work(google::protobuf::MessageLite & message)
