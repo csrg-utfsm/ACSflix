@@ -2,9 +2,9 @@ ACSFlix
 =======
 
 ## Dependencies
-- epel (to install some dependencies)
+- libuuid-devel, uuid. Epel repo is recommended. 
 - cmake
-- czmq-devel
+- zmq 4.2.0+
 - protobuf-compiler
 - protobuf-devel
 
@@ -12,3 +12,6 @@ ACSFlix
  - Create folder build inside ACSFlix folder and cd into it
  - run cmake
  - If you're using a self-compiled version of zmq and czmq, CMakeList.txt must be modified.
+ 
+ ## Rebuild due to CZMQ Zero Copy Deprecation
+ - https://github.com/zeromq/czmq/commit/de8c1bc4
