@@ -70,27 +70,14 @@ bool WorkerFlow::work()
 	if (errno == EAGAIN) {
 	    std::cout << "Halt detected!" << std::endl;
 	    //return false;
-	    
+
 	} else if (errno != EINTR) {
             return false;
         }
 
-	// Change identity
-	//gen_uuid(m_identity_uuid);
-	zmq_setsockopt(m_dealer, ZMQ_IDENTITY, m_identity_uuid, sizeof(m_identity_uuid));
-
         m_eintr_count++;
 
-        /*if (m_eintr_count++ == 5) {
-          std::cout << "Tried too many times... Aborting!" << std::endl;
-          return false;
-          }*/
-             //std::cout << "Trying again... " << std::endl;
     }
-
-    //assert(sret == zmq_msg_size(&msg));
-    //std::cout << "sret: " << sret << std::endl;
-    //std::cout << "zmsize: " << zmq_msg_size(&msg) << std::endl;
 
     m_tokens++;
 
