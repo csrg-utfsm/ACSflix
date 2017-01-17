@@ -1,8 +1,7 @@
 #include <iostream>
 #include <WorkerStream.hpp>
 #include <stdlib.h>
-#include "ProtobufWorker.h"
-
+#include <cstring>
 
 class SampleWorkerFlowCallback : public WorkerFlowCallback
 {

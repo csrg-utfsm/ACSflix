@@ -2,17 +2,18 @@
 #define BDT_ENGINE_FLOW_H
 
 #include <string>
-#include <czmq.h>
 #include <ZMQBufferFactory.h>
 #include <ZMQHeapBufferFactory.h>
 #include <ZMQPooledBufferFactory.h>
+#include <zmq.h>
+#include <zmq_common.h>
 #include "google/protobuf/message_lite.h"
 #include "BufferPool.h"
 
 class SenderFlow
 {
 private:
-	zsock_t * context;
+	void * context;
 
 	void * router;
 

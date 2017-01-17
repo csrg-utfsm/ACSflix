@@ -30,7 +30,6 @@ include_directories(utils)
 set(SOURCE_FILES
         sender/BytesSenderFlow.cpp
         sender/ProtobufSenderFlow.cpp
-        worker/ProtobufWorker.cpp
         bufpool/BufferPool.cpp
         bufpool/BufferPoolElement.cpp
         bufpool/ZMQBuffer.cpp
@@ -43,7 +42,8 @@ set(SOURCE_FILES
         sender/SenderFlow.cpp
         proto/BdBlock.pb.cc
         worker/WorkerFlow.cpp
-        worker/WorkerStream.cpp)
+        worker/WorkerStream.cpp
+	utils/zmq_common.cpp)
 
 add_executable(sender tests/sender_stream_binary.cpp ${SOURCE_FILES})
 add_executable(worker tests/worker_binary.cpp ${SOURCE_FILES})
