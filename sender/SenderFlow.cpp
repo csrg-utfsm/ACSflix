@@ -64,11 +64,11 @@ void SenderFlow::send(zmq_msg_t * msg)
     //std::cout << identity << " " << std::endl;
     //std::cout << "size: " << size << std::endl;
 
-#ifdef DEBUG
+//#ifdef DEBUG
     std::cout << "Sending " << zmq_msg_size(msg)
               << " bytes to " << identity
               << std::endl;
-#endif
+//#endif
 
     // ignore delimiter.
     char * ignore = zcommon_str_recv(router);

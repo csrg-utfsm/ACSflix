@@ -76,7 +76,7 @@ bool WorkerFlow::work()
         }
 
 	// Change identity
-	gen_uuid(m_identity_uuid);
+	//gen_uuid(m_identity_uuid);
 	zmq_setsockopt(m_dealer, ZMQ_IDENTITY, m_identity_uuid, sizeof(m_identity_uuid));
 
         m_eintr_count++;
