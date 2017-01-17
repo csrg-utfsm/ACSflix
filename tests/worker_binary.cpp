@@ -11,25 +11,25 @@ private:
 
 public:
     virtual void on_start(WorkerFlow * flow)
-    {
-        this->flow = flow;
+	{
+	    this->flow = flow;
 
-		    accumulated = 0;
+	    accumulated = 0;
 
-        std::cout << "Started flow " << flow->get_identity() << " with "
-                  << flow->get_tokens() << " tokens." << std::endl;
-    }
+	    std::cout << "Started flow " << flow->get_identity() << " with "
+		      << flow->get_tokens() << " tokens." << std::endl;
+	}
 
     virtual void on_workload(const char * buffer, size_t size)
-    {
-		    accumulated += size;
-		    //std::cout << accumulated << std::endl;
-    }
+	{
+	    accumulated += size;
+	    //std::cout << accumulated << std::endl;
+	}
 
     virtual void on_stop()
-    {
-		    std::cout << "Received: " << accumulated << std::endl;
-    }
+	{
+	    std::cout << "Received: " << accumulated << std::endl;
+	}
 };
 
 
