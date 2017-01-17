@@ -14,19 +14,23 @@ void gen_uuid(char uuid_str[37])
 }
 
 WorkerFlow::WorkerFlow(std::string connect,
-        std::string identity,
-        WorkerFlowCallback * callback) :
-        m_context(zctx_new()),
-        m_dealer(zsocket_new(m_context, ZMQ_DEALER)),
-        m_callback(callback),
-        m_tokens(1),
-        m_identity(identity),
-        m_eintr_count(0)
+		       std::string identity,
+		       WorkerFlowCallback * callback) :
+    m_context(zmq_ctx_new()),
+    m_dealer(zmq_socket(m_context, ZMQ_DEALER)),
+    m_callback(callback),
+    m_tokens(1),
+    m_identity(identity),
+    m_eintr_count(0)
 {
     gen_uuid(m_identity_uuid);
-    //char * identity_cpy = strdup(identity.c_str());
-    zsocket_set_identity(m_dealer, m_identity_uuid);
-    zsocket_connect(m_dealer, connect.c_str());
+    zmq_setsockopt(m_dealer,
+		   ZMQ_IDENTITY,
+		   m_identity_uuid,
+		   strlen(m_identity_uuid));
+
+    // Connect socket
+    zmq_connect(m_dealer, connect.c_str());
 
     int timeout = 5000; // 5s
     zmq_setsockopt(m_dealer, ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
@@ -34,7 +38,7 @@ WorkerFlow::WorkerFlow(std::string connect,
 
 WorkerFlow::~WorkerFlow()
 {
-    zctx_destroy(&m_context);
+    zmq_ctx_destroy(m_context);
 }
 
 WorkerFlowCallback * WorkerFlow::callback()
@@ -52,8 +56,8 @@ bool WorkerFlow::work()
 
     // send notifications to router.
     while (m_tokens) {
-        zstr_sendm(m_dealer, "");
-        zstr_send(m_dealer, "T");
+	zmq_send(m_dealer, "", 0, ZMQ_SNDMORE);
+	zmq_send(m_dealer, "", 0, 0);
 
         m_tokens--;
     }
@@ -97,7 +101,7 @@ bool WorkerFlow::work()
     }
 
     m_callback->on_workload(static_cast<const char *>(zmq_msg_data(&msg)),
-            zmq_msg_size(&msg));
+			    zmq_msg_size(&msg));
 
     zmq_msg_close(&msg);
 

@@ -1,37 +1,35 @@
 #ifndef BDT_ENGINE_WORKERFLOW_H
 #define BDT_ENGINE_WORKERFLOW_H
 
-#include <czmq.h>
 #include <string>
+#include <zmq.h>
 #include "WorkerFlowCallback.hpp"
 
 class WorkerFlow
 {
-	zctx_t * m_context;
+    void * m_context;
 
-	void * m_dealer;
+    void * m_dealer;
 
-	size_t m_tokens;
+    size_t m_tokens;
 
+    int m_eintr_count;
+    
     std::string m_identity;
     char m_identity_uuid[37];
 
-	WorkerFlowCallback * m_callback;
-
-	int m_eintr_count;
-
-	// TODO: save working state for exit checks.
+    WorkerFlowCallback * m_callback;
 
 public:
-	WorkerFlow(std::string connect,
-	           std::string identity,
-	           WorkerFlowCallback * callback);
+    WorkerFlow(std::string connect,
+	       std::string identity,
+	       WorkerFlowCallback * callback);
 
-	virtual ~WorkerFlow();
+    virtual ~WorkerFlow();
 
-	WorkerFlowCallback * callback();
+    WorkerFlowCallback * callback();
 
-	bool work();
+    bool work();
 
     void set_tokens(size_t tokens);
 

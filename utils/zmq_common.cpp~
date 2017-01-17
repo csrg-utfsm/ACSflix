@@ -1,0 +1,22 @@
+#include <zmq.h>
+#include <cstring>
+#include "zmq_common.h"
+
+char *zcommon_str_recv(void *zmq_socket)
+{
+    char buffer[256];
+    int size = zmq_recv(socket,
+			buffer,
+			sizeof(buffer),
+			0);
+
+    if (size == -1) {
+        return NULL;
+    }
+    if (size > 255) {
+        size = 255;
+    }
+    
+    buffer[size] = 0;
+    return strdup(buffer);
+}
