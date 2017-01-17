@@ -28,6 +28,7 @@ public:
         file_block.ParseFromArray(buffer, (int) size);
 
 		accumulated += size;
+		std::cout << "Parcially Received: " << accumulated << std::endl;
     }
 
     virtual void on_stop() override
