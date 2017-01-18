@@ -23,7 +23,7 @@ public:
     virtual void on_workload(const char * buffer, size_t size)
 	{
 	    accumulated += size;
-	    //std::cout << accumulated << std::endl;
+	    std::cout << accumulated << std::endl;
 	}
 
     virtual void on_stop()

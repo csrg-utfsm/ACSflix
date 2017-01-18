@@ -66,11 +66,12 @@ bool WorkerFlow::work()
     zmq_msg_init(&msg);
     int sret;
 
+    // tokens always zero in this point
     while ((sret = zmq_msg_recv(&msg, m_dealer, 0)) == -1) {
 	if (errno == EAGAIN) {
 	
-	    zmq_getsockopt(m_dealer, ZMQ_IDENTITY, id, &id_size);
-	    std::cout << "Halt detected: " << ZMQ_IDENTITY << " tokens: " << m_tokens << std::endl;
+	    //zmq_getsockopt(m_dealer, ZMQ_IDENTITY, id, &id_size);
+	    std::cout << "Halt: " << ZMQ_IDENTITY << std::endl;
 	    //return false;
 
 	} else if (errno != EINTR) {
@@ -78,7 +79,6 @@ bool WorkerFlow::work()
         }
 
         m_eintr_count++;
-
     }
 
     m_tokens++;
@@ -89,8 +89,7 @@ bool WorkerFlow::work()
         return false;
     }
 
-    m_callback->on_workload(static_cast<const char *>(zmq_msg_data(&msg)),
-			    zmq_msg_size(&msg));
+    m_callback->on_workload(static_cast<const char *>(zmq_msg_data(&msg)), zmq_msg_size(&msg));
 
     zmq_msg_close(&msg);
 

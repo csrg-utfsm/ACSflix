@@ -41,6 +41,7 @@ void SenderFlow::send(zmq_msg_t * msg)
     int size;
     size_t sent;
 
+
     while ((size = zmq_recv(router, identity, 256, 0)) == -1) {
 	if (errno == EAGAIN) {
 	    std::cout << "Halt detected: " << identity << std::endl;
@@ -68,7 +69,7 @@ void SenderFlow::send(zmq_msg_t * msg)
 //#ifdef DEBUG
     std::cout << "Sending " << zmq_msg_size(msg)  << " bytes to " << identity << std::endl;
     sent += zmq_msg_size(msg);
-    printf("Total Sent %zu Bytes \n",sent);
+    printf("Total Sent %zu KB \n", (sent/1024) );
 
 //#endif
 
