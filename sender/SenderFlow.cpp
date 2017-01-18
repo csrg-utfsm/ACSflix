@@ -67,7 +67,7 @@ void SenderFlow::send(zmq_msg_t * msg)
 
 //#ifdef DEBUG
     std::cout << "Sending " << zmq_msg_size(msg)  << " bytes to " << identity << std::endl;
-    sent += zmq_msg_size(msg)
+    sent += zmq_msg_size(msg);
     printf("Total Sent %zu Bytes",sent);
 
 //#endif
