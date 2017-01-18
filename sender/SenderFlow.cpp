@@ -32,13 +32,14 @@ void SenderFlow::send(zmq_msg_t * msg)
 {
     assert(!stopped);
 
-//#ifdef DEBUG
+#ifdef DEBUG
     std::cout << "Waiting for worker..." << std::endl;
-//#endif
+#endif
 
     //char * identity = zstr_recv(router);
     char identity[256];
     int size;
+    size_t sent;
 
     while ((size = zmq_recv(router, identity, 256, 0)) == -1) {
 	if (errno == EAGAIN) {
@@ -65,9 +66,10 @@ void SenderFlow::send(zmq_msg_t * msg)
     //std::cout << "size: " << size << std::endl;
 
 //#ifdef DEBUG
-    std::cout << "Sending " << zmq_msg_size(msg)
-              << " bytes to " << identity
-              << std::endl;
+    std::cout << "Sending " << zmq_msg_size(msg)  << " bytes to " << identity << std::endl;
+    sent += zmq_msg_size(msg)
+    printf("Total Sent %zu Bytes",sent);
+
 //#endif
 
     // ignore delimiter.
