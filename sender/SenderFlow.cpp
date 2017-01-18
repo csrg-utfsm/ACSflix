@@ -32,9 +32,9 @@ void SenderFlow::send(zmq_msg_t * msg)
 {
     assert(!stopped);
 
-#ifdef DEBUG
+//#ifdef DEBUG
     std::cout << "Waiting for worker..." << std::endl;
-#endif
+//#endif
 
     //char * identity = zstr_recv(router);
     char identity[256];
@@ -42,7 +42,7 @@ void SenderFlow::send(zmq_msg_t * msg)
 
     while ((size = zmq_recv(router, identity, 256, 0)) == -1) {
 	if (errno == EAGAIN) {
-	    std::cout << "Halt detected!" << std::endl;
+	    std::cout << "Halt detected: " << identity << std::endl;
 	    return;
 		
 	} else if (errno != EINTR) {

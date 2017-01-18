@@ -68,7 +68,9 @@ bool WorkerFlow::work()
 
     while ((sret = zmq_msg_recv(&msg, m_dealer, 0)) == -1) {
 	if (errno == EAGAIN) {
-	    std::cout << "Halt detected!" << std::endl;
+	
+	    zmq_getsockopt(m_dealer, ZMQ_IDENTITY, id, &id_size);
+	    std::cout << "Halt detected: " << id_size << std::endl;
 	    //return false;
 
 	} else if (errno != EINTR) {
