@@ -20,6 +20,7 @@ int main(int argc, char * argv[])
 
     clock_t begin = clock();
     size_t block_count = 0;
+    size_t accumulated_sent_size;
 
     std::cout << "Beginning transmission..." << std::endl;
     uint32_t i = 0;
@@ -32,6 +33,7 @@ int main(int argc, char * argv[])
         if (block_count % 256 == 0) {
 	    std::cout << "Sent: " << block_count << " blocks of " << sent_size << " bytes each." << std::endl;
         }
+	std::cout << "Accumulated: " << accumulated_sent_size << std::endl;
     }
 
     clock_t end = clock();
