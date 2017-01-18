@@ -70,7 +70,7 @@ bool WorkerFlow::work()
 	if (errno == EAGAIN) {
 	
 	    zmq_getsockopt(m_dealer, ZMQ_IDENTITY, id, &id_size);
-	    std::cout << "Halt detected: " << id << std::endl;
+	    std::cout << "Halt detected: " << ZMQ_IDENTITY << " tokens: " << m_tokens << std::endl;
 	    //return false;
 
 	} else if (errno != EINTR) {

@@ -22,8 +22,9 @@ int main()
     uint64_t i = 0;
     while (!feof(file)) {
         sent_size = fread(buffer, 1, sizeof(buffer), file);
-
+	std::cout << "sent size 1: " << sent_size  << std:endl;
         file_block.set_offset(i++);
+	std::cout << "offset: " << i  << std:endl;
         file_block.set_data(buffer, sent_size);
 
         sender.send(file_block);
