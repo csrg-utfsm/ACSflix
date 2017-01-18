@@ -14,7 +14,7 @@ class WorkerFlow
     size_t m_tokens;
 
     int m_eintr_count;
-    
+
     std::string m_identity;
     char m_identity_uuid[37];
 

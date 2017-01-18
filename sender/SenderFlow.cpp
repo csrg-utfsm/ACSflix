@@ -46,7 +46,7 @@ void SenderFlow::send(zmq_msg_t * msg)
 	if (errno == EAGAIN) {
 	    std::cout << "Halt detected: " << identity << std::endl;
 	    return;
-		
+
 	} else if (errno != EINTR) {
 	    std::cout << strerror(errno) << "(" << errno << ")" << std::endl;
 	    assert(size != -1); // WILL FAIL!
@@ -59,7 +59,7 @@ void SenderFlow::send(zmq_msg_t * msg)
 	  assert(size != -1);
 	  }*/
 	//std::cout << "Trying again..." << std::endl;
-    } 
+    }
 
     identity[size] = 0;
 

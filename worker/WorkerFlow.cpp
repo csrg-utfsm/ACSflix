@@ -23,11 +23,7 @@ WorkerFlow::WorkerFlow(std::string connect,
     m_identity(identity),
     m_eintr_count(0)
 {
-    gen_uuid(m_identity_uuid);
-    zmq_setsockopt(m_dealer,
-		   ZMQ_IDENTITY,
-		   m_identity_uuid,
-		   strlen(m_identity_uuid));
+    zmq_setsockopt(m_dealer, ZMQ_IDENTITY, identity.c_str(), identity.length());
 
     // Connect socket
     zmq_connect(m_dealer, connect.c_str());
@@ -51,14 +47,10 @@ bool WorkerFlow::work()
     char id[256];
     size_t id_size = 256;
 
-    //zmq_getsockopt(m_dealer, ZMQ_IDENTITY, id, &id_size);
-    //std::cout << "id: " << id_size << std::endl;
-
     // send notifications to router.
     while (m_tokens) {
-	zmq_send(m_dealer, "", 0, ZMQ_SNDMORE);
-	zmq_send(m_dealer, "", 0, 0);
-
+        zmq_send(m_dealer, "", 0, ZMQ_SNDMORE);
+        zmq_send(m_dealer, "", 0, 0);
         m_tokens--;
     }
 
@@ -68,13 +60,9 @@ bool WorkerFlow::work()
 
     // tokens always zero in this point
     while ((sret = zmq_msg_recv(&msg, m_dealer, 0)) == -1) {
-	if (errno == EAGAIN) {
-	
-	    //zmq_getsockopt(m_dealer, ZMQ_IDENTITY, id, &id_size);
-	    std::cout << "Halt: " << ZMQ_IDENTITY << std::endl;
-	    //return false;
-
-	} else if (errno != EINTR) {
+        if (errno == EAGAIN) {
+            std::cout << "Halt: " << ZMQ_IDENTITY << std::endl;
+        } else if (errno != EINTR) {
             return false;
         }
 
