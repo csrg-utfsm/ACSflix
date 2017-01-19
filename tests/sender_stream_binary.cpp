@@ -29,7 +29,7 @@ int main(int argc, char * argv[])
         flow1->send(buffer, sent_size);
 
         block_count++;
-        
+
         if (block_count % 256 == 0) {
 	    std::cout << "Sent: " << block_count << " blocks of " << sent_size << " bytes each." << std::endl;
         }

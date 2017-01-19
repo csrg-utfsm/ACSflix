@@ -6,16 +6,13 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg -g")
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
 find_package(ZMQ REQUIRED)
-find_package(czmq REQUIRED)
 find_package(Protobuf REQUIRED)
 
 set(EXTERNAL_LIBS
         ${ZMQ_LIBRARIES}
-        ${CZMQ_LIBRARIES}
         ${PROTOBUF_LIBRARIES})
 
 include_directories(${ZMQ_INCLUDE_DIR})
-include_directories(${CZMQ_INCLUDE_DIRS})
 include_directories(${PROTOBUF_INCLUDE_DIRS})
 
 include_directories(worker)
