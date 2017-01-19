@@ -16,8 +16,7 @@ public:
 
 	    accumulated = 0;
 
-	    std::cout << "Started flow " << flow->get_identity() << " with "
-		      << flow->get_tokens() << " tokens." << std::endl;
+	    //std::cout << "Started flow " << flow->get_identity() << " with " << flow->get_tokens() << " tokens." << std::endl;
 	}
 
     virtual void on_workload(const char * buffer, size_t size)
@@ -28,7 +27,8 @@ public:
 
     virtual void on_stop()
 	{
-	    std::cout << "Received: " << accumulated << std::endl;
+	    //std::cout << "Received: " << accumulated << std::endl;
+	    ;
 	}
 };
 

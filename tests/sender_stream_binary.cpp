@@ -14,7 +14,7 @@ int main(int argc, char * argv[])
     FILE * file = fopen(argv[1], "rb");
     assert(file);
 
-    char buffer[524288]; // 512KB
+    char buffer[4096]; // 4KB
 
     size_t sent_size;
 
@@ -22,26 +22,28 @@ int main(int argc, char * argv[])
     size_t block_count = 0;
     size_t accumulated_sent_size = 0;
 
-    std::cout << "Beginning transmission..." << std::endl;
+    //std::cout << "Beginning transmission..." << std::endl;
+    // sent_size == sizeof(buffer) except for the last package
     uint32_t i = 0;
     while (!feof(file)) {
-        sent_size = fread(buffer, 1, sizeof(buffer), file);
+        sent_size = fread(buffer, sizeof(char), sizeof(buffer), file);
         flow1->send(buffer, sent_size);
 
         block_count++;
 
-        if (block_count % 256 == 0) {
+        /*if (block_count % 256 == 0) {
 	    std::cout << "Sent: " << block_count << " blocks of " << sent_size << " bytes each." << std::endl;
-        }
+        }*/
 	accumulated_sent_size += sent_size;
-	std::cout << "Accumulated: " << accumulated_sent_size << std::endl;
+	//std::cout << "Accumulated: " << accumulated_sent_size << std::endl;
+	std::cout << buffer;
     }
 
     clock_t end = clock();
 
     double elapsed_secs = (double) (end - begin) / CLOCKS_PER_SEC;
 
-    std::cout << "Seconds: " << elapsed_secs << std::endl;
+    std::cerr << "\nSeconds: " << elapsed_secs << std::endl;
 
     flow1->stop();
 

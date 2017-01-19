@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cerrno>
 #include <cstring>
+#include <fstream>
 
 WorkerFlow::WorkerFlow(std::string connect,
 		       std::string identity,
@@ -41,29 +42,27 @@ bool WorkerFlow::work()
     // send notifications to router.
     while (m_tokens) {
         zmq_send(m_dealer, "", 0, ZMQ_SNDMORE);
-        zmq_send(m_dealer, "Hi!", strlen("Hi!"), 0);
+        zmq_send(m_dealer, "!", strlen("!"), 0);
         m_tokens--;
     }
 
-    char buffer[524289];
+    char buffer[4096]; // 4KB
     int size;
 
     // tokens always zero in this point
-    std::cout << "Waiting for sender..." << std::endl;
-    size = zmq_recv(m_dealer, buffer, 524288, 0); // delimiter.
-    size = zmq_recv(m_dealer, buffer, 524288, 0); // workload.
+    //std::cout << "Waiting for sender..." << std::endl;
+    size = zmq_recv(m_dealer, buffer, sizeof(buffer), 0); // delimiter.
+    size = zmq_recv(m_dealer, buffer, sizeof(buffer), 0); // workload.
 
-    std::cout << "Received: " << size << std::endl;
-
+    std::cout << buffer ;
     m_tokens++;
 
     if (size == 0) {
-        std::cout << "Total failures: " << m_eintr_count << std::endl;
+        std::cerr << "Total failures: " << m_eintr_count << std::endl;
         return false;
     }
 
     // m_callback->on_workload(static_cast<const char *>(zmq_msg_data(&msg)), zmq_msg_size(&msg));
-
     return true;
 }
 
