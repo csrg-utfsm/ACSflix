@@ -3,6 +3,7 @@
 #include <cerrno>
 #include <cstring>
 #include <fstream>
+#include <cstdlib>
 
 WorkerFlow::WorkerFlow(std::string connect,
 		       std::string identity,
