@@ -31,7 +31,7 @@ protected:
 	 *
 	 * @param msg message to send.
 	 */
-	void send(zmq_msg_t * msg);
+	void send(char * buffer, size_t size);
 
 public:
 	SenderFlow(std::string bind, int linger = 10000);

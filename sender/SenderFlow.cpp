@@ -33,7 +33,7 @@ SenderFlow::~SenderFlow()
 }
 
 
-void SenderFlow::send(char * buffer, size_t size)
+void SenderFlow::send(char * buffer, size_t buf_size)
 {
     assert(!stopped);
 
@@ -58,17 +58,17 @@ void SenderFlow::send(char * buffer, size_t size)
 
     std::cout << "Received Token" << std::endl;
 
-    char buffer[256];
+    char i_buffer[256];
 
     // ignore delimiter.
-    size = zmq_recv(router, buffer, 255, 0);
-    size = zmq_recv(router, buffer, 255, 0);
+    size = zmq_recv(router, i_buffer, 255, 0);
+    size = zmq_recv(router, i_buffer, 255, 0);
 
     std::cout << " -- Sending Workload" << std::endl;
 
     zmq_send(router, identity, strlen(identity), ZMQ_SNDMORE);
     zmq_send(router, "", 0, ZMQ_SNDMORE);
-    zmq_msg_send(msg, router, 0);
+    zmq_send(router, buffer, buf_size, 0);
 }
 
 void SenderFlow::stop()

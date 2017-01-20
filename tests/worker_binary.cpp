@@ -18,7 +18,6 @@ public:
 		FILE * file = fopen("test.jpg", "ab");
 		assert(file);
 
-		std::cout << buffer << std::endl;
 		size_t  s = fwrite(buffer, 1, size, file);
 		assert(s == size);
 

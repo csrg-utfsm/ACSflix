@@ -24,7 +24,7 @@ void ProtobufSenderFlow::send(const google::protobuf::MessageLite & message)
     zmq_msg_t msg;
     zmq_buffer->init_data(&msg);
 
-    SenderFlow::send(&msg);
+    // SenderFlow::send(&msg);
 
     delete zmq_buffer;
 }
