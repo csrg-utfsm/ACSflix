@@ -41,7 +41,7 @@ void SenderFlow::send(char * buffer, size_t buf_size)
     int size;
     size_t sent;
 
-    std::cout << "Waiting for worker..." << std::endl;
+    //std::cout << "Waiting for worker..." << std::endl;
 
     while ((size = zmq_recv(router, identity, 256, 0)) == -1) {
         if (errno == EAGAIN) {
@@ -56,15 +56,17 @@ void SenderFlow::send(char * buffer, size_t buf_size)
     }
     identity[size] = 0;
 
-    std::cout << "Received Token" << std::endl;
+    //std::cout << "Received Token " << std::endl;
 
     char i_buffer[256];
 
     // ignore delimiter.
+
     size = zmq_recv(router, i_buffer, 255, 0);
     size = zmq_recv(router, i_buffer, 255, 0);
 
-    std::cout << " -- Sending Workload" << std::endl;
+
+    //std::cout << sizeof(buffer) << std::endl;
 
     zmq_send(router, identity, strlen(identity), ZMQ_SNDMORE);
     zmq_send(router, "", 0, ZMQ_SNDMORE);
@@ -100,7 +102,7 @@ void SenderFlow::stop()
 #endif
     }
 
-    std::cout << "Total failures: " << m_eintr_count << std::endl;
+    //std::cout << "Total failures: " << m_eintr_count << std::endl;
 
 #ifdef DEBUG
     std::cout << "Done" << std::endl;

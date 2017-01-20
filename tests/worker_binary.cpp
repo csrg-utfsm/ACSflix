@@ -11,6 +11,7 @@ private:
 public:
     virtual void on_start(WorkerFlow * flow)
 	{
+
 	}
 
     virtual void on_workload(char * buffer, size_t size)
@@ -26,6 +27,7 @@ public:
 
     virtual void on_stop()
 	{
+
 	}
 };
 
