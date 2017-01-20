@@ -27,8 +27,7 @@ public:
 
     virtual void on_stop()
 	{
-	    //std::cout << "Received: " << accumulated << std::endl;
-	    ;
+	    std::cerr << "Received: " << accumulated << std::endl;
 	}
 };
 
