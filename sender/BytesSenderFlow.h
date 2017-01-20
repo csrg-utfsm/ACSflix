@@ -10,7 +10,7 @@ class BytesSenderFlow : public SenderFlow
 public:
 	BytesSenderFlow(const std::string &bind, int linger);
 
-	void send(const char * buffer, size_t size);
+	void send(char * buffer, size_t size);
 };
 
 

@@ -6,7 +6,7 @@
 
 int main(int argc, char * argv[])
 {
-    BufferPool pool;
+	BufferPool pool;
     SenderStream stream(pool, 1000);
 
     BytesSenderFlow * flow1 = stream.create_flow<BytesSenderFlow>("Flow1", "tcp://*:9991");
