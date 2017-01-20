@@ -19,7 +19,7 @@ public:
 		FILE * file = fopen("test.jpg", "ab");
 		assert(file);
 
-		size_t  s = fwrite(buffer, 1, size, file);
+		size_t  s = fwrite(buffer, sizeof(char), size, file);
 		assert(s == size);
 
 		fclose(file);

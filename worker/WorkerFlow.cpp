@@ -23,7 +23,7 @@ WorkerFlow::WorkerFlow(std::string connect,
         exit(1);
     }
 
-    int timeout = 5000; // 5s
+    int timeout = 3000; // 3s
     // zmq_setsockopt(m_dealer, ZMQ_RCVTIMEO, &timeout, sizeof(timeout));
 }
 
@@ -46,7 +46,7 @@ bool WorkerFlow::work()
         m_tokens--;
     }
 
-    char buffer[4096]; // 4KB
+    char buffer[65536]; // 64KB
     int size;
 
     // tokens always zero in this point
@@ -54,7 +54,6 @@ bool WorkerFlow::work()
     size = zmq_recv(m_dealer, buffer, sizeof(buffer), 0); // delimiter.
     size = zmq_recv(m_dealer, buffer, sizeof(buffer), 0); // workload.
 
-    std::cout << buffer ;
     m_tokens++;
 
     if (size == 0) {
@@ -62,10 +61,7 @@ bool WorkerFlow::work()
         return false;
     }
 
-
     m_callback->on_workload(buffer, size);
-
-
     return true;
 }
 

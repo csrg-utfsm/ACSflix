@@ -15,8 +15,7 @@ int main(int argc, char * argv[])
     //FILE * file2 = fopen("Tsender", "wb");
     assert(file);
 
-    char buffer[4096]; // 4KB
-
+    char buffer[65536]; // 64KB
     size_t sent_size;
 
     clock_t begin = clock();
@@ -37,13 +36,10 @@ int main(int argc, char * argv[])
     }
 
     clock_t end = clock();
-
     double elapsed_secs = (double) (end - begin) / CLOCKS_PER_SEC;
 
     std::cerr << "\nSeconds: " << elapsed_secs << " Suposed Size Sent (MB): " << ( block_count * sizeof(buffer) / 1024 ) << std::endl;
-
     flow1->stop();
-
     fclose(file);
 
     return 0;
