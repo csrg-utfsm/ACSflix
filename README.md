@@ -10,6 +10,7 @@ ACSFlix
 
 ## How to Build
  - Create folder build inside ACSFlix folder and cd into it
+ - protoc --cpp_out=. BdBlock.proto inside proto folder
  - run cmake
  - If you're using a self-compiled version of zmq and czmq, CMakeList.txt must be modified.
  
