@@ -62,7 +62,7 @@ bool WorkerFlow::work()
         return false;
     }
 
-    // m_callback->on_workload(static_cast<const char *>(zmq_msg_data(&msg)), zmq_msg_size(&msg));
+    m_callback->on_workload(buffer, size);
 
     return true;
 }

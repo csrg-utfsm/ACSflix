@@ -2,33 +2,31 @@
 #include <WorkerStream.hpp>
 #include <stdlib.h>
 #include <cstring>
+#include <stdio.h>
+#include <cassert>
 
 class SampleWorkerFlowCallback : public WorkerFlowCallback
 {
 private:
-    WorkerFlow * flow;
-    size_t accumulated;
-
 public:
     virtual void on_start(WorkerFlow * flow)
 	{
-	    this->flow = flow;
-
-	    accumulated = 0;
-
-	    std::cout << "Started flow " << flow->get_identity() << " with "
-		      << flow->get_tokens() << " tokens." << std::endl;
 	}
 
-    virtual void on_workload(const char * buffer, size_t size)
+    virtual void on_workload(char * buffer, size_t size)
 	{
-	    accumulated += size;
-	    std::cout << accumulated << std::endl;
+		FILE * file = fopen("test.jpg", "ab");
+		assert(file);
+
+		std::cout << buffer << std::endl;
+		size_t  s = fwrite(buffer, 1, size, file);
+		assert(s == size);
+
+		fclose(file);
 	}
 
     virtual void on_stop()
 	{
-	    std::cout << "Received: " << accumulated << std::endl;
 	}
 };
 

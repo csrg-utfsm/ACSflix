@@ -33,7 +33,7 @@ SenderFlow::~SenderFlow()
 }
 
 
-void SenderFlow::send(zmq_msg_t * msg)
+void SenderFlow::send(char * buffer, size_t size)
 {
     assert(!stopped);
 
