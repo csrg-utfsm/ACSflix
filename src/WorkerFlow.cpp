@@ -33,6 +33,7 @@ WorkerFlow::~WorkerFlow()
 {
     // safely close ZMQ entities.
     zmq_close(m_stream_socket);
+    zmq_close(m_notif_socket);
     zmq_ctx_destroy(m_context);
 }
 
@@ -92,8 +93,12 @@ bool WorkerFlow::work()
         { m_notif_socket,  0, ZMQ_POLLIN, 0 }
     };
     // Wait until there is data to read in either channel
-    if (zmq_poll(items, 2, -1) == -1) {
-        std::string(strerror(errno));
+    /*if (zmq_poll(items, 2, -1) == -1) {
+        std::cout << "poll_error: " <<
+            std::string(strerror(errno)) << std::endl;
+    }*/
+    while (zmq_poll(items, 2, -1) == -1 && errno == EINTR) {
+        std::cout << "zmq_poll: retrying" << std::endl;
     }
 
     // Multiplex channels
@@ -106,6 +111,7 @@ bool WorkerFlow::work()
         return recv_notif();
     }
     
-    // Unreachable
+    // zmq_poll failed with errno != EINTR
+    std::cout << "Panic! > " << strerror(errno) << std::endl;
     return false;
 }
