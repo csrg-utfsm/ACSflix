@@ -3,4 +3,5 @@
 build/
 proto/*.pb.*
 .vscode
+*.mp4
 
