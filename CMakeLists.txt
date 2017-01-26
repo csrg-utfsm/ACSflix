@@ -17,7 +17,8 @@ include_directories(src)
 set(SOURCE_FILES
         src/WorkerFlow.cpp
         src/WorkerStream.cpp
-        src/SenderFlow.cpp)
+        src/SenderFlow.cpp
+        src/SenderStream.cpp)
 
 add_executable(worker cmd/worker.cpp ${SOURCE_FILES})
 add_executable(sender cmd/sender.cpp ${SOURCE_FILES})
