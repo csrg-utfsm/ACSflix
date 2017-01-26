@@ -10,12 +10,17 @@ SenderFlow::SenderFlow(std::string bind) :
     m_stream_socket(zmq_socket(m_context, ZMQ_PUSH)),
     m_notif_socket(zmq_socket(m_context, ZMQ_PUB))
 {
-    // bind the port for the sender.
+    // bind the port for the stream endpoint
     int rc = zmq_bind(m_stream_socket, bind.c_str());
-    assert(zmq_bind(m_notif_socket, "tcp://*:9992") != -1);
     if (rc == -1) {
-        throw zmq_strerror(zmq_errno());
+        throw std::string(strerror(errno));
     }
+    // bind the port for the notification channel endpoint
+    rc = zmq_bind(m_notif_socket, "tcp://*:9992");
+    if (rc == -1) {
+        throw std::string(strerror(errno));
+    }
+
 }
 
 SenderFlow::~SenderFlow()

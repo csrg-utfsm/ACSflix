@@ -12,12 +12,20 @@ WorkerFlow::WorkerFlow(std::string connect, Callback * cb) :
     m_notif_socket(zmq_socket(m_context, ZMQ_SUB)),
     m_cb(cb)
 {
-    // connect to the sender socket.
+    // connect to the stream endpoint
     int rc = zmq_connect(m_stream_socket, connect.c_str());
-    assert(zmq_connect(m_notif_socket, "tcp://localhost:9992") != -1);
-    assert(zmq_setsockopt(m_notif_socket, ZMQ_SUBSCRIBE, "", 0) != -1);
     if (rc == -1) {
-        throw zmq_strerror(zmq_errno());
+        throw std::string(strerror(errno));
+    }
+    // connect to to the notification channel endpoint
+    rc = zmq_connect(m_notif_socket, "tcp://localhost:9992");
+    if (rc == -1) {
+        throw std::string(strerror(errno));
+    }
+    // subscribe to default topic
+    zmq_setsockopt(m_notif_socket, ZMQ_SUBSCRIBE, "", 0);
+    if (rc == -1) {
+        throw std::string(strerror(errno));
     }
 }
 
