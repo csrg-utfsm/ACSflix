@@ -1,4 +1,4 @@
-#include "WorkerFlow.hpp"
+#include "WorkerFlow.h"
 
 #include <zmq.h>
 #include <iostream>

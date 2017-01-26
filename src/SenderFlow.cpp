@@ -1,4 +1,4 @@
-#include "SenderFlow.hpp"
+#include "SenderFlow.h"
 
 #include <zmq.h>
 #include <iostream>
