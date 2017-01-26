@@ -13,9 +13,6 @@ WorkerFlow::WorkerFlow(std::string connect, Callback * cb) :
     if (rc == -1) {
         throw zmq_strerror(zmq_errno());
     }
-
-    // tell the callback that we are ready.
-    m_cb->on_start(this);
 }
 
 WorkerFlow::~WorkerFlow()
@@ -23,6 +20,12 @@ WorkerFlow::~WorkerFlow()
     // safely close ZMQ entities.
     zmq_close(m_socket);
     zmq_ctx_destroy(m_context);
+}
+
+void WorkerFlow::ready()
+{
+    // tell the callback that we are ready.
+    m_cb->on_start(this);
 }
 
 bool WorkerFlow::work()

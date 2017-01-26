@@ -1,3 +1,4 @@
+#include "SenderStream.hpp"
 #include "SenderFlow.hpp"
 
 #include <iostream>
@@ -14,8 +15,9 @@ int main(int argc, char * argv[]) {
     std::string bind(argv[1]);
     std::string file_path(argv[2]);
 
-    // create the Callback and WorkerFlow with the connect argument.
-    SenderFlow sf(bind);
+    // create the stream and a flow.
+    SenderStream ss;
+    SenderFlow * sf = ss.create_flow("flow-1", bind);
 
     FILE * file = fopen(argv[2], "r");
     assert(file);
@@ -24,7 +26,7 @@ int main(int argc, char * argv[]) {
 
     while (!feof(file)) {
         size_t read = fread(buffer, 1, sizeof(buffer), file);
-        sf.send(buffer, read);
+        sf->send(buffer, read);
     }
 
     fclose(file);
