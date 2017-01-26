@@ -1,20 +1,22 @@
 # How to run test
 Compile
 ```
-make clean
+mkdir -p build
+cd build
+cmake ..
 make
 ```
 You may need to set `LD_LIBRARY_PATH` for the binaries to work
 ```
 export LD_LIBRARY_PATH=/usr/local/lib
 ```
-Run sender with input file name or `debug` option
+Run sender with input file:
 ```
-./sender tcp://*:9991 file|debug
+./sender tcp://*:9991 file
 ```
-Run worker with output file name or `stdout` option
+Run worker with output file name:
 ```
-./worker tcp://localhost:9991 test.out|stdout
+./worker tcp://localhost:9991 file
 ```
 
 # Worker results
