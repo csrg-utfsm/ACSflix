@@ -21,6 +21,8 @@ public:
     // http://api.zeromq.org/4-2:zmq-bind).
     SenderFlow(std::string bind);
 
+    ~SenderFlow();
+
     // Send a buffer to a worker, in round robin order.
     void send(char * buffer, size_t size);
 };

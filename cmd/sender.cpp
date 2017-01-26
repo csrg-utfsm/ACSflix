@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <string>
+#include <cassert>
 
 int main(int argc, char * argv[]) {
     if (argc != 3) {
@@ -16,5 +17,15 @@ int main(int argc, char * argv[]) {
     // create the Callback and WorkerFlow with the connect argument.
     SenderFlow sf(bind);
 
-    sf.send(NULL, 0);
+    FILE * file = fopen(argv[2], "r");
+    assert(file);
+
+    char buffer[524288];
+
+    while (!feof(file)) {
+        size_t read = fread(buffer, 1, sizeof(buffer), file);
+        sf.send(buffer, read);
+    }
+
+    fclose(file);
 }

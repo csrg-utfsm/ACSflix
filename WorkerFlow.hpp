@@ -37,13 +37,15 @@ private:
 
     // Buffer to store incoming data, it will be reused every time work() is
     // called. It is allocated with a fixed size.
-    char m_buffer[524288];
+    char m_buffer[524288 + 1];
 
 public:
     // WorkerFlow creates a new Worker Flow, connected to a sender using the 
     // connect parameter. The connect parameter is formatted as ZMQ zmq_connect
     // format (see http://api.zeromq.org/4-2:zmq-connect).
     WorkerFlow(std::string connect, Callback * cb);
+
+    ~WorkerFlow();
 
     // Work tells this worker to receive a workload and process it. Returns
     // true if there's more work to do. A worker should stop working when it
