@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8)
 project(acsflix)
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg -g")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 
