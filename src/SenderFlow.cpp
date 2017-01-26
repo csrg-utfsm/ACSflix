@@ -25,7 +25,6 @@ SenderFlow::SenderFlow(std::string bind) :
 
 SenderFlow::~SenderFlow()
 {
-    std::cout << __PRETTY_FUNCTION__ << std::endl;
     // Send graceful end of transmission notification
     end_transmission();
     // safely close all ZMQ entities.
