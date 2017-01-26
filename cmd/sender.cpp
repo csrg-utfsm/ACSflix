@@ -47,6 +47,8 @@ int main(int argc, char * argv[]) {
             size_t read = fread(buffer, 1, sizeof(buffer), file);
             sf->send(buffer, read);
         }
+
+        std::cout << "EOF" << std::endl;
     }
 
 }
