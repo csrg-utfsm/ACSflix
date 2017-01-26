@@ -37,6 +37,8 @@ private:
 
     // Buffer to store incoming data, it will be reused every time work() is
     // called. It is allocated with a fixed size.
+    // NOTE: the buffer is created with an extra byte for the null terminating
+    // character, it should not be used for anything else.
     char m_buffer[524288 + 1];
 
 public:
