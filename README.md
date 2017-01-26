@@ -1,4 +1,14 @@
-# How to run test
+# ACSFlix
+
+## Dependencies
+
+- libuuid-devel, uuid. Epel repo is recommended.
+- cmake
+- zmq 4.2.0+
+- protobuf-compiler
+- protobuf-devel
+
+## How to run test
 Compile
 ```
 mkdir -p build
@@ -19,7 +29,7 @@ Run worker with output file name:
 ./worker tcp://localhost:9991 file
 ```
 
-# Worker results
+## Worker results
 Using `zmq_send` with 73M video with `chunk_size = 512kB`
 ```
 real	0m0.690s
