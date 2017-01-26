@@ -8,4 +8,7 @@ plain.file
 own/
 proto/*.pb.*
 compile_commands.json
+.vscode
+worker
+sender
 
