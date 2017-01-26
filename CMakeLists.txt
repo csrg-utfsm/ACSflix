@@ -12,7 +12,7 @@ set(EXTERNAL_LIBS
 
 include_directories(${ZMQ_INCLUDE_DIR})
 
-include_directories(.)
+include_directories(src)
 
 set(SOURCE_FILES
         WorkerFlow.cpp
