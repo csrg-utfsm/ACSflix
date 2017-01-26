@@ -19,9 +19,6 @@ WorkerFlow::WorkerFlow(std::string connect, Callback * cb) :
     if (rc == -1) {
         throw zmq_strerror(zmq_errno());
     }
-
-    // tell the callback that we are ready.
-    m_cb->on_start(this);
 }
 
 WorkerFlow::~WorkerFlow()
@@ -31,12 +28,18 @@ WorkerFlow::~WorkerFlow()
     zmq_ctx_destroy(m_context);
 }
 
+void WorkerFlow::ready()
+{
+    // tell the callback that we are ready.
+    m_cb->on_start(this);
+}
+
 bool WorkerFlow::recv_stream()
 {
     // receive a workload into the worker buffer.
     // NOTE: Here the size of the buffer is limited (subtracted one byte) in
     // order to allow space for the null terminating character.
-    int size = zmq_recv(m_stream_socket, m_buffer, sizeof(m_buffer) - 1, 0);
+    int size = zmq_recv(m_stream_socket, m_buffer, sizeof(m_buffer), 0);
     if (size == -1) {
         throw std::string(strerror(errno));
     }

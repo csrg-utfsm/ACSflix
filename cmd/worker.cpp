@@ -1,4 +1,5 @@
 #include "WorkerFlow.h"
+#include "WorkerStream.h"
 
 #include <iostream>
 #include <string>
@@ -45,11 +46,17 @@ int main(int argc, char * argv[]) {
     std::string connect(argv[1]);
     std::string output(argv[2]);
 
-    // create the Callback and WorkerFlow with the connect argument.
-    WorkerCallback cb(output);
-    WorkerFlow wf(connect, &cb);
+    // create the WorkerStream to manage flows.
+    WorkerStream ws;
 
-    // Receive workloads
-    while (wf.work());
+    // create the Callback for the flow.
+    WorkerCallback cb(output);
+
+    // create the flow from the stream, here we don't need to save the
+    // instance.
+    ws.create_flow("flow-1", connect, &cb);
+
+    // call the start method to loop workers.
+    ws.start();
     std::cout << "End of transmission" << std::endl;
 }

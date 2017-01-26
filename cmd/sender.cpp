@@ -1,4 +1,5 @@
 #include "SenderFlow.h"
+#include "SenderStream.h"
 
 #include <iostream>
 #include <cstring>
@@ -21,8 +22,9 @@ int main(int argc, char * argv[]) {
     std::string bind(argv[1]);
     std::string file_path(argv[2]);
 
-    // create the Callback and WorkerFlow with the connect argument.
-    SenderFlow sf(bind);
+    // create the stream and a flow.
+    SenderStream ss;
+    SenderFlow * sf = ss.create_flow("flow-1", bind);
 
     if (file_path == "debug") {
         int msg_counter = 1;
@@ -30,7 +32,7 @@ int main(int argc, char * argv[]) {
 
         while (msg_counter < 11) {
             sprintf(message, "Message #%d\n", msg_counter++);
-            sf.send(message, strlen(message));
+            sf->send(message, strlen(message));
             std::cout << "Sent: " << message;
             sleep(1);
         }
@@ -43,7 +45,7 @@ int main(int argc, char * argv[]) {
 
         while (!feof(file)) {
             size_t read = fread(buffer, 1, sizeof(buffer), file);
-            sf.send(buffer, read);
+            sf->send(buffer, read);
         }
     }
 
