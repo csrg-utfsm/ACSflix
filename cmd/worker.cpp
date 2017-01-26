@@ -15,7 +15,7 @@ public:
         if (output == "stdout") {
             m_output = stdout;
         } else {
-            fopen(output.c_str(), "w");
+            m_output = fopen(output.c_str(), "w");
         }
     }
 
