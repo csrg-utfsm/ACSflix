@@ -8,12 +8,15 @@
 // are sent with the send() method.
 class SenderFlow
 {
-private:
     // ZMQ Context.
     void * m_context;
 
     // ZMQ Socket.
-    void * m_socket;
+    void * m_stream_socket;
+    void * m_notif_socket;
+
+    // End of transmission notification
+    void end_transmission();
 
 public:
     // SenderFlow creates a new SenderFlow bound to the bind parameter given. 

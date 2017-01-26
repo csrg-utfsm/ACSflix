@@ -1,13 +1,20 @@
-#include "SenderStream.hpp"
-#include "SenderFlow.hpp"
+#include "SenderFlow.h"
+#include "SenderStream.h"
 
 #include <iostream>
-#include <string>
+#include <cstring>
 #include <cassert>
+#include <cstdio>
+#include <unistd.h>
+
+void __raii_file(FILE **file)
+{
+    if (file) fclose(*file);
+}
 
 int main(int argc, char * argv[]) {
     if (argc != 3) {
-        std::cerr << "usage: " << argv[0] << " bind file" << std::endl;
+        std::cerr << "Usage: " << argv[0] << " bind file|debug" << std::endl;
         return 0;
     }
 
@@ -19,15 +26,27 @@ int main(int argc, char * argv[]) {
     SenderStream ss;
     SenderFlow * sf = ss.create_flow("flow-1", bind);
 
-    FILE * file = fopen(argv[2], "r");
-    assert(file);
+    if (file_path == "debug") {
+        int msg_counter = 1;
+        char message[256];
 
-    char buffer[524288];
+        while (msg_counter < 11) {
+            sprintf(message, "Message #%d\n", msg_counter++);
+            sf->send(message, strlen(message));
+            std::cout << "Sent: " << message;
+            sleep(1);
+        }
+    } else {
+        FILE * file __attribute__((cleanup (__raii_file))) = NULL;
+        file = fopen(argv[2], "r");
+        assert(file);
 
-    while (!feof(file)) {
-        size_t read = fread(buffer, 1, sizeof(buffer), file);
-        sf->send(buffer, read);
+        char buffer[524288];
+
+        while (!feof(file)) {
+            size_t read = fread(buffer, 1, sizeof(buffer), file);
+            sf->send(buffer, read);
+        }
     }
 
-    fclose(file);
 }

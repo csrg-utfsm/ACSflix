@@ -1,4 +1,4 @@
-#include "WorkerStream.hpp"
+#include "WorkerStream.h"
 
 WorkerStream::~WorkerStream()
 {

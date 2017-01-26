@@ -1,7 +1,7 @@
 #ifndef WORKERSTREAM_H
 #define WORKERSTREAM_H
 
-#include "WorkerFlow.hpp"
+#include "WorkerFlow.h"
 
 #include <string>
 #include <map>

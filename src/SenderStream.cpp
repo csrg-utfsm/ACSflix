@@ -1,4 +1,4 @@
-#include "SenderStream.hpp"
+#include "SenderStream.h"
 
 SenderStream::~SenderStream()
 {

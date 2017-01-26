@@ -1,7 +1,7 @@
 #ifndef SENDERSTREAM_HPP
 #define SENDERSTREAM_HPP
 
-#include "SenderFlow.hpp"
+#include "SenderFlow.h"
 
 #include <map>
 #include <string>
