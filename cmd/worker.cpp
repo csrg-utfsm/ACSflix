@@ -6,17 +6,22 @@
 
 class WorkerCallback : public Callback
 {
-private:
     FILE * m_output;
 
 public:
-    WorkerCallback(std::string output) :
-        m_output(fopen(output.c_str(), "w"))
+    WorkerCallback(std::string output)
+    {
+        if (output == "stdout") {
+            m_output = stdout;
+        } else {
+            fopen(output.c_str(), "w");
+        }
+    }
+
+    void on_start(WorkerFlow * flow) 
     {
         std::cout << "Callback initialized" << std::endl;
     }
-
-    void on_start(WorkerFlow * flow) {}
 
     void on_workload(char * buffer, size_t size)
     {
@@ -32,7 +37,7 @@ public:
 
 int main(int argc, char * argv[]) {
     if (argc != 3) {
-        std::cerr << "Usage: " << argv[0] << " connect output" << std::endl;
+        std::cerr << "Usage: " << argv[0] << " connect output|stdout" << std::endl;
         return 0;
     }
 
@@ -44,5 +49,7 @@ int main(int argc, char * argv[]) {
     WorkerCallback cb(output);
     WorkerFlow wf(connect, &cb);
 
+    // Receive workloads
     while (wf.work());
+    std::cout << "End of transmission" << std::endl;
 }
