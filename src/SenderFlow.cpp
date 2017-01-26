@@ -36,10 +36,15 @@ SenderFlow::~SenderFlow()
 void SenderFlow::send(char * buffer, size_t size)
 {
     // send the workload.
-    int rc = zmq_send(m_stream_socket, buffer, size, 0);
-    if (rc == -1) {
-        throw zmq_strerror(zmq_errno());
+    while (zmq_send(m_stream_socket, buffer, size, 0) == -1 && errno == EINTR) {
+        std::cout << "zmq_send: retrying" << std::endl;
     }
+
+    /*int rc = zmq_send(m_stream_socket, buffer, size, 0);
+    if (rc == -1) {
+        std::cout << strerror(errno) << std::endl;
+        throw zmq_strerror(zmq_errno());
+    }*/
 }
 
 void SenderFlow::end_transmission()
