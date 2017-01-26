@@ -108,14 +108,14 @@ int main(int argc, char *argv[])
 
         printf("Send start!\n");
         //char chunk[524288]; // 512kB
-        size_t chunk_size = 524288;
+        size_t chunk_size = 104857600;
         while (!feof(file)) {
             char *chunk = cs_pop(&buffer_stack);
             if (chunk == NULL) {
                 chunk = malloc(chunk_size);
             }
-
-            size_t read = fread(chunk, 1, sizeof(chunk_size), file);
+            size_t read = fread(chunk, 1, chunk_size, file);
+            printf("\rRead: %lu", read);
 
             zmq_msg_t message;
             zmq_msg_init_data(&message,

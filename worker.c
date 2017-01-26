@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
         file = fopen(fname, "w");
     }
 
-    char buffer[524288];
+    static char buffer[104857600];
     while (1) {
         int size = zmq_recv(socket, buffer, sizeof(buffer), 0);
         assert(size != -1);
