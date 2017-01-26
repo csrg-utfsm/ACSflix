@@ -27,6 +27,11 @@ void __raii_file(FILE **file)
     if (file) fclose(*file);
 }
 
+void free_buffer(void *data, void *hint)
+{
+    free(data);
+}
+
 int main(int argc, char *argv[])
 {
     if (argc != 3) {
@@ -74,14 +79,26 @@ int main(int argc, char *argv[])
         }
     } else {
         printf("Send start!\n");
-        char chunk[524288]; // 512kB
+        //char chunk[524288]; // 512kB
+        size_t chunk_size = 524288;
         while (!feof(file)) {
-            size_t read = fread(chunk, 1, sizeof(chunk), file);
-            assert(zmq_send(socket, chunk, read, 0) != -1);
+            char *chunk = malloc(chunk_size);                
+            size_t read = fread(chunk, 1, sizeof(chunk_size), file);
+
+            zmq_msg_t message;
+            zmq_msg_init_data(&message,
+                chunk,
+                read,
+                free_buffer,
+                NULL);
+
+            assert(zmq_msg_send(&message, socket, 0) != -1);
+            //assert(zmq_send(socket, chunk, read, 0) != -1);
         }
 
-        sprintf(chunk, "__FEOF__");
-        zmq_send(socket, chunk, strlen(chunk), 0);
+        char feofs[] = "__FEOF__";
+        //sprintf(chunk, "__FEOF__");
+        zmq_send(socket, feofs, strlen(feofs), 0);
 
         printf("FEOF reached.\n");
     }

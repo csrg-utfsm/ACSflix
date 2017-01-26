@@ -60,7 +60,7 @@ int main(int argc, char *argv[])
         assert(size != -1);
 
         buffer[size] = 0;
-
+        
         if (strcmp(buffer, "__FEOF__") == 0) {
             printf("End of transmission.\n");
             break;
