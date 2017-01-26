@@ -1,3 +1,6 @@
+#ifndef SENDERFLOW_H
+#define SENDERFLOW_H
+
 #include <string>
 
 // SenderFlow implements the sender behavior in the ACSFlix model, using the 
@@ -12,8 +15,13 @@ private:
     void * m_socket;
 
 public:
-    // SenderFlow creates a new SenderFlow bound to the bind parameter
-    // given. The bind parameter must be in the zmq_bind format
-    // (see http://api.zeromq.org/4-2:zmq-bind).
+    // SenderFlow creates a new SenderFlow bound to the bind parameter given. 
+    // The bind parameter must be in the zmq_bind format (see 
+    // http://api.zeromq.org/4-2:zmq-bind).
     SenderFlow(std::string bind);
+
+    // Send a buffer to a worker, in round robin order.
+    send(char * buffer, size_t size);
 }
+
+#endif // SENDERFLOW_H
