@@ -5,7 +5,7 @@ CFLAGS=-Wall
 all: sender worker
 
 sender:
-	$(CC) $(CFLAGS) -o sender sender.c $(LFLAGS)
+	$(CC) $(CFLAGS) -o sender sender.c $(LFLAGS) -pthread
 
 worker:
 	$(CC) $(CFLAGS) -o worker worker.c $(LFLAGS)

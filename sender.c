@@ -5,6 +5,23 @@
 #include <string.h>
 #include <errno.h>
 #include <unistd.h>
+#include <pthread.h>
+
+struct concurrent_stack;
+
+typedef struct s_cs_node {
+    char             *buffer;
+    struct s_cs_node *next;
+} cs_node;
+
+struct concurrent_stack {
+    cs_node         *top;
+    pthread_mutex_t op_mutex;
+};
+
+void cs_push(struct concurrent_stack *, char *);
+char *cs_pop(struct concurrent_stack *);
+void cs_free(struct concurrent_stack *);
 
 void usage(const char *prog)
 {
@@ -27,9 +44,15 @@ void __raii_file(FILE **file)
     if (file) fclose(*file);
 }
 
+void __raii_cs(struct concurrent_stack *cs)
+{
+    if (cs) cs_free(cs);
+}
+
 void free_buffer(void *data, void *hint)
 {
-    free(data);
+    struct concurrent_stack *cs = hint;
+    cs_push(cs, data);
 }
 
 int main(int argc, char *argv[])
@@ -78,11 +101,20 @@ int main(int argc, char *argv[])
             sleep(1);
         }
     } else {
+        // Make a concurrent_stack
+        struct concurrent_stack buffer_stack
+            __attribute__((cleanup (__raii_cs)));
+        memset(&buffer_stack, 0, sizeof(buffer_stack));
+
         printf("Send start!\n");
         //char chunk[524288]; // 512kB
         size_t chunk_size = 524288;
         while (!feof(file)) {
-            char *chunk = malloc(chunk_size);                
+            char *chunk = cs_pop(&buffer_stack);
+            if (chunk == NULL) {
+                chunk = malloc(chunk_size);
+            }
+
             size_t read = fread(chunk, 1, sizeof(chunk_size), file);
 
             zmq_msg_t message;
@@ -90,7 +122,7 @@ int main(int argc, char *argv[])
                 chunk,
                 read,
                 free_buffer,
-                NULL);
+                &buffer_stack);
 
             assert(zmq_msg_send(&message, socket, 0) != -1);
             //assert(zmq_send(socket, chunk, read, 0) != -1);
@@ -104,4 +136,42 @@ int main(int argc, char *argv[])
     }
 
     return 0;
+}
+
+void cs_push(struct concurrent_stack *self, char *buffer)
+{
+    pthread_mutex_lock(&self->op_mutex);
+    cs_node *node = malloc(sizeof(cs_node));
+    node->buffer  = buffer;
+    node->next    = self->top;
+    self->top     = node;
+    pthread_mutex_unlock(&self->op_mutex);
+}
+
+char *cs_pop(struct concurrent_stack *self)
+{
+    char *buffer = NULL;
+    pthread_mutex_lock(&self->op_mutex);
+    if (self->top != NULL) {
+        buffer       = self->top->buffer;
+        cs_node *top = self->top;
+        self->top    = top->next;
+        free(top);
+    }
+    pthread_mutex_unlock(&self->op_mutex);
+    return buffer;
+}
+
+void cs_free(struct concurrent_stack *self)
+{
+    pthread_mutex_lock(&self->op_mutex);
+    cs_node *node = self->top;
+    while (node != NULL) {
+        cs_node *next = node->next;
+        free(node->buffer);
+        free(node);
+        node = next;
+    }
+    self->top = NULL;
+    pthread_mutex_unlock(&self->op_mutex);
 }
