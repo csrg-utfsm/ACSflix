@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include <cassert>
+#include <cstdio>
 
 int main(int argc, char * argv[]) {
     if (argc != 3) {
