@@ -6,7 +6,8 @@
 // SenderFlow implements the sender behavior in the ACSFlix model, using the 
 // PUSH/PULL pattern. It creates it's own context and PUSH Socket, workloads
 // are sent with the send() method.
-class SenderFlow {
+class SenderFlow
+{
 private:
     // ZMQ Context.
     void * m_context;
@@ -21,7 +22,7 @@ public:
     SenderFlow(std::string bind);
 
     // Send a buffer to a worker, in round robin order.
-    send(char * buffer, size_t size);
-}
+    void send(char * buffer, size_t size);
+};
 
 #endif // SENDERFLOW_H

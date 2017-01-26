@@ -15,8 +15,11 @@ include_directories(${ZMQ_INCLUDE_DIR})
 include_directories(.)
 
 set(SOURCE_FILES
-        WorkerFlow.cpp)
+        WorkerFlow.cpp
+        SenderFlow.cpp)
 
 add_executable(worker cmd/worker.cpp ${SOURCE_FILES})
+add_executable(sender cmd/sender.cpp ${SOURCE_FILES})
 
 target_link_libraries(worker ${EXTERNAL_LIBS})
+target_link_libraries(sender ${EXTERNAL_LIBS})
