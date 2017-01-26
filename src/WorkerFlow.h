@@ -30,7 +30,8 @@ private:
     void * m_context;   
 
     // ZeroMQ socket.
-    void * m_socket;    
+    void * m_stream_socket;    
+    void * m_notif_socket;
 
     // Callback to notify lifecycle related events.
     Callback * m_cb;
@@ -39,7 +40,11 @@ private:
     // called. It is allocated with a fixed size.
     // NOTE: the buffer is created with an extra byte for the null terminating
     // character, it should not be used for anything else.
-    char m_buffer[524288 + 1];
+    char m_buffer[524288];
+
+    // Multiplex channels
+    bool recv_stream();
+    bool recv_notif();
 
 public:
     // WorkerFlow creates a new Worker Flow, connected to a sender using the 
