@@ -10,7 +10,10 @@ class WorkerFlow;
 class Callback
 {
 public:
-    // on_start is called when the worker starts, right after it gets created.
+    // on_start is called when the worker starts, through the ready() method.
+    // (see WorkerFlow::ready()). If the flow is used within a stream, then the
+    // ready() method will be fired automatically, if not, the ready()
+    // method has to be called manually for this method to be called.
     virtual void on_start(WorkerFlow * flow) = 0;
 
     // on_workload is called when a new workload arrives.
@@ -48,6 +51,10 @@ public:
     WorkerFlow(std::string connect, Callback * cb);
 
     ~WorkerFlow();
+
+    // Called when the WorkerStream is about to poll each worker. If the flow
+    // is not used within a stream, the user must call this method manually.
+    void ready();
 
     // Work tells this worker to receive a workload and process it. Returns
     // true if there's more work to do. A worker should stop working when it
