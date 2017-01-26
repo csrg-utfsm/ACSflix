@@ -12,9 +12,9 @@ Run sender with input file name or `debug` option
 ```
 ./sender tcp://*:9991 file|debug
 ```
-Run worker with output file name
+Run worker with output file name or `stdout` option
 ```
-./worker tcp://localhost:9991 test.out
+./worker tcp://localhost:9991 test.out|stdout
 ```
 
 # Worker results
