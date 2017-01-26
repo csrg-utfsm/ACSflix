@@ -1,18 +1,34 @@
-ACSFlix
-=======
+# How to run test
+Compile
+```
+mkdir -p build
+cd build
+cmake ..
+make
+```
+You may need to set `LD_LIBRARY_PATH` for the binaries to work
+```
+export LD_LIBRARY_PATH=/usr/local/lib
+```
+Run sender with input file:
+```
+./sender tcp://*:9991 file
+```
+Run worker with output file name:
+```
+./worker tcp://localhost:9991 file
+```
 
-## Dependencies
-- libuuid-devel, uuid. Epel repo is recommended. 
-- cmake
-- zmq 4.2.0+
-- protobuf-compiler
-- protobuf-devel
-
-## How to Build
- - Create folder build inside ACSFlix folder and cd into it
- - protoc --cpp_out=. BdBlock.proto inside proto folder
- - run cmake
- - If you're using a self-compiled version of zmq and czmq, CMakeList.txt must be modified.
- 
- ## Rebuild due to CZMQ Zero Copy Deprecation
- - https://github.com/zeromq/czmq/commit/de8c1bc4
+# Worker results
+Using `zmq_send` with 73M video with `chunk_size = 512kB`
+```
+real	0m0.690s
+user	0m0.050s
+sys	0m0.080s
+```
+Using `zmq_send` with 3.5G video with `chunk_size = 512kB`
+```
+real	0m49.443s
+user	0m1.280s
+sys	0m6.660s
+```
