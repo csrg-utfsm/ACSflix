@@ -46,8 +46,6 @@ void WorkerFlow::ready()
 bool WorkerFlow::recv_stream()
 {
     // receive a workload into the worker buffer.
-    // NOTE: Here the size of the buffer is limited (subtracted one byte) in
-    // order to allow space for the null terminating character.
     int size = zmq_recv(m_stream_socket, m_buffer, sizeof(m_buffer), 0);
     if (size == -1) {
         throw std::string(strerror(errno));
@@ -63,7 +61,7 @@ bool WorkerFlow::recv_stream()
 bool WorkerFlow::recv_notif()
 {
     // Receive a message from the notification channel
-    int size = zmq_recv(m_notif_socket, m_buffer, sizeof(m_buffer) - 1, 0);
+    int size = zmq_recv(m_notif_socket, m_buffer, sizeof(m_buffer), 0);
     if (size == -1) {
         throw std::string(strerror(errno));
     }
