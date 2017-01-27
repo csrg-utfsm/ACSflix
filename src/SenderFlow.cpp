@@ -39,12 +39,7 @@ void SenderFlow::send(char * buffer, size_t size)
     while (zmq_send(m_stream_socket, buffer, size, 0) == -1 && errno == EINTR) {
         std::cout << "zmq_send: retrying" << std::endl;
     }
-
-    /*int rc = zmq_send(m_stream_socket, buffer, size, 0);
-    if (rc == -1) {
-        std::cout << strerror(errno) << std::endl;
-        throw zmq_strerror(zmq_errno());
-    }*/
+    /* FIXME: Properly handle this exception */
 }
 
 void SenderFlow::end_transmission()

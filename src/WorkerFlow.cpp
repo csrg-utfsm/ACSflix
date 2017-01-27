@@ -93,10 +93,6 @@ bool WorkerFlow::work()
         { m_notif_socket,  0, ZMQ_POLLIN, 0 }
     };
     // Wait until there is data to read in either channel
-    /*if (zmq_poll(items, 2, -1) == -1) {
-        std::cout << "poll_error: " <<
-            std::string(strerror(errno)) << std::endl;
-    }*/
     while (zmq_poll(items, 2, -1) == -1 && errno == EINTR) {
         std::cout << "zmq_poll: retrying" << std::endl;
     }
