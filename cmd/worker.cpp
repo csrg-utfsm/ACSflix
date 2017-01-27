@@ -14,6 +14,8 @@ public:
     {
         if (output == "stdout") {
             m_output = stdout;
+        } else if (output == "null") {
+            m_output = NULL;
         } else {
             m_output = fopen(output.c_str(), "w");
         }
@@ -26,8 +28,10 @@ public:
 
     void on_workload(char * buffer, size_t size)
     {
-        fwrite(buffer, 1, size, m_output);
-        fflush(m_output);
+        if (m_output) {
+            fwrite(buffer, 1, size, m_output);
+            fflush(m_output);
+        }
     }
 
     void on_stop()
@@ -38,7 +42,9 @@ public:
 
 int main(int argc, char * argv[]) {
     if (argc != 3) {
-        std::cerr << "Usage: " << argv[0] << " connect output|stdout" << std::endl;
+        std::cerr << "Usage: " << argv[0]
+            << " connect output|stdout|null"
+            << std::endl;
         return 0;
     }
 
