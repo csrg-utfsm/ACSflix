@@ -4,7 +4,8 @@
 
 - libuuid-devel, uuid. Epel repo is recommended.
 - cmake
-- zmq 4.2.0+
+- zmq 3.2+
+- zmq-devel
 - protobuf-compiler
 - protobuf-devel
 
@@ -16,7 +17,7 @@ cd build
 cmake ..
 make
 ```
-You may need to set `LD_LIBRARY_PATH` for the binaries to work
+You may need to set `LD_LIBRARY_PATH` for the binaries to work if you use a custom installation of zmq (not necessary nor recommended)
 ```
 export LD_LIBRARY_PATH=/usr/local/lib
 ```
