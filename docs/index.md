@@ -1,8 +1,8 @@
-# Benchmark for ACSflix commit ce8e9875011e874b995b42ddb5388234eb59855d
+# Benchmark for ACSflix commit ce8e987501
 
 This benchmark is based on the [http://zeromq.org/results:10gbe-tests](same test taken by ZMQ), which consisted in:
 
-> sending 1M messages over the network as fast as possible. The test was run for different messages size (1, 2, 4, 8, 16, 32, 64, 128, 256, 512 and 1024 bytes). The whole test was performed 3 times.
+> sending 1M messages over the network as fast as possible. The test was run for different messages size ( 2, 4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096 and 8192 bytes). The whole test was performed 3 times.
 
 With that in mind, we followed ZMQ Instructions on [http://zeromq.org/results:perf-howto](How To Benchmark)
 
@@ -10,12 +10,17 @@ With that in mind, we followed ZMQ Instructions on [http://zeromq.org/results:pe
 
 These tests will allow us to define a baseline behaviour
 
- - Idle systems, with different message sizes, for 1 million roundtrips, from A to B: 
+ - Idle systems, MTU 1500, with different message sizes, for 1 million roundtrips, from A to B: 
 
-| Message Size (Bytes) | 1       | 2       | 4       | 8       | 16      | 32      | 64      | 128     | 256     | 512 | 1024 | 
-|  Latency  (us)       | 126.943 | 128.261 | 130.060 | 131.086 | 130.633 | 132.878 | 136.549 | 138.214 | 139.322 |  |  |
-|  Throughput (msg/s)  |  |  |  |  |  |  |  |  |  |  |  |
-|  Throughput (Mbit/s) |  |  |  |  |  |  |  |  |  |  |  |
+| Message Size (Bytes) | 2         | 4         | 8         | 16        | 32        | 64        | 128      | 256      | 512      | 1024    |
+|  Latency  (us)       | 128.261   | 130.060   | 131.086   | 130.633   | 132.878   | 136.549   | 138.214  | 139.322  | 142.327  | 156.682 |
+|  Throughput (msg/s)  | 5.247.773 | 5.154.931 | 4.935.712 | 4.584.653 | 2.919.801 | 1.497.671 | 748.864  | 365.747  | 186.768  | 94.288  |
+|  Throughput (Mbit/s) | 83.964    | 164.958   | 315.886   | 586.836   | 747.469   | 766.808   | 766.837  | 749.050  | 765.002  | 772.407 |
+
+| Message Size (Bytes) | 2048    | 4096    | 8192      |
+|  Latency  (us)       | 145.435 | 264.269 |    |
+|  Throughput (msg/s)  | 47.470  | 23.771  | 11.812   |
+|  Throughput (Mbit/s) | 777.748 | 778.928 | 774.111  |
 
 
 ## ACSflix
@@ -31,3 +36,4 @@ The computer's SO is Centos 7.3, kernel 3.10.0-514.10.2
  - [http://zeromq.org/results:10gbe-tests](ZMQ oficial 10Gb Ethernet Tests)
  - [http://nikolaveber.blogspot.cl/2011/04/if-you-are-planning-large-or-not-even.html]
  - [http://zeromq.org/area:results](ZMQ Benchmaks)
+ - Pub/sub reports 15 us extra interval and ZMQ_NOBLOCK lows the extra time to just 10 us: [http://stackoverflow.com/questions/30660627/zeromq-performance-test-whats-the-accurate-latency]
