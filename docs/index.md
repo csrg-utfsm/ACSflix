@@ -12,10 +12,10 @@ These tests will allow us to define a baseline behaviour
 
  - Idle systems, with different message sizes, for 1 million roundtrips, from A to B: 
 
-| Message Size (Bytes) | 1 | 2 | 4 | 8 | 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 
-|  Latency  (us) | 126.943 | 128.261 | 130.060 | 130.633 | 132.878 |  |  |  |  |  |  |
-|  Throughput (msg/s)   |  |  |  |  |  |  |  |  |  |  |  |
-|  Throughput (Mbit/s)  |  |  |  |  |  |  |  |  |  |  |  |
+| Message Size (Bytes) | 1       | 2       | 4       | 8       | 16      | 32      | 64      | 128     | 256     | 512 | 1024 | 
+|  Latency  (us)       | 126.943 | 128.261 | 130.060 | 131.086 | 130.633 | 132.878 | 136.549 | 138.214 | 139.322 |  |  |
+|  Throughput (msg/s)  |  |  |  |  |  |  |  |  |  |  |  |
+|  Throughput (Mbit/s) |  |  |  |  |  |  |  |  |  |  |  |
 
 
 ## ACSflix
