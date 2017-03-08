@@ -11,10 +11,10 @@ WorkerStream::~WorkerStream()
 }
 
 WorkerFlow * WorkerStream::create_flow(std::string name, std::string connect,
-    Callback * cb)
+    size_t buffsize)
 {
     // create the flow.
-    WorkerFlow * flow = new WorkerFlow(connect, cb);
+    WorkerFlow * flow = new WorkerFlow(connect, buffsize);
 
     // wrap the flow with additional meta-data.
     WorkerWrapper * wd = new WorkerWrapper;

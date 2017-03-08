@@ -6,11 +6,12 @@
 #include <cerrno>
 #include <cassert>
 
-WorkerFlow::WorkerFlow(std::string connect, Callback * cb) : 
+WorkerFlow::WorkerFlow(std::string connect, size_t buffsize) : 
     m_context(zmq_ctx_new()),
     m_stream_socket(zmq_socket(m_context, ZMQ_PULL)),
     m_notif_socket(zmq_socket(m_context, ZMQ_SUB)),
-    m_cb(cb)
+    m_cb(NULL),
+    m_buffer(new char[(buffsize) ? buffsize : DEFAULT_BUFFER_SIZE])
 {
     // connect to the stream endpoint
     int rc = zmq_connect(m_stream_socket, connect.c_str());
@@ -35,12 +36,15 @@ WorkerFlow::~WorkerFlow()
     zmq_close(m_stream_socket);
     zmq_close(m_notif_socket);
     zmq_ctx_destroy(m_context);
+    delete[] m_buffer;
 }
 
 void WorkerFlow::ready()
 {
     // tell the callback that we are ready.
-    m_cb->on_start(this);
+    if (m_cb) {
+        m_cb->on_start(this);
+    }
 }
 
 bool WorkerFlow::recv_stream()
@@ -52,7 +56,9 @@ bool WorkerFlow::recv_stream()
     }
 
     // tell the callback that there's workload to take.
-    m_cb->on_workload(m_buffer, size);
+    if (m_cb) {
+        m_cb->on_workload(m_buffer, size);
+    }
 
     // Keep receiving
     return true;
@@ -108,4 +114,9 @@ bool WorkerFlow::work()
     // zmq_poll failed with errno != EINTR
     std::cout << "Panic! > " << strerror(errno) << std::endl;
     return false;
+}
+
+void WorkerFlow::set_callback(Callback * cb)
+{
+    m_cb = cb;
 }

@@ -4,6 +4,8 @@
 #include <iostream>
 #include <string>
 #include <cstdio>
+#include <cstdlib>
+#include <unistd.h>
 
 class WorkerCallback : public Callback
 {
@@ -41,12 +43,31 @@ public:
 };
 
 int main(int argc, char * argv[]) {
-    if (argc != 3) {
+    int opt;
+    size_t buffsize = 0;
+    int opts_consumed = 0;
+
+    while ((opt = getopt(argc, argv, "b:")) != -1) {
+        switch (opt) {
+        case 'b':
+            opt = strtol(optarg, NULL, 10);
+            buffsize = (opt > 0) ? opt : buffsize;
+            opts_consumed += 2;
+            break;
+        default:
+            return 1;
+        }
+    }
+
+    if (argc - opts_consumed != 3) {
         std::cerr << "Usage: " << argv[0]
-            << " connect output|stdout|null"
+            << " [-b buffsize] connect output|stdout|null"
             << std::endl;
         return 0;
     }
+
+    // Assuming options before positional arguments
+    argv += opts_consumed;
 
     // get arguments from console.
     std::string connect(argv[1]);
@@ -60,7 +81,8 @@ int main(int argc, char * argv[]) {
 
     // create the flow from the stream, here we don't need to save the
     // instance.
-    ws.create_flow("flow-1", connect, &cb);
+    WorkerFlow *wf = ws.create_flow("flow-1", connect, buffsize);
+    wf->set_callback(&cb);
 
     // call the start method to loop workers.
     ws.start();

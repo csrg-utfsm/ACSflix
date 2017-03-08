@@ -61,13 +61,14 @@ int main(int argc, char * argv[]) {
         file = fopen(argv[2], "r");
         assert(file);
 
-        char *buffer = (char*)malloc(buffsize);
+        char *buffer = new char[buffsize];
 
         while (!feof(file)) {
             size_t read = fread(buffer, 1, buffsize, file);
             sf->send(buffer, read);
         }
 
+        delete[] buffer;
         std::cout << "EOF" << std::endl;
     }
 

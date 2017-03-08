@@ -3,6 +3,8 @@
 
 #include <string>
 
+#define DEFAULT_BUFFER_SIZE 524288
+
 // Forward declarations.
 class WorkerFlow;
 
@@ -43,7 +45,7 @@ private:
     // called. It is allocated with a fixed size.
     // NOTE: the buffer is created with an extra byte for the null terminating
     // character, it should not be used for anything else.
-    char m_buffer[524288];
+    char *m_buffer;
 
     // Multiplex channels
     bool recv_stream();
@@ -53,7 +55,7 @@ public:
     // WorkerFlow creates a new Worker Flow, connected to a sender using the 
     // connect parameter. The connect parameter is formatted as ZMQ zmq_connect
     // format (see http://api.zeromq.org/4-2:zmq-connect).
-    WorkerFlow(std::string connect, Callback * cb);
+    WorkerFlow(std::string connect, size_t buffsize);
 
     ~WorkerFlow();
 
@@ -65,6 +67,9 @@ public:
     // true if there's more work to do. A worker should stop working when it
     // returns false.
     bool work();
+
+    // Workflow callback setter
+    void set_callback(Callback * cb);
 };
 
 #endif // WORKERFLOW_H

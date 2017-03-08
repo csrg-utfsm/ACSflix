@@ -22,12 +22,15 @@ private:
     std::map<std::string, WorkerWrapper*> m_flows;
 
 public:
-    // Creates a new WorkerFlow with the given name, using the connect string
+    // Creates a new WorkerFlow with the given name, using the connect string,
     // and the callback (see WorkerFlow constructor). The returned WorkerFlow
     // must not be destroyed manually, this class will dispose them as 
     // necessary.
+    //
+    // Edit: Callback is now set separatedly and is replaced by positional
+    // argument buffsize
     WorkerFlow * create_flow(std::string name, std::string connect, 
-        Callback * cb);
+        size_t buffsize=0);
 
     ~WorkerStream();
 
