@@ -6,6 +6,7 @@
 #include <cassert>
 #include <cstdio>
 #include <unistd.h>
+#include <cstdlib>
 
 void __raii_file(FILE **file)
 {
@@ -13,10 +14,29 @@ void __raii_file(FILE **file)
 }
 
 int main(int argc, char * argv[]) {
-    if (argc != 3) {
-        std::cerr << "Usage: " << argv[0] << " bind file|debug" << std::endl;
-        return 0;
+    int opt;
+    int buffsize = 524288;
+    int opts_consumed = 0;
+
+    while ((opt = getopt(argc, argv, "b:")) != -1) {
+        switch (opt) {
+        case 'b':
+            opt = strtol(optarg, NULL, 10);
+            buffsize = (opt > 0) ? opt : buffsize;
+            opts_consumed += 2;
+            break;
+        default:
+            return 1;
+        }
     }
+
+    if (argc - opts_consumed != 3) {
+        std::cerr << "Usage: " << argv[0] << " [-b buffsize] bind file|debug" << std::endl;
+        return 1;
+    }
+
+    // Assuming options before positional arguments
+    argv += opts_consumed;
 
     // get arguments from console.
     std::string bind(argv[1]);
@@ -41,10 +61,10 @@ int main(int argc, char * argv[]) {
         file = fopen(argv[2], "r");
         assert(file);
 
-        char buffer[524288];
+        char *buffer = (char*)malloc(buffsize);
 
         while (!feof(file)) {
-            size_t read = fread(buffer, 1, sizeof(buffer), file);
+            size_t read = fread(buffer, 1, buffsize, file);
             sf->send(buffer, read);
         }
 
