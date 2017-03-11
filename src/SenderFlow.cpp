@@ -32,7 +32,7 @@ SenderFlow::~SenderFlow()
     // safely close all ZMQ entities.
     zmq_close(m_stream_socket);
     zmq_close(m_notif_socket);
-    zmq_ctx_destroy(m_context);
+    zmq_ctx_term(m_context);
 }
 
 void SenderFlow::send(char * buffer, size_t size)
