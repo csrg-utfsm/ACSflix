@@ -36,7 +36,7 @@ WorkerFlow::~WorkerFlow()
     // safely close ZMQ entities.
     zmq_close(m_stream_socket);
     zmq_close(m_notif_socket);
-    zmq_ctx_destroy(m_context);
+    zmq_ctx_term(m_context);
     delete[] m_buffer;
 }
 
