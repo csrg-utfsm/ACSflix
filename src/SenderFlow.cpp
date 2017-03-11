@@ -20,7 +20,9 @@ SenderFlow::SenderFlow(std::string bind) :
     if (rc == -1) {
         throw std::string(strerror(errno));
     }
-
+    int linger = -1;
+    zmq_setsockopt(m_stream_socket, ZMQ_LINGER, &linger, sizeof(linger));
+    zmq_setsockopt(m_notif_socket, ZMQ_LINGER, &linger, sizeof(linger));
 }
 
 SenderFlow::~SenderFlow()
