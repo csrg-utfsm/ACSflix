@@ -25,6 +25,13 @@ These tests will allow us to define a baseline behaviour
 
 ## ACSflix
 
+The logic in ACSflix is pretty simple:
+ * We use PUSH/PULL sockets to send the data.
+ * And a PUB/SUB channel to notify the worker of the End of Transmission.
+
+ - The minimum buffer size is 2 Bytes. 
+ - Testings are performed over OSes with firewalls.
+
 ## HW Specifications
  * Computer A (Zoidberg): Dell Precision WorkStation T3400, 4GiB RAM DDR2 @ 800 MHz, Core 2 Duo E4600 @ 2.4 GHz, NetXtreme BCM5754 Gigabit
 
