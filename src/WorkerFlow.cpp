@@ -79,7 +79,7 @@ bool WorkerFlow::recv_notif()
 
     // For now, we only support __EndOfTransmission__ message
     // This must be extendable and standarized!
-    if (strcmp(m_buffer, "__EndOfTransmission__") == 0) {
+    if (strcmp(m_buffer, "#\\") == 0) {
         return false;
     }
 

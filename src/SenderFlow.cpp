@@ -46,6 +46,6 @@ void SenderFlow::send(char * buffer, size_t size)
 
 void SenderFlow::end_transmission()
 {
-    char buffer[] = "__EndOfTransmission__";
+    char buffer[] = "#\\";
     zmq_send(m_notif_socket, buffer, strlen(buffer), 0);
 }
