@@ -29,8 +29,19 @@ The logic in ACSflix is pretty simple:
  * We use PUSH/PULL sockets to send the data.
  * And a PUB/SUB channel to notify the worker of the End of Transmission.
 
+Each of the Push/Pull pair of sockets is referred as a _Flow_, which can be grouped in a _Stream_.
+
  - The minimum buffer size is 2 Bytes. 
  - Testings are performed over OSes with firewalls.
+
+### 1 Flow, 1 Stream
+
+
+### 3 Flows, 1 Stream
+
+
+### 3 Flows, 3 Streams
+
 
 ## HW Specifications
  * Computer A (Zoidberg): Dell Precision WorkStation T3400, 4GiB RAM DDR2 @ 800 MHz, Core 2 Duo E4600 @ 2.4 GHz, NetXtreme BCM5754 Gigabit
