@@ -15,7 +15,7 @@ void __raii_file(FILE **file)
 
 int main(int argc, char * argv[]) {
     int opt;
-    int buffsize = 524288;
+    int buffsize = 2048;
     int opts_consumed = 0;
 
     while ((opt = getopt(argc, argv, "b:")) != -1) {

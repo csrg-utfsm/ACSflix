@@ -44,7 +44,7 @@ public:
 
 int main(int argc, char * argv[]) {
     int opt;
-    size_t buffsize = 0;
+    size_t buffsize = 2048;
     int opts_consumed = 0;
 
     while ((opt = getopt(argc, argv, "b:")) != -1) {
