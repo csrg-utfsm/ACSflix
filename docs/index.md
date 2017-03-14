@@ -17,13 +17,26 @@ These tests will allow us to define a baseline behaviour
 |  Throughput (msg/s)  | 5.247.773 | 5.154.931 | 4.935.712 | 4.584.653 | 2.919.801 | 1.497.671 | 748.864  | 365.747  | 186.768  | 94.288  |
 |  Throughput (Mbit/s) | 83.964    | 164.958   | 315.886   | 586.836   | 747.469   | 766.808   | 766.837  | 749.050  | 765.002  | 772.407 |
 
-| Message Size (Bytes) | 2048    | 4096    | 8192     |
-|  Latency  (us)       | 145.435 | 264.269 | 289.649  |
-|  Throughput (msg/s)  | 47.470  | 23.771  | 11.812   |
-|  Throughput (Mbit/s) | 777.748 | 778.928 | 774.111  |
-
+| Message Size (Bytes) | 2048    | 4096    | 8192    |
+|  Latency  (us)       | 145.435 | 264.269 | 289.649 |
+|  Throughput (msg/s)  | 47.470  | 23.771  | 11.812  |
+|  Throughput (Mbit/s) | 777.748 | 778.928 | 774.111 |
 
 ## ACSflix
+
+|File Size [MB] - Buffer Size [B]| 1.91 (2) | 3.82 (4) | 7.64 (8) | 15.28 (16) | 30.56 (32) | 61.12 (64) | 122.24 (128) | 244.48 (256) | 488.96 (512) | 977.12 (1024) |
+|  Throughput (msg/s)  |
+|  Throughput (Mbit/s) |
+
+
+|File Size (MB)| 1956 (2048) | 3912 (4096) | 7824 (8192) |
+|  Throughput (msg/s)  |
+|  Throughput (Mbit/s) |
+
+
+ * An equivalent file size has been calculated with: (1 Million messages * X Bytes) / 1024^2
+ * In ACSflix, using -b flag, buffer size can be set. 
+ * -Files used are images available at [http://repo.csrg.cl/images]-
 
 ## HW Specifications
  * Computer A (Zoidberg): Dell Precision WorkStation T3400, 4GiB RAM DDR2 @ 800 MHz, Core 2 Duo E4600 @ 2.4 GHz, NetXtreme BCM5754 Gigabit
