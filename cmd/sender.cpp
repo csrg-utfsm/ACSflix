@@ -17,6 +17,8 @@ int main(int argc, char * argv[]) {
     int opt;
     int buffsize = 2048;
     int opts_consumed = 0;
+    int message_count = 0;
+    size_t message_size;
 
     while ((opt = getopt(argc, argv, "b:")) != -1) {
         switch (opt) {
@@ -63,13 +65,30 @@ int main(int argc, char * argv[]) {
 
         char *buffer = new char[buffsize];
 
+	watch = zmq_stopwatch_start();
+
         while (!feof(file)) {
             size_t read = fread(buffer, 1, buffsize, file);
             sf->send(buffer, read);
+	    message_count++;
         }
 
         delete[] buffer;
-        std::cout << "EOF" << std::endl;
+
+    elapsed = zmq_stopwatch_stop (watch);
+    if (elapsed == 0)
+    	elapsed = 1;
+
+    message_size = buffsize;
+    throughput = (unsigned long) ((double) message_count / (double) elapsed * 1000000);
+    megabits = (double) (throughput * message_size * 8) / 1000000;
+
+    printf ("message size: %d [B]\n", (int) message_size);
+    printf ("message count: %d\n", (int) message_count);
+    printf ("mean throughput: %d [msg/s]\n", (int) throughput);
+    printf ("mean throughput: %.3f [Mb/s]\n", (double) megabits);
+
+    std::cout << "EOF" << std::endl;
     }
 
 }
