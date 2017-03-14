@@ -19,6 +19,10 @@ int main(int argc, char * argv[]) {
     int opts_consumed = 0;
     int message_count = 0;
     size_t message_size;
+    void *watch;
+    unsigned long elapsed;
+    unsigned long throughput;
+    double megabits;
 
     while ((opt = getopt(argc, argv, "b:")) != -1) {
         switch (opt) {
