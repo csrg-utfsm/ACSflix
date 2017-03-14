@@ -11,7 +11,8 @@ WorkerFlow::WorkerFlow(std::string connect, size_t buffsize) :
     m_stream_socket(zmq_socket(m_context, ZMQ_PULL)),
     m_notif_socket(zmq_socket(m_context, ZMQ_SUB)),
     m_cb(NULL),
-    m_buffer(new char[(buffsize) ? buffsize : DEFAULT_BUFFER_SIZE])
+    m_buffer(new char[(buffsize) ? buffsize : DEFAULT_BUFFER_SIZE]),
+    m_buffsize((buffsize) ? buffsize : DEFAULT_BUFFER_SIZE)
 {
     // connect to the stream endpoint
     int rc = zmq_connect(m_stream_socket, connect.c_str());
@@ -35,7 +36,7 @@ WorkerFlow::~WorkerFlow()
     // safely close ZMQ entities.
     zmq_close(m_stream_socket);
     zmq_close(m_notif_socket);
-    zmq_ctx_destroy(m_context);
+    zmq_ctx_term(m_context);
     delete[] m_buffer;
 }
 
@@ -50,7 +51,7 @@ void WorkerFlow::ready()
 bool WorkerFlow::recv_stream()
 {
     // receive a workload into the worker buffer.
-    int size = zmq_recv(m_stream_socket, m_buffer, sizeof(m_buffer), 0);
+    int size = zmq_recv(m_stream_socket, m_buffer, m_buffsize, 0);
     if (size == -1) {
         throw std::string(strerror(errno));
     }
@@ -67,7 +68,7 @@ bool WorkerFlow::recv_stream()
 bool WorkerFlow::recv_notif()
 {
     // Receive a message from the notification channel
-    int size = zmq_recv(m_notif_socket, m_buffer, sizeof(m_buffer), 0);
+    int size = zmq_recv(m_notif_socket, m_buffer, m_buffsize, 0);
     if (size == -1) {
         throw std::string(strerror(errno));
     }
@@ -78,7 +79,7 @@ bool WorkerFlow::recv_notif()
 
     // For now, we only support __EndOfTransmission__ message
     // This must be extendable and standarized!
-    if (strcmp(m_buffer, "__EndOfTransmission__") == 0) {
+    if (strcmp(m_buffer, "#\\") == 0) {
         return false;
     }
 

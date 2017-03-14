@@ -24,19 +24,35 @@ These tests will allow us to define a baseline behaviour
 
 ## ACSflix
 
+The logic in ACSflix is pretty simple:
+ * We use PUSH/PULL sockets to send the data.
+ * And a PUB/SUB channel to notify the worker of the End of Transmission.
+
+Each of the Push/Pull pair of sockets is referred as a _Flow_, which can be grouped in a _Stream_.
+
+ - The minimum buffer size is 2 Bytes. 
+ - Testings are performed over OSes with firewalls.
+ - An equivalent file size has been calculated with: (1 Million messages * X Bytes) / 1024^2
+ - In ACSflix, using -b flag, buffer size can be set.
+ - Files used are images available at [http://repo.csrg.cl/images]-
+
+### 1 Flow, 1 Stream
+
 |File Size [MB] - Buffer Size [B]| 1.91 (2) | 3.82 (4) | 7.64 (8) | 15.28 (16) | 30.56 (32) | 61.12 (64) | 122.24 (128) | 244.48 (256) | 488.96 (512) | 977.12 (1024) |
 |  Throughput (msg/s)  |
 |  Throughput (Mbit/s) |
-
 
 |File Size (MB)| 1956 (2048) | 3912 (4096) | 7824 (8192) |
 |  Throughput (msg/s)  |
 |  Throughput (Mbit/s) |
 
+### 3 Flows, 1 Stream
 
- * An equivalent file size has been calculated with: (1 Million messages * X Bytes) / 1024^2
- * In ACSflix, using -b flag, buffer size can be set. 
- * -Files used are images available at [http://repo.csrg.cl/images]-
+
+
+### 3 Flows, 3 Streams
+
+
 
 ## HW Specifications
  * Computer A (Zoidberg): Dell Precision WorkStation T3400, 4GiB RAM DDR2 @ 800 MHz, Core 2 Duo E4600 @ 2.4 GHz, NetXtreme BCM5754 Gigabit

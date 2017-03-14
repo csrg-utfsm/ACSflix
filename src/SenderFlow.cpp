@@ -20,7 +20,9 @@ SenderFlow::SenderFlow(std::string bind) :
     if (rc == -1) {
         throw std::string(strerror(errno));
     }
-
+    int linger = -1;
+    zmq_setsockopt(m_stream_socket, ZMQ_LINGER, &linger, sizeof(linger));
+    zmq_setsockopt(m_notif_socket, ZMQ_LINGER, &linger, sizeof(linger));
 }
 
 SenderFlow::~SenderFlow()
@@ -30,7 +32,7 @@ SenderFlow::~SenderFlow()
     // safely close all ZMQ entities.
     zmq_close(m_stream_socket);
     zmq_close(m_notif_socket);
-    zmq_ctx_destroy(m_context);
+    zmq_ctx_term(m_context);
 }
 
 void SenderFlow::send(char * buffer, size_t size)
@@ -44,6 +46,6 @@ void SenderFlow::send(char * buffer, size_t size)
 
 void SenderFlow::end_transmission()
 {
-    char buffer[] = "__EndOfTransmission__";
+    char buffer[] = "#\\";
     zmq_send(m_notif_socket, buffer, strlen(buffer), 0);
 }

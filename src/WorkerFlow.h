@@ -42,10 +42,10 @@ private:
     Callback * m_cb;
 
     // Buffer to store incoming data, it will be reused every time work() is
-    // called. It is allocated with a fixed size.
-    // NOTE: the buffer is created with an extra byte for the null terminating
-    // character, it should not be used for anything else.
+    // called. ~It is allocated with a fixed size~ NOT ANYMORE.
     char *m_buffer;
+    size_t m_buffsize;
+
 
     // Multiplex channels
     bool recv_stream();
