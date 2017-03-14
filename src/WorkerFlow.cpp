@@ -20,7 +20,7 @@ WorkerFlow::WorkerFlow(std::string connect, size_t buffsize) :
         throw std::string(strerror(errno));
     }
     // connect to to the notification channel endpoint
-    rc = zmq_connect(m_notif_socket, "tcp://localhost:9992");
+    rc = zmq_connect(m_notif_socket, "tcp://10.10.3.12:9992");
     if (rc == -1) {
         throw std::string(strerror(errno));
     }
