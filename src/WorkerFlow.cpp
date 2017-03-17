@@ -5,6 +5,22 @@
 #include <cstring>
 #include <cerrno>
 #include <cassert>
+#include <locale>
+
+std::string change_port(std::string original, std::string new_port)
+{
+	std::string new_endpoint;
+	std::string::iterator it;
+	for (it = original.begin(); it != original.end(); it++) {
+		if (*it == ':' && std::isdigit(*(it+1)) ) {
+			return new_endpoint + ":" + new_port;
+		} else {
+			new_endpoint += *it;
+		}
+	}
+	
+	throw "Invalid input endpoint";
+}
 
 WorkerFlow::WorkerFlow(std::string connect, size_t buffsize) : 
     m_context(zmq_ctx_new()),
@@ -20,7 +36,8 @@ WorkerFlow::WorkerFlow(std::string connect, size_t buffsize) :
         throw std::string(strerror(errno));
     }
     // connect to to the notification channel endpoint
-    rc = zmq_connect(m_notif_socket, "tcp://10.10.3.12:9992");
+    const char *notif_connect = change_port(connect, "9992").c_str();
+    rc = zmq_connect(m_notif_socket, notif_connect);
     if (rc == -1) {
         throw std::string(strerror(errno));
     }
