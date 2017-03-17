@@ -92,8 +92,6 @@ int main(int argc, char * argv[]) {
     printf ("%d,", (int) message_count); // message count
     printf ("%d,", (int) throughput); // mean throughput msg/s
     printf ("%.3f\n", (double) megabits); // mean throughput Mbit/s
-
-    fclose(file);
     }
 
 }
