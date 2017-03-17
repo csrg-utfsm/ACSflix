@@ -88,12 +88,12 @@ int main(int argc, char * argv[]) {
     throughput = (unsigned long) ((double) message_count / (double) elapsed * 1000000);
     megabits = (double) (throughput * message_size * 8) / 1000000;
 
-    printf ("message size: %d [B]\n", (int) message_size);
-    printf ("message count: %d\n", (int) message_count);
-    printf ("mean throughput: %d [msg/s]\n", (int) throughput);
-    printf ("mean throughput: %.3f [Mb/s]\n", (double) megabits);
+    printf ("%d, ", (int) message_size); // message size
+    printf ("%d,", (int) message_count); // message count
+    printf ("%d,", (int) throughput); // mean throughput msg/s
+    printf ("%.3f\n", (double) megabits); // mean throughput Mbit/s
 
-    std::cout << "EOF" << std::endl;
+    fclose(file);
     }
 
 }
