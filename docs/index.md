@@ -36,13 +36,15 @@ Each of the Push/Pull pair of sockets is referred as a _Flow_, which can be grou
  - In ACSflix, using -b flag, buffer size can be set.
  - Files used are images available at [http://repo.csrg.cl/images]-
 
+ - Raw Spreadsheat with results [here](https://docs.google.com/spreadsheets/d/1Cc6lL09_GAdZqS7Cgd2qobvoYTfTsW_EFV5t3pR1eSc/edit?usp=sharing)
+
 ### 1 Flow, 1 Stream
 
 |File Size [MB] - Buffer Size [B]| 1.91 (2) | 3.82 (4) | 7.64 (8) | 15.28 (16) | 30.56 (32) | 61.12 (64) | 122.24 (128) | 244.48 (256) | 488.96 (512) | 977.12 (1024) |
-| Message Count | 1003567 | 1186428 | 1066113 | 1055297 | 1055155 | 1012879 | 995589 | | | |
+| Message Count | 1003567 | 1186428 | 1066113 | 1055297 | 1055155 | 1012879 | 995589 | 1007966 | | |
 |---------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-|  Throughput (msg/s)  | 534282 | 498097 | 526471 | 528386 | 531906 | 482857 | 490666 |
-|  Throughput (Mbit/s) | 8.549 | 15.939 | 33.694 | 67.633 | 136.168 | 247.223 | 502.442 |
+|  Throughput (msg/s)  | 534282 | 498097 | 526471 | 528386 | 531906 | 482857 | 490666 | 389603 | 
+|  Throughput (Mbit/s) | 8.549 | 15.939 | 33.694 | 67.633 | 136.168 | 247.223 | 502.442 | 797.907 |
 
 |File Size (MB)| 1956 (2048) | 3912 (4096) | 7824 (8192) |
 | Message Count | | | |
