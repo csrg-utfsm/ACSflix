@@ -53,7 +53,6 @@ void *flow_thread( void *threadfile  ){
     printf ("Flow id %u. mean throughput: %d [msg/s]\n", self_id, (int) throughput);
     printf ("Flow id %u. mean throughput: %.3f [Mb/s]\n", self_id, (double) megabits);
 
-    fclose(file);
 }
 
 int main(int argc, char * argv[]) {
