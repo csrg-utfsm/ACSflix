@@ -5,33 +5,49 @@
 #include <cstring>
 #include <cassert>
 #include <cstdio>
+#include <cerrno>
 #include <unistd.h>
 #include <cstdlib>
 #include <zmq.h>
 #include <pthread.h>
-#include <exception>
+#include <jsmnutils.h>
+#include <sstream>
+
+#define panic(msg)\
+    perror(msg); exit(EXIT_FAILURE);
+
+#define N_THREADS 3
 
 void __raii_file(FILE **file)
 {
     if (file) fclose(*file);
 }
 
-void *flow_thread( void *threadfile  ){
+struct flow_thread_args
+{
+    SenderFlow *flow;
+    std::string filename;
+    size_t buffsize;
+};
 
-    std::string filename ;
-    pthread_t self_id = pthread_self();
+void *flow_thread(void *thread_args)
+{
+    int message_count = 0;
+    unsigned long elapsed;
+    unsigned long throughput;
+    double megabits;
 
-    FILE * file __attribute__((cleanup (__raii_file))) = NULL;
-    try{
-	filename = *reinterpret_cast<std::string*>(threadfile);
-    	file = fopen(filename, "r");
-    } catch (const std::exception& e) {
-	std::cout << e.what() << "'\n";
-	exit (EXIT_FAILURE);
-    }
+    // Get thread arguments
+    struct flow_thread_args *args = (struct flow_thread_args*)thread_args;
+    SenderFlow *sf = args->flow;
+    std::string filename = args->filename;
+    size_t buffsize = args->buffsize;
+
+    FILE *file __attribute__((cleanup (__raii_file))) =
+        fopen(filename.c_str(), "r");
 
     char *buffer = new char[buffsize];
-    watch = zmq_stopwatch_start();
+    void *watch = zmq_stopwatch_start();
 
     while (!feof(file)) {
         size_t read = fread(buffer, 1, buffsize, file);
@@ -44,71 +60,87 @@ void *flow_thread( void *threadfile  ){
     if (elapsed == 0)
         elapsed = 1;
 
-    message_size = buffsize;
+    size_t message_size = buffsize;
     throughput = (unsigned long) ((double) message_count / (double) elapsed * 1000000);
     megabits = (double) (throughput * message_size * 8) / 1000000;
 
-    printf ("Flow id %u. message size: %d [B]\n", self_id, (int) message_size);
-    printf ("Flow id %u. message count: %d\n", self_id, (int) message_count);
-    printf ("Flow id %u. mean throughput: %d [msg/s]\n", self_id, (int) throughput);
-    printf ("Flow id %u. mean throughput: %.3f [Mb/s]\n", self_id, (double) megabits);
+    printf ("%s. message size: %d [B]\n", sf->name().c_str(), (int) message_size);
+    printf ("%s. message count: %d\n", sf->name().c_str(), (int) message_count);
+    printf ("%s. mean throughput: %d [msg/s]\n", sf->name().c_str(), (int) throughput);
+    printf ("%s. mean throughput: %.3f [Mb/s]\n", sf->name().c_str(), (double) megabits);
+}
 
+void usage(char *argv[])
+{
+    std::cerr << "Usage: " << *argv << " config_file" << std::endl;
+    exit(EXIT_FAILURE);
 }
 
 int main(int argc, char * argv[]) {
     int opt;
-    int buffsize = 2048;
+    int buffsize = 2048; // default buffer size
     int opts_consumed = 0;
-    int message_count = 0;
-    size_t message_size;
-    void *watch;
-    unsigned long elapsed;
-    unsigned long throughput;
-    double megabits;
-    pthread_t flow1;
-    pthread_t flow2;
-    pthread_t flow3;
-    int thr_flow1, thr_flow2, thr_flow3;
+    pthread_t flows[N_THREADS];
+    struct flow_thread_args args[N_THREADS];
 
-    while ((opt = getopt(argc, argv, "b:")) != -1) {
-        switch (opt) {
-        case 'b':
-            opt = strtol(optarg, NULL, 10);
-            buffsize = (opt > 0) ? opt : buffsize;
-            opts_consumed += 2;
-            break;
-        default:
-            return 1;
+    if (argc != 2) {
+        usage(argv);
+    }
+    std::string config_file(argv[1]);
+    
+    // Parse config file (assume it has no errors)
+    JSONParser parser;
+    parser.load_file(config_file);
+    JSONObject config = parser.parse();
+
+    // REQUIRED: default binding
+    std::string default_bind = config["bind"];
+    JSONArray flows_config = config["flows"];
+    try {
+        buffsize = (int)config["buffsize"];
+    } catch (JSMNUtilsEx &ex) {
+        // buffsize stays default
+    }
+    // Initialize SenderStream
+    SenderStream ss;
+
+    for (int i = 0; i < N_THREADS; i++) {
+        JSONObject flow_config = flows_config[i];
+        std::string flow_name = flow_config["name"];
+        std::string flow_bind = default_bind;
+        int flow_buffsize = buffsize;
+        try {
+            flow_bind = (std::string)flow_config["bind"];
+        } catch (JSMNUtilsEx &ex) {
+            // bind stays default
+        }
+        try {
+            flow_buffsize = (int)flow_config["buffsize"];
+        } catch(JSMNUtilsEx &ex) {
+            // buffsize stays default
+        }
+        int flow_port = flow_config["port"];
+        std::stringstream sstr;
+        sstr << flow_bind << ":" << flow_port;
+        flow_bind = sstr.str(); // something like "tcp://localhost:5000"
+        std::string filename = flow_config["file"];
+        // Create flow - make arguments for thread
+        args[i].flow = ss.create_flow(flow_name, flow_bind);
+        args[i].filename = filename;
+        args[i].buffsize = flow_buffsize;
+        // Create pthread
+        if (pthread_create(flows + i, NULL, flow_thread, args + i) != 0) {
+            sstr << "pthread_create(flow" << (i + 1);
+            panic(sstr.str().c_str());
         }
     }
-
-    if (argc - opts_consumed != 5) {
-        std::cerr << "Usage: " << argv[0] << " [-b buffsize] bind file" << std::endl;
-        return 1;
+    // Join all threads
+    for (int i = 0; i < N_THREADS; i++) {
+        if (pthread_join(flows[i], NULL) != 0) {
+            std::stringstream sstr;
+            sstr << "pthread_join(flow" << (i + 1);
+            panic(sstr.str().c_str());
+        }
     }
-
-    // Assuming options before positional arguments
-    argv += opts_consumed;
-
-    // get arguments from console.
-    std::string bind(argv[1]);
-    std::string file_path1(argv[2]);
-    std::string file_path2(argv[3]);
-    std::string file_path3(argv[4]);
-
-    // create the stream and a flow.
-    SenderStream ss;
-    SenderFlow * sf1 = ss.create_flow("flow1", bind);
-    SenderFlow * sf2 = ss.create_flow("flow2", bind);
-    SenderFlow * sf3 = ss.create_flow("flow3", bind);
-
-    // Self reminder: pthread_create(pthread_t threadID, threadAttr, function to be used, parameters of function )
-    flow1 = pthread_create(flow1,NULL,flow_thread,&file_path1);
-    flow2 = pthread_create(flow1,NULL,flow_thread,&file_path2);
-    flow3 = pthread_create(flow1,NULL,flow_thread,&file_path3);
-
-    assert(flow1 == 0)
-    assert(flow2 == 0)
-    assert(flow3 == 0)
-
+    // ss goes out of scope and deletes flows!
 }
