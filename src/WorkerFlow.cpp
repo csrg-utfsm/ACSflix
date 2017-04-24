@@ -27,6 +27,7 @@ WorkerFlow::WorkerFlow(std::string connect, size_t buffsize) :
     m_stream_socket(zmq_socket(m_context, ZMQ_PULL)),
     m_notif_socket(zmq_socket(m_context, ZMQ_SUB)),
     m_cb(NULL),
+    m_callback_owned(false),
     m_buffer(new char[(buffsize) ? buffsize : DEFAULT_BUFFER_SIZE]),
     m_buffsize((buffsize) ? buffsize : DEFAULT_BUFFER_SIZE)
 {
@@ -55,6 +56,11 @@ WorkerFlow::~WorkerFlow()
     zmq_close(m_notif_socket);
     zmq_ctx_term(m_context);
     delete[] m_buffer;
+    // If I own the callback,
+    // I have to take care of it
+    if (m_callback_owned) {
+        delete m_cb;
+    }
 }
 
 void WorkerFlow::ready()
@@ -115,7 +121,8 @@ bool WorkerFlow::work()
         { m_notif_socket,  0, ZMQ_POLLIN, 0 }
     };
     // Wait until there is data to read in either channel
-    while (zmq_poll(items, 2, -1) == -1 && errno == EINTR) {
+    int timeout = 0; // return inmediatly
+    while (zmq_poll(items, 2, timeout) == -1 && errno == EINTR) {
         std::cout << "zmq_poll: retrying" << std::endl;
     }
 
@@ -137,4 +144,9 @@ bool WorkerFlow::work()
 void WorkerFlow::set_callback(Callback * cb)
 {
     m_cb = cb;
+}
+
+void WorkerFlow::own_callback()
+{
+    m_callback_owned = true;
 }

@@ -40,6 +40,7 @@ private:
 
     // Callback to notify lifecycle related events.
     Callback * m_cb;
+    bool m_callback_owned;
 
     // Buffer to store incoming data, it will be reused every time work() is
     // called. ~It is allocated with a fixed size~ NOT ANYMORE.
@@ -70,6 +71,9 @@ public:
 
     // Workflow callback setter
     void set_callback(Callback * cb);
+
+    // Should own callback?
+    void own_callback();
 };
 
 #endif // WORKERFLOW_H
