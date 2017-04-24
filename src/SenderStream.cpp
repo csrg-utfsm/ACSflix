@@ -12,6 +12,7 @@ SenderStream::~SenderStream()
 SenderFlow * SenderStream::create_flow(std::string name, std::string bind)
 {
     SenderFlow * flow = new SenderFlow(bind);
+    flow->set_name(name);
     m_flows[name] = flow;
     return flow;
 }
