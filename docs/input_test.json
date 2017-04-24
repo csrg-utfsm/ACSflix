@@ -1,0 +1,22 @@
+{
+    "bind": "tcp://localhost",
+    "buffsize": 2048,
+
+    "flows": [
+        {
+            "name": "flow1",
+            "port": 5000,
+            "file": "movie.mp4"
+        },
+        {
+            "name": "flow2",
+            "port": 8000,
+            "file": "GG.png"
+        },
+        {
+            "name": "flow3",
+            "port": 9000,
+            "file": "test.jpg"
+        }
+    ]
+}
