@@ -1,6 +1,8 @@
 .idea/
 .DS_Store
 build/
+bin/
+test/
 proto/*.pb.*
 .vscode
 test_files
