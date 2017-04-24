@@ -1,0 +1,2 @@
+- Use JeroMq, since jzmq hasn't been released in almost three years: https://github.com/zeromq/jeromq
+- Look at this https://google.github.io/flatbuffers/md__benchmarks.html
