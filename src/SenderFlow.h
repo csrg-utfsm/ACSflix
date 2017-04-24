@@ -15,6 +15,9 @@ class SenderFlow
     void * m_stream_socket;
     void * m_notif_socket;
 
+    // Name
+    std::string m_name;
+
     // End of transmission notification
     void end_transmission();
 
@@ -28,6 +31,9 @@ public:
 
     // Send a buffer to a worker, in round robin order.
     void send(char * buffer, size_t size);
+
+    void set_name(std::string name);
+    std::string name() const;
 };
 
 #endif // SENDERFLOW_H

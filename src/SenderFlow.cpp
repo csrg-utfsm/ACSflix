@@ -49,3 +49,13 @@ void SenderFlow::end_transmission()
     char buffer[] = "#\\";
     zmq_send(m_notif_socket, buffer, strlen(buffer), 0);
 }
+
+void SenderFlow::set_name(std::string name)
+{
+    m_name = name;
+}
+
+std::string SenderFlow::name() const
+{
+    return m_name;
+}
