@@ -99,12 +99,12 @@ int main(int argc, char **argv)
             // buffsize stays default
         }
         int flow_port = flow_config["port"];
-        std::stringstream ss;
-        ss << flow_connect << ":" << flow_port;
-        flow_connect = ss.str(); // something like "tcp://localhost:5000"
+        //std::stringstream ss;
+        //ss << flow_connect << ":" << flow_port;
+        //flow_connect = ss.str(); // something like "tcp://localhost:5000"
         std::string filename = flow_config["file"];
         // Create flow
-        WorkerFlow *flow = ws.create_flow(flow_name, flow_connect,
+        WorkerFlow *flow = ws.create_flow(flow_name, flow_connect, flow_port,
                 flow_buffsize);
         WorkerCallback *cb = new WorkerCallback(filename);
         flow->set_callback(cb);

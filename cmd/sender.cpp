@@ -2,6 +2,7 @@
 #include "SenderStream.h"
 
 #include <iostream>
+#include <sstream>
 #include <cstring>
 #include <cassert>
 #include <cstdio>
@@ -37,8 +38,8 @@ int main(int argc, char * argv[]) {
         }
     }
 
-    if (argc - opts_consumed != 3) {
-        std::cerr << "Usage: " << argv[0] << " [-b buffsize] bind file|debug" << std::endl;
+    if (argc - opts_consumed != 4) {
+        std::cerr << "Usage: " << argv[0] << " [-b buffsize] bind port file|debug" << std::endl;
         return 1;
     }
 
@@ -47,11 +48,15 @@ int main(int argc, char * argv[]) {
 
     // get arguments from console.
     std::string bind(argv[1]);
-    std::string file_path(argv[2]);
+    std::string strport(argv[2]);
+    std::string file_path(argv[3]);
+    // port's numerical value
+    int port;
+    std::istringstream(strport) >> port;
 
     // create the stream and a flow.
     SenderStream ss;
-    SenderFlow * sf = ss.create_flow("flow-1", bind);
+    SenderFlow * sf = ss.create_flow("flow-1", bind, port);
 
     if (file_path == "debug") {
         int msg_counter = 1;

@@ -45,6 +45,12 @@ void *flow_thread(void *thread_args)
 
     FILE *file __attribute__((cleanup (__raii_file))) =
         fopen(filename.c_str(), "r");
+    if (file == NULL) {
+        char errmsg[32];
+        sprintf(errmsg, "fopen(\"%s\")", filename.c_str());
+        perror(errmsg);
+        return NULL;
+    }
 
     char *buffer = new char[buffsize];
     void *watch = zmq_stopwatch_start();
@@ -120,16 +126,16 @@ int main(int argc, char * argv[]) {
             // buffsize stays default
         }
         int flow_port = flow_config["port"];
-        std::stringstream sstr;
-        sstr << flow_bind << ":" << flow_port;
-        flow_bind = sstr.str(); // something like "tcp://localhost:5000"
+        //sstr << flow_bind << ":" << flow_port;
+        //flow_bind = sstr.str(); // something like "tcp://localhost:5000"
         std::string filename = flow_config["file"];
         // Create flow - make arguments for thread
-        args[i].flow = ss.create_flow(flow_name, flow_bind);
+        args[i].flow = ss.create_flow(flow_name, flow_bind, flow_port);
         args[i].filename = filename;
         args[i].buffsize = flow_buffsize;
         // Create pthread
         if (pthread_create(flows + i, NULL, flow_thread, args + i) != 0) {
+            std::stringstream sstr;
             sstr << "pthread_create(flow" << (i + 1);
             panic(sstr.str().c_str());
         }

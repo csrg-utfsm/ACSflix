@@ -2,6 +2,7 @@
 #include "WorkerStream.h"
 
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <cstdio>
 #include <cstdlib>
@@ -60,9 +61,9 @@ int main(int argc, char * argv[])
         }
     }
 
-    if (argc - opts_consumed != 3) {
+    if (argc - opts_consumed != 4) {
         std::cerr << "Usage: " << argv[0]
-            << " [-b buffsize] connect output|stdout|null"
+            << " [-b buffsize] connect port output|stdout|null"
             << std::endl;
         return 0;
     }
@@ -72,7 +73,11 @@ int main(int argc, char * argv[])
 
     // get arguments from console.
     std::string connect(argv[1]);
-    std::string output(argv[2]);
+    std::string strport(argv[2]);
+    std::string output(argv[3]);
+    // get numerical port
+    int port;
+    std::istringstream(strport) >> port;
 
     // create the WorkerStream to manage flows.
     WorkerStream ws;
@@ -82,7 +87,7 @@ int main(int argc, char * argv[])
 
     // create the flow from the stream, here we don't need to save the
     // instance.
-    WorkerFlow *wf = ws.create_flow("flow-1", connect, buffsize);
+    WorkerFlow *wf = ws.create_flow("flow-1", connect, port, buffsize);
     wf->set_callback(&cb);
 
     // call the start method to loop workers.
