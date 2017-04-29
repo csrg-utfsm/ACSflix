@@ -21,6 +21,11 @@ You may need to set `LD_LIBRARY_PATH` for the binaries to work if you use a cust
 ```
 export LD_LIBRARY_PATH=/usr/local/lib
 ```
+*For a permanent solution to this issue:*
+```bash
+# echo "/usr/local/lib > /etc/ld.so.conf.d/usrlocal.conf"
+# ldconfig -v
+```
 Run sender with input file:
 ```
 ./sender tcp://*:9991 file
