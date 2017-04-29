@@ -36,7 +36,16 @@ target_link_libraries(jsmnutils_test jsmnutils)
 target_link_libraries(sender3F1S jsmnutils ${EXTERNAL_LIBS})
 target_link_libraries(worker3F1S jsmnutils ${EXTERNAL_LIBS})
 
-install(FILES docs/input_test.json DESTINATION ${prefix}/test)
+install(
+    FILES
+        docs/input_test.json
+        docs/sender3F1S.conf
+        docs/worker3F1S.conf
+        test_files/Momacro.JPG
+        test_files/rocio.JPG
+        test_files/wave.jpg
+    DESTINATION
+        ${prefix}/test)
 install(TARGETS worker sender DESTINATION ${prefix}/bin)
 install(TARGETS jsmnutils_test sender3F1S worker3F1S
     DESTINATION ${prefix}/test)
