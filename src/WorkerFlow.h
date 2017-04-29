@@ -56,7 +56,7 @@ public:
     // WorkerFlow creates a new Worker Flow, connected to a sender using the 
     // connect parameter. The connect parameter is formatted as ZMQ zmq_connect
     // format (see http://api.zeromq.org/4-2:zmq-connect).
-    WorkerFlow(std::string connect, size_t buffsize);
+    WorkerFlow(std::string connect, int port, size_t buffsize);
 
     ~WorkerFlow();
 

@@ -18,7 +18,7 @@ public:
     // Creates a sender flow with the given name and bound to the bind given.
     // (see SenderFlow constructor). The allocated flow will be managed by this
     // class. The SenderFlow returned must be used manually.
-    SenderFlow * create_flow(std::string name, std::string bind);
+    SenderFlow * create_flow(std::string name, std::string bind, int port);
 };
 
 #endif // SENDERSTREAM_HPP

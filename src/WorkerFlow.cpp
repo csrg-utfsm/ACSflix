@@ -2,27 +2,13 @@
 
 #include <zmq.h>
 #include <iostream>
+#include <sstream>
 #include <cstring>
 #include <cerrno>
 #include <cassert>
 #include <locale>
 
-std::string change_port(std::string original, std::string new_port)
-{
-	std::string new_endpoint;
-	std::string::iterator it;
-	for (it = original.begin(); it != original.end(); it++) {
-		if (*it == ':' && std::isdigit(*(it+1)) ) {
-			return new_endpoint + ":" + new_port;
-		} else {
-			new_endpoint += *it;
-		}
-	}
-	
-	throw "Invalid input endpoint";
-}
-
-WorkerFlow::WorkerFlow(std::string connect, size_t buffsize) : 
+WorkerFlow::WorkerFlow(std::string connect, int port, size_t buffsize) : 
     m_context(zmq_ctx_new()),
     m_stream_socket(zmq_socket(m_context, ZMQ_PULL)),
     m_notif_socket(zmq_socket(m_context, ZMQ_SUB)),
@@ -31,14 +17,18 @@ WorkerFlow::WorkerFlow(std::string connect, size_t buffsize) :
     m_buffer(new char[(buffsize) ? buffsize : DEFAULT_BUFFER_SIZE]),
     m_buffsize((buffsize) ? buffsize : DEFAULT_BUFFER_SIZE)
 {
+    // addr
+    std::stringstream stream_addr;
+    stream_addr << connect << ":" << port;
+    std::stringstream notf_addr;
+    notf_addr << connect << ":" << (port + 1);
     // connect to the stream endpoint
-    int rc = zmq_connect(m_stream_socket, connect.c_str());
+    int rc = zmq_connect(m_stream_socket, stream_addr.str().c_str());
     if (rc == -1) {
         throw std::string(strerror(errno));
     }
     // connect to to the notification channel endpoint
-    const char *notif_connect = change_port(connect, "9992").c_str();
-    rc = zmq_connect(m_notif_socket, notif_connect);
+    rc = zmq_connect(m_notif_socket, notf_addr.str().c_str());
     if (rc == -1) {
         throw std::string(strerror(errno));
     }

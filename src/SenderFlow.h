@@ -2,6 +2,14 @@
 #define SENDERFLOW_H
 
 #include <string>
+#include <stdexcept>
+
+class SenderFlowEx : public std::runtime_error
+{
+public:
+    SenderFlowEx(std::string errmsg) :
+        std::runtime_error("senderflow error: " + errmsg) {}
+};
 
 // SenderFlow implements the sender behavior in the ACSFlix model, using the 
 // PUSH/PULL pattern. It creates it's own context and PUSH Socket, workloads
@@ -25,7 +33,7 @@ public:
     // SenderFlow creates a new SenderFlow bound to the bind parameter given. 
     // The bind parameter must be in the zmq_bind format (see 
     // http://api.zeromq.org/4-2:zmq-bind).
-    SenderFlow(std::string bind);
+    SenderFlow(std::string bind, int port);
 
     ~SenderFlow();
 

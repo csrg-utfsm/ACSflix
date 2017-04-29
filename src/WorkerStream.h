@@ -29,7 +29,7 @@ public:
     //
     // Edit: Callback is now set separatedly and is replaced by positional
     // argument buffsize
-    WorkerFlow * create_flow(std::string name, std::string connect, 
+    WorkerFlow * create_flow(std::string name, std::string connect, int port,
         size_t buffsize=0);
 
     ~WorkerStream();

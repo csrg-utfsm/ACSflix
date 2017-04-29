@@ -9,9 +9,9 @@ SenderStream::~SenderStream()
     }
 }
 
-SenderFlow * SenderStream::create_flow(std::string name, std::string bind)
+SenderFlow * SenderStream::create_flow(std::string name, std::string bind, int port)
 {
-    SenderFlow * flow = new SenderFlow(bind);
+    SenderFlow * flow = new SenderFlow(bind, port);
     flow->set_name(name);
     m_flows[name] = flow;
     return flow;
