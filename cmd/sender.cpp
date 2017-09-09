@@ -70,9 +70,13 @@ int main(int argc, char * argv[]) {
         }
     } else {
         FILE * file __attribute__((cleanup (__raii_file))) = NULL;
-        file = fopen(argv[2], "r");
-        assert(file);
+        file = fopen(file_path.c_str(), "r");
 
+	if (file == NULL) {
+	  perror("Could not open file");
+	  return 1;
+	}
+	
         char *buffer = new char[buffsize];
 
 	watch = zmq_stopwatch_start();
