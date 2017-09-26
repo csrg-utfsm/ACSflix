@@ -6,9 +6,10 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/Modules/")
 set(prefix ${CMAKE_SOURCE_DIR})
 
 find_package(ZMQ REQUIRED)
+find_package( Threads )
 
 set(EXTERNAL_LIBS
-        ${ZMQ_LIBRARIES})
+        ${ZMQ_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} )
 
 include_directories(${ZMQ_INCLUDE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/src/jsmnutils)

@@ -111,7 +111,7 @@ bool WorkerFlow::work()
         { m_notif_socket,  0, ZMQ_POLLIN, 0 }
     };
     // Wait until there is data to read in either channel
-    int timeout = 0; // return inmediatly
+    int timeout = -1; // return inmediatly
     while (zmq_poll(items, 2, timeout) == -1 && errno == EINTR) {
         std::cout << "zmq_poll: retrying" << std::endl;
     }
